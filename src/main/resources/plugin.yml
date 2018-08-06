@@ -1,0 +1,4 @@
+name: Spiritcraft
+main: com.kabryxis.spiritcraft.Spiritcraft
+version: 1.0.0
+depend: [WorldEdit,FastAsyncWorldEdit,ProtocolLib]

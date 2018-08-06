@@ -1,0 +1,5 @@
+
+# Use if you use a world system for a hub, instead of BungeeCord and a lot of servers
+world-mode: false
+# Location for the lobby's spawn, format: world_name,x,y,z
+lobby-spawn: 'spirit_lobby,0.5,20,0.5'
