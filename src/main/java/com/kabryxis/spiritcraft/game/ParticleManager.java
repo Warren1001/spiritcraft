@@ -20,7 +20,7 @@ public class ParticleManager {
 	}
 	
 	public void loadAll() {
-		File[] files = folder.listFiles(new FileEndingFilter("yml"));
+		File[] files = folder.listFiles(new FileEndingFilter(".yml"));
 		if(files != null && files.length != 0) {
 			particleDataMap.clear();
 			for(File file : files) {

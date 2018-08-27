@@ -9,15 +9,12 @@ import com.kabryxis.spiritcraft.game.ParticleData;
 import com.kabryxis.spiritcraft.game.ParticleTask;
 import com.kabryxis.spiritcraft.game.SchematicCreator;
 import com.kabryxis.spiritcraft.game.a.game.Game;
-import com.kabryxis.spiritcraft.game.ability.StabChargeTask;
-import com.kabryxis.spiritcraft.game.inv.DynamicInventory;
-import com.kabryxis.spiritcraft.game.inv.PlayerItemInfo;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
+import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
+import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +30,11 @@ public class SpiritPlayer extends GamePlayer {
 	private BlockSelection selection;
 	private SchematicCreator creator;
 	
-	private DynamicInventory current, previous;
 	private List<String> errorMessages = new ArrayList<>();
 	
 	private PlayerType playerType = PlayerType.WAITING;
 	private boolean wantsGhost = true;
 	private ParticleTask particleTask;
-	private BukkitTask finisherTask;
 	private double damageToGhost = 0.0;
 	
 	public SpiritPlayer(Game game, UUID uuid, Config data) {
@@ -152,10 +147,6 @@ public class SpiritPlayer extends GamePlayer {
 		return wantsGhost;
 	}
 	
-	public boolean isPlaying() {
-		return playerType != PlayerType.SPECTATOR;
-	}
-	
 	public boolean isInGame() {
 		return playerType == PlayerType.GHOST || playerType == PlayerType.HUNTER;
 	}
@@ -173,31 +164,12 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public void openInventory(DynamicInventory inventory) {
-		this.current = inventory;
-		inventory.open(this);
-	}
-	
-	public void archiveInventory() {
-		this.previous = current;
-		this.current = null;
-	}
-	
-	public DynamicInventory getCurrent() {
-		return current;
-	}
-	
-	public DynamicInventory getPrevious() {
-		return previous;
-	}
-	
-	public boolean hasPrevious() {
-		return previous != null;
+		inventory.open(player);
 	}
 	
 	public void startParticleTimer() {
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20000000, 0, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20000000, 0, false, false));
-		if(particleTask == null) particleTask = new ParticleTask(this);
+		if(particleTask != null) particleTask.cancel();
+		particleTask = new ParticleTask(this);
 		particleTask.start();
 	}
 	
@@ -219,21 +191,12 @@ public class SpiritPlayer extends GamePlayer {
 	
 	@Override
 	public void reset(ResetFlag... flags) {
-		if(particleTask != null) particleTask.cancel();
-		resetCharge();
+		if(particleTask != null) {
+			particleTask.cancel();
+			particleTask = null; // TODO find better way to handle tasks rather than creating new instances
+		}
 		super.reset(flags);
 		playerType = PlayerType.WAITING;
-	}
-	
-	public void startCharge(ItemStack item) {
-		if(finisherTask == null) finisherTask = new StabChargeTask(this, item).start();
-	}
-	
-	public void resetCharge() {
-		if(finisherTask != null) {
-			finisherTask.cancel();
-			finisherTask = null;
-		}
 	}
 	
 	public BlockFace getFacingDirection() {
@@ -243,6 +206,21 @@ public class SpiritPlayer extends GamePlayer {
 		if(yaw >= 135.0F && yaw <= 225.0F) return BlockFace.SOUTH;
 		if(yaw >= 225.0F && yaw <= 315.0F) return BlockFace.WEST;
 		else return BlockFace.NORTH;
+	}
+	
+	public int getPing() {
+		return entityPlayer.getPing();
+	}
+	
+	public DimData getCurrentDimData() {
+		String playerWorldName = player.getWorld().getName();
+		ArenaData arenaData = game.getCurrentArenaData();
+		if(playerWorldName.equals(arenaData.getNormalDimData().getDimInfo().getLocation().getWorld().getName())) return arenaData.getNormalDimData();
+		else if(playerWorldName.equals(arenaData.getSpiritDimData().getDimInfo().getLocation().getWorld().getName())) return arenaData.getSpiritDimData();
+		else {
+			sendMessage("where the hell are you? (cannot find you in normal or spirit dimension)");
+			return null; // TODO maybe throw error
+		}
 	}
 	
 }

@@ -1,152 +1,54 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.kabryxis.spiritcraft.Spiritcraft;
-import com.kabryxis.spiritcraft.game.ParticleTask;
-import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
-import com.kabryxis.spiritcraft.game.ability.CloudTask;
-import com.kabryxis.spiritcraft.game.ability.FireBreathTask;
-import com.kabryxis.spiritcraft.game.ability.ThrowItemDelayedRunnable;
-import com.kabryxis.spiritcraft.game.ability.ThrowItemTimerRunnable;
-import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
-import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
+import com.kabryxis.spiritcraft.game.ParticleTask;
+import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
+import com.kabryxis.spiritcraft.game.a.objective.Objective;
+import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
+import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.player.PlayerType;
+import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.inventivetalent.particle.ParticleEffect;
 
-public class GameListener implements GlobalListener {
+import java.util.HashMap;
+import java.util.Map;
 
-	private final Spiritcraft plugin;
+public class GameListener implements GlobalListener {
 	
-	public GameListener(Spiritcraft plugin) {
-		this.plugin = plugin;
+	private final Map<Entity, Long> lastPortalTimestamp = new HashMap<>();
+	
+	private final Game game;
+	
+	public GameListener(Game game) {
+		this.game = game;
 	}
 	
 	@Override
 	public void onEvent(Event event) {
 		switch(event.getEventName()) {
-			case "PlayerChangedDimEvent":
-				PlayerChangedDimEvent pcde = (PlayerChangedDimEvent)event;
-				SpiritPlayer pcdePlayer = pcde.getPlayer();
-				if(pcdePlayer.getPlayerType() == PlayerType.GHOST) {
-					ParticleTask particleTask = pcdePlayer.getParticleTask();
-					if(pcde.getNewDim() == PlayerChangedDimEvent.DimType.NORMAL) particleTask.setDefaultDelay();
-					else particleTask.setDelay(particleTask.getDelay() / 4);
-				}
-				break;
-			case "PlayerJoinEvent":
-				PlayerJoinEvent pje = (PlayerJoinEvent)event;
-				// TODO reset and reapply stuff to player if theyre rejoining game or make them spectator, ect if game is still going, otherwise lobby
-				break;
-			case "PlayerQuitEvent":
-				PlayerQuitEvent pqe = (PlayerQuitEvent)event;
-				// TODO quitting here is likely unintentional, keep them loaded as best as can, ghosts will need invis armorstands as their combat logger
-				break;
-			case "PlayerInteractEvent":
-				PlayerInteractEvent pie = (PlayerInteractEvent)event;
-				SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(pie.getPlayer());
-				Action action = pie.getAction();
-				if(Items.isType(pie.getItem(), Material.SHEARS)) {
-					if(action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) player.startCharge(pie.getItem());
-				}
-				else if(Items.isType(pie.getItem(), Material.NETHER_STAR)) {
-					if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-						new ThrowItemDelayedRunnable(player, 3 * 20L) {
-							
-							@Override
-							public void onThrow() {}
-							
-							@Override
-							public void onFinish() {
-								Location loc = item.getLocation();
-								loc.getWorld().playSound(loc, Sound.GLASS, 1F, 0.01F);
-								loc.getWorld().getNearbyEntities(loc, 3.5, 3.5, 3.5).forEach(entity -> {
-									if(entity instanceof Player) {
-										SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer((Player)entity);
-										if(player.hasLineOfSight(item)) System.out.println(player.getName() + " can see the flashbang");
-										if(player.getPlayerType() == PlayerType.HUNTER) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 3 * 20), true);
-									}
-								});
-							}
-							
-						};
-					}
-				}
-				else if(Items.isType(pie.getItem(), Material.BLAZE_POWDER)) {
-					if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-						player.getInventory().setItemInHand(new ItemStack(Material.AIR));
-						player.getWorld().playSound(player.getLocation(), Sound.ENDERDRAGON_GROWL, 1F, 0.01F);
-						new FireBreathTask(player);
-					}
-				}
-				else if(Items.isType(pie.getItem(), Material.WOOL)) {
-					if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-						new ThrowItemDelayedRunnable(player, 2 * 20L) {
-							
-							@Override
-							public void onThrow() {}
-							
-							@Override
-							public void onFinish() {
-								Location loc = item.getLocation();
-								loc.getWorld().playSound(loc, Sound.DIG_SNOW, 1F, 0.5F);
-								new CloudTask(loc);
-							}
-							
-						};
-					}
-					else if(action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
-						Location loc = player.getLocation();
-						loc.getWorld().playSound(loc, Sound.DIG_SNOW, 1F, 0.5F);
-						new CloudTask(loc);
-						player.getInventory().setItemInHand(new ItemStack(Material.AIR));
-					}
-				}
-				else if(Items.isType(pie.getItem(), Material.MAGMA_CREAM)) {
-					if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-						new ThrowItemTimerRunnable(player, 10L, 3000) {
-							
-							@Override
-							public void onThrow() {}
-							
-							@Override
-							public void onTick() {
-								item.getWorld().playSound(item.getLocation(), Sound.NOTE_PIANO, 0.5F, 1F);
-							}
-							
-							@Override
-							public void onFinish() {
-								Location loc = item.getLocation();
-								loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 4F, false, false); // TODO custom explosion damage handling to get who caused the dmg
-							}
-							
-						};
-					}
-				}
-				break;
 			case "EntityDamageByEntityEvent":
 				EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent)event;
-				SpiritPlayer defender = plugin.getGame().getPlayerManager().getPlayer((Player)edbee.getEntity());
+				SpiritPlayer defender = game.getPlayerManager().getPlayer((Player)edbee.getEntity());
 				SpiritPlayer attacker = null;
 				Entity damager = edbee.getDamager();
-				if(damager instanceof Player) attacker = plugin.getGame().getPlayerManager().getPlayer((Player)edbee.getDamager());
-				else if(damager instanceof Projectile) attacker = plugin.getGame().getPlayerManager().getPlayer((Player)((Projectile)damager).getShooter());
+				if(damager instanceof Player) attacker = game.getPlayerManager().getPlayer((Player)edbee.getDamager());
+				else if(damager instanceof Projectile) attacker = game.getPlayerManager().getPlayer((Player)((Projectile)damager).getShooter());
 				else break;
 				if(defender.getPlayerType() != PlayerType.GHOST) break;
 				Location loc = defender.getPlayer().getLocation().add(0, 0.75, 0);
@@ -155,31 +57,49 @@ public class GameListener implements GlobalListener {
 				break;
 			case "EntityDamageEvent":
 				EntityDamageEvent ede = (EntityDamageEvent)event;
-				if(ede.getCause() == EntityDamageEvent.DamageCause.FALL && plugin.getGame().getPlayerManager().getPlayer((Player)ede.getEntity()).getPlayerType() == PlayerType.GHOST) ede.setCancelled(true);
+				if(ede.getCause() == EntityDamageEvent.DamageCause.FALL && game.getPlayerManager().getPlayer((Player)ede.getEntity()).getPlayerType() == PlayerType.GHOST) ede.setCancelled(true);
 				break;
-			case "CreatureSpawnEvent":
-				CreatureSpawnEvent cse = (CreatureSpawnEvent)event;
-				if(cse.getSpawnReason() != CreatureSpawnEvent.SpawnReason.CUSTOM) cse.setCancelled(true);
+			case "EntityPortalEnterEvent":
+				EntityPortalEnterEvent epee = (EntityPortalEnterEvent)event;
+				Entity epeeEntity = epee.getEntity();
+				long curr = System.currentTimeMillis();
+				if(curr - lastPortalTimestamp.getOrDefault(epeeEntity, 0L) > 1000) {
+					lastPortalTimestamp.put(epeeEntity, curr);
+					game.getCurrentArenaData().teleportToOtherDim(epeeEntity);
+				}
 				break;
-			case "ItemSpawnEvent":
-			case "EntitySpawnEvent":
-				EntitySpawnEvent ese = (EntitySpawnEvent)event;
-				Entity entity = ese.getEntity();
-				if(!(entity instanceof Player) && !(entity instanceof Item) && !(entity instanceof Projectile)) ese.setCancelled(true);
+			case "PlayerInteractEvent":
+				PlayerInteractEvent pie = (PlayerInteractEvent)event;
+				Action action = pie.getAction();
+				if(action != Action.PHYSICAL) {
+					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
+					TriggerType triggerType = action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK;
+					boolean hasBlock = action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK;
+					AbilityTrigger trigger = hasBlock ? new AbilityTrigger(triggerType, pie.getItem(), pie.getClickedBlock()) : new AbilityTrigger(triggerType, pie.getItem());
+					game.getAbilityManager().handle(player, trigger);
+					if(trigger.cancelsEvent()) pie.setCancelled(true);
+				}
+				if(pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
+					DimData dimData = player.getCurrentDimData();
+					Objective objective = dimData.getObjective(pie.getClickedBlock());
+					if(objective != null) {
+						objective.trigger(player, ObjectiveTrigger.RIGHT_CLICK);
+						pie.setCancelled(true);
+						return;
+					}
+				}
 				break;
-			case "PlayerDeathEvent":
-				PlayerDeathEvent pde = (PlayerDeathEvent)event;
-				pde.setDeathMessage("");
-				pde.getDrops().clear();
+			case "PlayerChangedDimEvent":
+				PlayerChangedDimEvent pcde = (PlayerChangedDimEvent)event;
+				SpiritPlayer pcdePlayer = pcde.getPlayer();
+				if(pcdePlayer.getPlayerType() == PlayerType.GHOST) {
+					ParticleTask particleTask = pcdePlayer.getParticleTask();
+					if(pcde.getNewDim() == PlayerChangedDimEvent.DimType.NORMAL) particleTask.setDefaultDelay();
+					else particleTask.setDelay(particleTask.getDelay() / 8);
+				}
 				break;
-			case "ItemMergeEvent":
-			case "WeatherChangeEvent":
-			case "FoodLevelChangeEvent":
 			case "EntityRegainHealthEvent":
-			case "PlayerDropItemEvent": // TODO droppable items?
-			case "PlayerPickupItemEvent": // TODO ^
-			case "BlockBreakEvent":
-			case "BlockPlaceEvent":
 				((Cancellable)event).setCancelled(true);
 				break;
 			default:

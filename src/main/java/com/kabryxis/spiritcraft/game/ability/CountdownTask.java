@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat.WrappedPacketPlayOutChat;
+import com.kabryxis.spiritcraft.game.a.game.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,10 +23,8 @@ public class CountdownTask extends BukkitRunnable {
 	@Override
 	public void run() {
 		if(timeLeft == 0) {
-			packet.setMessage("");
-			game.forEachPlayer(player -> packet.send(player.getPlayer()));
-			game.end();
 			cancel();
+			game.end(true);
 			return;
 		}
 		int seconds = (timeLeft % 60);
@@ -34,6 +32,13 @@ public class CountdownTask extends BukkitRunnable {
 		packet.setMessage(ChatColor.GOLD.toString() + (timeLeft / 60) + ":" + stringSeconds);
 		game.forEachPlayer(player -> packet.send(player.getPlayer()));
 		timeLeft--;
+	}
+	
+	@Override
+	public synchronized void cancel() throws IllegalStateException {
+		super.cancel();
+		packet.setMessage("");
+		game.forEachPlayer(player -> packet.send(player.getPlayer()));
 	}
 	
 	public BukkitTask start() {

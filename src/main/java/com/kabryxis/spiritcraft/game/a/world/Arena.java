@@ -1,9 +1,9 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.kabryxis.spiritcraft.game.Schematic;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.conditional.ConditionalWeighted;
 import com.kabryxis.kabutils.spigot.world.Locations;
+import com.kabryxis.spiritcraft.game.Schematic;
 
 public class Arena implements ConditionalWeighted<Object> {
 	
@@ -52,7 +52,7 @@ public class Arena implements ConditionalWeighted<Object> {
 	public boolean test(Object o) {
 		if(o instanceof Schematic) {
 			Schematic schematic = (Schematic)o;
-			System.out.println("arena " + data.getName() + " is compatible with " + schematic.getName() + " schematic");
+			//System.out.println("arena " + data.getName() + " is compatible with " + schematic.getName() + " schematic");
 			return true; // TODO
 		}
 		return true;

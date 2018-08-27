@@ -1,8 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
-import org.bukkit.Material;
+import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +15,10 @@ public abstract class ThrowItemDelayedRunnable extends BukkitRunnable {
 	public ThrowItemDelayedRunnable(SpiritPlayer player, long delay) {
 		this.player = player;
 		Player p = player.getPlayer();
-		item = p.getWorld().dropItem(p.getEyeLocation(), p.getItemInHand());
-		p.setItemInHand(new ItemStack(Material.AIR));
+		ItemStack itemStack = p.getItemInHand().clone();
+		itemStack.setAmount(1);
+		player.getGame().getPlugin().allowNextItemSpawn();
+		item = p.getWorld().dropItem(p.getEyeLocation(), itemStack);
 		item.setVelocity(p.getLocation().getDirection().multiply(1.2));
 		onThrow();
 		BukkitThreads.syncLater(this, delay);

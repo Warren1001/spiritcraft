@@ -4,6 +4,7 @@ import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.object.collection.BlockVectorSet;
 import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.spiritcraft.game.Schematic;
+import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
@@ -19,14 +20,13 @@ public class DimData {
 	
 	private static final BaseBlock AIR = FaweCache.getBlock(0, 0);
 	
+	private final Map<Block, Objective> objectiveLocations = new HashMap<>();
 	private final Set<Vector> modifiedPositions = new BlockVectorSet();
-	private final Map<Block, PowerBlock> powerBlocks = new HashMap<>();
 	
 	private final ArenaData arenaData;
 	private final Schematic schematic;
 	private final DimInfo dimInfo;
 	private final RandomArrayList<Location> ghostSpawns, hunterSpawns;
-	//private final RandomArrayList<Location> itemDropLocs;
 	
 	public DimData(ArenaData arenaData, Schematic schematic, DimInfo dimInfo) {
 		this.arenaData = arenaData;
@@ -38,11 +38,10 @@ public class DimData {
 		List<String> hunterSpawnStrings = schematic.getData().getList("spawns.hunter", String.class);
 		this.hunterSpawns = new RandomArrayList<>(hunterSpawnStrings.size(), hunterSpawnStrings.size());
 		constructLocations(hunterSpawns, hunterSpawnStrings);
-		/*this.itemDropLocs = new RandomArrayList<>(2);
-		constructLocations(itemDropLocs, schematic.getData().getList("locations.item-drops", String.class));
-		Set<Location> blocksToPowerLocs = new HashSet<>();
-		constructLocations(blocksToPowerLocs, schematic.getData().getList("locations.power-blocks", String.class));
-		blocksToPowerLocs.forEach(loc -> blocksToPower.add(loc.getBlock())); TODO */
+		schematic.getData().getChild("objectives").getChildren().forEach(child -> {
+			Block location = constructLocation(child.get("location", String.class)).getBlock();
+			objectiveLocations.put(location, new Objective(arenaData.getGame().getObjectiveManager(), this, location, child));
+		});
 	}
 	
 	public Schematic getSchematic() {
@@ -79,16 +78,8 @@ public class DimData {
 		editSession.flushQueue();
 	}
 	
-	public void registerPowerBlock(PowerBlock powerBlock) {
-		powerBlocks.put(powerBlock.getBlock(), powerBlock);
-	}
-	
-	public boolean isPowerBlock(Block block) {
-		return powerBlocks.containsKey(block);
-	}
-	
-	public PowerBlock getPowerBlock(Block block) {
-		return powerBlocks.get(block);
+	public void constructLocations(Collection<Location> locs, List<String> list) {
+		list.forEach(s -> locs.add(constructLocation(s)));
 	}
 	
 	public Location getRandomGhostSpawn() {
@@ -99,13 +90,19 @@ public class DimData {
 		return hunterSpawns.random();
 	}
 	
-	private void constructLocations(Collection<Location> locs, List<String> list) {
+	public Location constructLocation(String serializedLoc) {
 		Location start = dimInfo.getLocation();
-		for(String string : list) {
-			String[] args = string.split(",");
-			locs.add(new Location(start.getWorld(), start.getX() + Double.parseDouble(args[0]), start.getY() + Double.parseDouble(args[1]),
-					start.getZ() + Double.parseDouble(args[2]), Float.parseFloat(args[3]), Float.parseFloat(args[4])));
+		String[] args = serializedLoc.split(",");
+		Location loc = new Location(start.getWorld(), start.getX() + Double.parseDouble(args[0]), start.getY() + Double.parseDouble(args[1]), start.getZ() + Double.parseDouble(args[2]));
+		if(args.length == 5) {
+			loc.setYaw(Float.parseFloat(args[3]));
+			loc.setPitch(Float.parseFloat(args[4]));
 		}
+		return loc;
+	}
+	
+	public Objective getObjective(Block location) {
+		return objectiveLocations.get(location);
 	}
 	
 }

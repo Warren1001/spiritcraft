@@ -6,14 +6,27 @@ import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
+import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
+import com.kabryxis.spiritcraft.game.a.ability.action.impl.*;
+import com.kabryxis.spiritcraft.game.a.ability.action.impl.creator.SpiritAbilityActionCreator;
+import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.BlockPrerequisite;
+import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.HandItemPrerequisite;
+import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.creator.SpiritAbilityPrerequisiteCreator;
+import com.kabryxis.spiritcraft.game.a.objective.ObjectiveManager;
+import com.kabryxis.spiritcraft.game.a.objective.action.impl.RemoveHandAction;
+import com.kabryxis.spiritcraft.game.a.objective.prerequisite.impl.HandPrerequisite;
+import com.kabryxis.spiritcraft.game.a.parse.Parser;
+import com.kabryxis.spiritcraft.game.a.parse.SpiritParser;
 import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 import com.kabryxis.spiritcraft.game.a.world.sound.SoundManager;
 import com.kabryxis.spiritcraft.game.ability.CountdownTask;
-import com.kabryxis.spiritcraft.game.inv.ItemManager;
+import com.kabryxis.spiritcraft.game.inventory.InventoryManager;
+import com.kabryxis.spiritcraft.game.item.ItemManager;
 import com.kabryxis.spiritcraft.game.player.PlayerManager;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 
@@ -28,12 +41,17 @@ import java.util.stream.Collectors;
 public class Game {
 	
 	private final Spiritcraft plugin;
+	private final Parser parser;
+	private final GameListener gameListener;
 	private final WorldManager worldManager;
 	private final PlayerManager playerManager;
+	private final InventoryManager inventoryManager;
 	private final ItemManager itemManager;
 	private final ParticleManager particleManager;
 	private final SoundManager soundManager;
 	private final DeadBodyManager deadBodyManager;
+	private final ObjectiveManager objectiveManager;
+	private final AbilityManager abilityManager;
 	private final Location lobbySpawn;
 	
 	private ArenaData currentArenaData;
@@ -46,12 +64,37 @@ public class Game {
 	
 	public Game(Spiritcraft plugin) {
 		this.plugin = plugin;
+		parser = new SpiritParser();
+		gameListener = new GameListener(this);
 		worldManager = new WorldManager(this);
 		playerManager = new PlayerManager(this, new File(plugin.getDataFolder(), "players"));
+		inventoryManager = new InventoryManager(this);
 		itemManager = new ItemManager(this);
 		particleManager = new ParticleManager(new File(plugin.getDataFolder(), "particles"));
 		soundManager = new SoundManager(new File(plugin.getDataFolder(), "sounds"));
 		deadBodyManager = new DeadBodyManager(this);
+		objectiveManager = new ObjectiveManager();
+		objectiveManager.registerActionCreators("explode", new com.kabryxis.spiritcraft.game.a.objective.action.impl.ExplodeAction(this), "remove_hand", new RemoveHandAction());
+		objectiveManager.registerPrerequisiteCreator("hand", new HandPrerequisite());
+		abilityManager = new AbilityManager(this, new File(plugin.getDataFolder(), "abilities"));
+		SpiritAbilityPrerequisiteCreator spiritAbilityPrerequisiteCreator = new SpiritAbilityPrerequisiteCreator(parser);
+		spiritAbilityPrerequisiteCreator.registerCreator("hand", HandItemPrerequisite::new);
+		spiritAbilityPrerequisiteCreator.registerCreator("block", BlockPrerequisite::new);
+		abilityManager.registerPrerequisiteCreator(spiritAbilityPrerequisiteCreator);
+		SpiritAbilityActionCreator spiritAbilityActionCreator = new SpiritAbilityActionCreator(parser);
+		spiritAbilityActionCreator.registerCreator("cloud", CloudAction::new);
+		spiritAbilityActionCreator.registerCreator("explode", ExplodeAction::new);
+		spiritAbilityActionCreator.registerCreator("fire_breath", FireBreathAction::new);
+		spiritAbilityActionCreator.registerCreator("looking", () -> new LookingAction(abilityManager));
+		spiritAbilityActionCreator.registerCreator("nearby", () -> new NearbyAction(abilityManager));
+		spiritAbilityActionCreator.registerCreator("sound", PlaySoundAction::new);
+		spiritAbilityActionCreator.registerCreator("potion", PotionEffectAction::new);
+		spiritAbilityActionCreator.registerCreator("remove_hand", com.kabryxis.spiritcraft.game.a.ability.action.impl.RemoveHandAction::new);
+		spiritAbilityActionCreator.registerCreator("stab", StabAction::new);
+		spiritAbilityActionCreator.registerCreator("throw_item_delayed", () -> new ThrowItemDelayedAction(abilityManager));
+		spiritAbilityActionCreator.registerCreator("throw_item_timer", () -> new ThrowItemTimerAction(abilityManager));
+		abilityManager.registerActionCreator(spiritAbilityActionCreator);
+		abilityManager.loadAbilities();
 		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager); // TODO
 		worldManager.loadChunks(this, lobbySpawn);
 		loadNext();
@@ -67,6 +110,10 @@ public class Game {
 	
 	public PlayerManager getPlayerManager() {
 		return playerManager;
+	}
+	
+	public InventoryManager getInventoryManager() {
+		return inventoryManager;
 	}
 	
 	public ItemManager getItemManager() {
@@ -85,6 +132,14 @@ public class Game {
 		return deadBodyManager;
 	}
 	
+	public ObjectiveManager getObjectiveManager() {
+		return objectiveManager;
+	}
+	
+	public AbilityManager getAbilityManager() {
+		return abilityManager;
+	}
+	
 	public Location getSpawn() {
 		return lobbySpawn;
 	}
@@ -100,8 +155,8 @@ public class Game {
 	public void start() {
 		inProgress = true;
 		allPlayers = playerManager.getAllPlayers();
-		spectators = allPlayers.stream().filter(player -> !player.isPlaying()).collect(Collectors.toList());
-		List<SpiritPlayer> playingPlayers = allPlayers.stream().filter(SpiritPlayer::isPlaying).collect(Collectors.toList());
+		spectators = allPlayers.stream().filter(player -> player.getPlayerType() == PlayerType.SPECTATOR).collect(Collectors.toList());
+		List<SpiritPlayer> playingPlayers = allPlayers.stream().filter(player -> player.getPlayerType() == PlayerType.WAITING).collect(Collectors.toList());
 		int numOfGhosts = 1;
 		ghostPlayers = new ArrayList<>(numOfGhosts);
 		hunterPlayers = new ArrayList<>(playingPlayers.size() - numOfGhosts);
@@ -109,6 +164,7 @@ public class Game {
 		for(SpiritPlayer ghostPlayer : ghostPlayers) {
 			ghostPlayer.teleport(currentArenaData.getNormalDimData().getRandomGhostSpawn());
 			ghostPlayer.setPlayerType(PlayerType.GHOST);
+			ghostPlayer.setGameMode(GameMode.SURVIVAL);
 			ghostPlayer.hide();
 			itemManager.giveGhostKit(ghostPlayer);
 			ghostPlayer.startParticleTimer();
@@ -116,6 +172,7 @@ public class Game {
 		for(SpiritPlayer hunterPlayer : hunterPlayers) {
 			hunterPlayer.teleport(currentArenaData.getNormalDimData().getRandomHunterSpawn());
 			hunterPlayer.setPlayerType(PlayerType.HUNTER);
+			hunterPlayer.setGameMode(GameMode.SURVIVAL);
 			itemManager.giveHunterKit(hunterPlayer);
 		}
 		countdownTask = new CountdownTask(this, 300);
@@ -166,15 +223,14 @@ public class Game {
 				return player;
 			}
 		}
-		System.out.println("something went wrong when choosing ghost");
 		return Randoms.getRandom(players);
 	}
 	
 	public void onEvent(Event event) {
-	
+		gameListener.onEvent(event);
 	}
 	
-	public void end() {
+	public void end(boolean loadNext) {
 		if(countdownTask != null) {
 			countdownTask.cancel();
 			countdownTask = null;
@@ -186,7 +242,7 @@ public class Game {
 		allPlayers = null;
 		inProgress = false;
 		currentArenaData.unload();
-		loadNext();
+		if(loadNext) loadNext();
 	}
 	
 	public void loadNext() {
