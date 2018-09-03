@@ -73,11 +73,13 @@ public class GameListener implements GlobalListener {
 				Action action = pie.getAction();
 				if(action != Action.PHYSICAL) {
 					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
-					TriggerType triggerType = action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK;
-					boolean hasBlock = action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK;
-					AbilityTrigger trigger = hasBlock ? new AbilityTrigger(triggerType, pie.getItem(), pie.getClickedBlock()) : new AbilityTrigger(triggerType, pie.getItem());
+					AbilityTrigger trigger = new AbilityTrigger();
+					trigger.triggerer = player;
+					trigger.type = action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK;
+					trigger.hand = pie.getItem();
+					trigger.block = pie.getClickedBlock();
 					game.getAbilityManager().handle(player, trigger);
-					if(trigger.cancelsEvent()) pie.setCancelled(true);
+					if(trigger.cancel) pie.setCancelled(true);
 				}
 				if(pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
 					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());

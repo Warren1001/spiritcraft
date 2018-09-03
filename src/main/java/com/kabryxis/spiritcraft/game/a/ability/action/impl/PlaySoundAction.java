@@ -1,25 +1,27 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
-import com.kabryxis.spiritcraft.game.a.ability.action.AutomaticSpiritAbilityAction;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.world.sound.SoundCause;
+import com.kabryxis.spiritcraft.game.a.world.sound.SoundManager;
+import com.kabryxis.spiritcraft.game.a.world.sound.SoundPlayer;
+import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
-public class PlaySoundAction extends AutomaticSpiritAbilityAction {
+public class PlaySoundAction extends AbstractSpiritAbilityAction {
 	
-	private Sound sound;
-	private float volume = 1F;
-	private float pitch = 1F;
+	private SoundPlayer soundPlayer;
 	
-	public PlaySoundAction() {
+	public PlaySoundAction(SoundManager soundManager) {
 		super("sound");
-		registerSubCommandHandler("sound", true, true, data -> sound = Sound.valueOf(data.toUpperCase()));
-		registerSubCommandHandler("volume", false, true, data -> volume = Float.parseFloat(data));
-		registerSubCommandHandler("pitch", false, true, data -> pitch = Float.parseFloat(data));
+		getParseHandler().registerSubCommandHandler("name", true, true, data -> {
+			soundPlayer = soundManager.getSoundPlayer(data);
+			if(soundPlayer == null) throw new IllegalArgumentException("Could not find sound named '" + data + "'.");
+		});
 	}
 	
 	@Override
-	public void execute(Location location) {
-		location.getWorld().playSound(location, sound, volume, pitch);
+	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
+		soundPlayer.playSound(new SoundCause(trigger.getOptimalLocation(player.getLocation()), player));
 	}
 	
 }

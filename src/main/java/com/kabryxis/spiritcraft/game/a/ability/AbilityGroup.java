@@ -91,7 +91,7 @@ public class AbilityGroup implements AbilityCaller {
 	}
 	
 	public boolean meetsPrerequisites(SpiritPlayer player, AbilityTrigger trigger) {
-		if(triggerTypes.contains(trigger.getType())) {
+		if(triggerTypes.contains(trigger.type)) {
 			if(prerequisites != null) {
 				for(AbilityPrerequisite prerequisite : prerequisites) {
 					if(!prerequisite.canPerform(player, trigger)) return false;

@@ -1,9 +1,8 @@
 package com.kabryxis.spiritcraft.game.a.world.sound;
 
-import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.kabryxis.kabutils.data.file.FileEndingFilter;
+import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
-import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
+import com.kabryxis.spiritcraft.game.a.world.sound.impl.SpiritSoundPlayer;
 
 import java.io.File;
 import java.util.HashMap;
@@ -17,35 +16,32 @@ public class SoundManager {
 	
 	public SoundManager(File folder) {
 		this.folder = folder;
-		File[] files = folder.listFiles(new FileEndingFilter(".yml"));
-		if(files != null) {
-			for(File file : files) {
-				Config data = new Config(file);
-				data.loadSync();
-				registerSoundEffect(data);
-			}
-		}
+		reloadAll();
 	}
 	
 	public void reloadAll() {
-		File[] files = folder.listFiles(new FileEndingFilter(".yml"));
-		if(files != null) {
-			for(File file : files) {
-				new Config(file).load(this::registerSoundEffect);
-			}
-		}
+		Files.forEachFileWithEnding(folder, ".yml", file -> {
+			Config data = new Config(file);
+			data.loadSync();
+			registerSoundPlayer(new SpiritSoundPlayer(data));
+		});
 	}
 	
-	private void registerSoundEffect(ConfigSection section) {
-		registerSoundEffect(section.get("ghost-effect", Boolean.class, false) ? new GhostSoundEffectPlayer(section) : new BasicSoundPlayer(section));
-	}
-	
-	public void registerSoundEffect(SoundPlayer soundPlayer) {
+	public void registerSoundPlayer(SoundPlayer soundPlayer) {
 		soundEffectPlayers.put(soundPlayer.getName(), soundPlayer);
 	}
 	
-	public void playSound(String name, SpiritPlayer causer) {
-		soundEffectPlayers.get(name).playSound(causer);
+	public SoundPlayer getSoundPlayer(String name) {
+		return soundEffectPlayers.get(name);
+	}
+	
+	public void playSound(String name, SoundCause cause) {
+		SoundPlayer soundPlayer = soundEffectPlayers.get(name);
+		if(soundPlayer == null) {
+			System.out.println("Could not find the sound named '" + name + "'.");
+			return;
+		}
+		soundPlayer.playSound(cause);
 	}
 	
 }

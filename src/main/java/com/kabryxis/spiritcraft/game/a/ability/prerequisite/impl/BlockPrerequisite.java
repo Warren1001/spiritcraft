@@ -12,13 +12,13 @@ public class BlockPrerequisite extends AbilityParsingAbilityPrerequisite {
 	
 	public BlockPrerequisite() {
 		super("block");
-		registerSubCommandHandler("type", false, true, data -> type = Material.getMaterial(data.toUpperCase()));
-		registerSubCommandHandler("data", false, true, data -> d = (byte)Integer.parseInt(data));
+		getParseHandler().registerSubCommandHandler("type", false, true, data -> type = Material.getMaterial(data.toUpperCase()));
+		getParseHandler().registerSubCommandHandler("data", false, byte.class, b -> d = b);
 	}
 	
 	@Override
 	public boolean canPerform(SpiritPlayer player, AbilityTrigger trigger) {
-		return trigger.hasBlock() && (type == null || (trigger.getBlock().getType() == type && trigger.getBlock().getData() == d));
+		return trigger.block != null && (type == null || (trigger.block.getType() == type && trigger.block.getData() == d));
 	}
 	
 }

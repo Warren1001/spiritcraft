@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
-import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.potion.PotionEffect;
@@ -15,11 +14,11 @@ public class PotionEffectAction extends AbstractSpiritAbilityAction {
 	private boolean force = false;
 	
 	public PotionEffectAction() {
-		super("potion", TriggerType.values());
-		registerSubCommandHandler("type", true, true, data -> type = PotionEffectType.getByName(data.toUpperCase()));
-		registerSubCommandHandler("amplifier", false, true, data -> amplifier = Integer.parseInt(data));
-		registerSubCommandHandler("duration", false, true, data -> duration = Integer.parseInt(data) * 20);
-		registerSubCommandHandler("force", false, false, data -> force = true);
+		super("potion");
+		getParseHandler().registerSubCommandHandler("type", true, true, data -> type = PotionEffectType.getByName(data.toUpperCase()));
+		getParseHandler().registerSubCommandHandler("amplifier", false, int.class, i -> amplifier = i);
+		getParseHandler().registerSubCommandHandler("duration", false, int.class, i -> duration = i * 20);
+		getParseHandler().registerSubCommandHandler("force", false, boolean.class, b -> force = b);
 	}
 	
 	@Override

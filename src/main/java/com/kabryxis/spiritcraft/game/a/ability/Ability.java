@@ -24,7 +24,7 @@ public class Ability implements AbilityCaller {
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
-		triggerGroups.forEach(group -> group.triggerSafely(player, trigger));
+		triggerGroups.forEach(group -> group.trigger(player, trigger));
 	}
 	
 	@Override

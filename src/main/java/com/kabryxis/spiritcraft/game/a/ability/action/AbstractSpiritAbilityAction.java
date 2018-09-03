@@ -12,12 +12,12 @@ public abstract class AbstractSpiritAbilityAction extends AbilityParseHandler im
 	public AbstractSpiritAbilityAction(String name, TriggerType... supportedTriggerTypes) {
 		super(name);
 		this.name = name;
-		this.supportedTriggerTypes = supportedTriggerTypes;
+		this.supportedTriggerTypes = supportedTriggerTypes.length == 0 ? TriggerType.values() : supportedTriggerTypes;
 	}
 	
 	@Override
 	public boolean hasTriggerType(TriggerType triggerType) {
-		return Arrays.containsEnum(supportedTriggerTypes, triggerType);
+		return Arrays.contains(supportedTriggerTypes, triggerType);
 	}
 	
 	@Override

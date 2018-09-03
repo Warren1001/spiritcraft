@@ -13,25 +13,23 @@ import java.util.List;
 
 public class ThrowItemTimerAction extends AbstractSpiritAbilityAction {
 	
-	private long duration = 3000, interval = 20;
+	private long duration = 3000L, interval = 20L;
 	private List<AbilityCaller> thrown = new ArrayList<>();
 	private List<AbilityCaller> tick = new ArrayList<>();
 	private List<AbilityCaller> finish = new ArrayList<>();
 	
 	public ThrowItemTimerAction(AbilityManager abilityManager) {
-		super("throw_item_timer", TriggerType.values());
-		registerSubCommandHandler("duration", false, true, data -> duration = Integer.parseInt(data));
-		registerSubCommandHandler("interval", false, true, data -> interval = Integer.parseInt(data));
-		registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
-		registerSubCommandHandler("tick", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, tick::add));
-		registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
+		super("throw_item_timer");
+		getParseHandler().registerSubCommandHandler("duration", false, long.class, l -> duration = l);
+		getParseHandler().registerSubCommandHandler("interval", false, long.class, l -> interval = l);
+		getParseHandler().registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
+		getParseHandler().registerSubCommandHandler("tick", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, tick::add));
+		getParseHandler().registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
 	}
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
 		new ThrowItemTimerRunnable(player, interval, duration) {
-			
-			private final AbilityTrigger thrownTigger = new AbilityTrigger(item);
 			
 			@Override
 			public void onThrow() {
@@ -40,11 +38,19 @@ public class ThrowItemTimerAction extends AbstractSpiritAbilityAction {
 			
 			@Override
 			public void onTick() {
+				AbilityTrigger thrownTigger = new AbilityTrigger();
+				thrownTigger.triggerer = player;
+				thrownTigger.type = TriggerType.THROW;
+				thrownTigger.item = item;
 				tick.forEach(ability -> ability.triggerSafely(player, thrownTigger));
 			}
 			
 			@Override
 			public void onFinish() {
+				AbilityTrigger thrownTigger = new AbilityTrigger();
+				thrownTigger.triggerer = player;
+				thrownTigger.type = TriggerType.THROW;
+				thrownTigger.item = item;
 				finish.forEach(ability -> ability.triggerSafely(player, thrownTigger));
 			}
 			

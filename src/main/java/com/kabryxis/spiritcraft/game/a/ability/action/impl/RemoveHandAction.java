@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
+import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
-import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
@@ -13,14 +13,14 @@ public class RemoveHandAction extends AbstractSpiritAbilityAction {
 	private long duration = 0L;
 	
 	public RemoveHandAction() {
-		super("remove_hand", TriggerType.values());
-		registerSubCommandHandler("amount", false, true, data -> amountToRemove = Integer.parseInt(data));
-		registerSubCommandHandler("duration", false, true, data -> duration = Long.parseLong(data));
+		super("remove_hand");
+		getParseHandler().registerSubCommandHandler("amount", false, int.class, i -> amountToRemove = i);
+		getParseHandler().registerSubCommandHandler("duration", false, long.class, l -> duration = l);
 	}
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
-		ItemStack itemStack = trigger.getHand();
+		ItemStack itemStack = trigger.hand;
 		int amountToRemove = Math.min(itemStack.getAmount(), this.amountToRemove);
 		int amount = itemStack.getAmount() - amountToRemove;
 		if(amount <= 0) player.getInventory().setItemInHand(null);
@@ -34,8 +34,11 @@ public class RemoveHandAction extends AbstractSpiritAbilityAction {
 				@Override
 				public void run() {
 					ItemStack itemStack = player.getInventory().getItem(slot);
-					if(itemStack.getType() != removed.getType()) player.getInventory().addItem(removed);
-					else itemStack.setAmount(itemStack.getAmount() + removed.getAmount());
+					if(Items.exists(itemStack)) {
+						if(Items.isType(itemStack, removed.getType())) itemStack.setAmount(itemStack.getAmount() + removed.getAmount());
+						else player.getInventory().addItem(removed);
+					}
+					else player.getInventory().setItem(slot, removed);
 				}
 				
 			}.runTaskLater(player.getGame().getPlugin(), duration);

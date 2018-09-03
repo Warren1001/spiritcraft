@@ -78,12 +78,12 @@ public class AbilityManager {
 	
 	private void requestAbilityFromCommand0(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
 		AbilityCaller abilityCaller = getAbility(abilityCommand);
-		if(abilityCaller == null) abilityCaller = createAction(abilityCommand.replace(',', ';'));
+		if(abilityCaller == null) abilityCaller = createAction(abilityCommand);
 		if(abilityCaller == null) {
 			System.out.println("The command '" + originCommand + "' requested the ability '" + abilityCommand + "' but the ability does not exist.");
 			abilityCaller = new NullAbilityCaller(originCommand, abilityCommand);
 		}
-		if(!(abilityCaller instanceof NullAbilityCaller) && requiresThrown && !abilityCaller.hasTriggerType(TriggerType.THROW)) {
+		else if(requiresThrown && !abilityCaller.hasTriggerType(TriggerType.THROW)) {
 			System.out.println("The ability '" + abilityCommand + "' needs to be thrown by command '" + originCommand + "', but the ability does not support being thrown.");
 		}
 		action.accept(abilityCaller);
@@ -95,8 +95,8 @@ public class AbilityManager {
 	
 	public AbilityAction createAction(String action) {
 		return cachedActions.computeIfAbsent(action, a -> {
-			if(a.contains(":")) {
-				String[] args = a.split(":", 2);
+			if(a.contains("~")) {
+				String[] args = a.split("~", 2);
 				String command = args[0];
 				String data = args[1];
 				if(data.isEmpty()) a = command;
@@ -107,7 +107,7 @@ public class AbilityManager {
 	}
 	
 	public void handle(SpiritPlayer player, AbilityTrigger trigger) {
-		abilities.values().forEach(ability -> ability.triggerSafely(player, trigger));
+		abilities.values().forEach(ability -> ability.trigger(player, trigger));
 	}
 	
 	public void registerActionCreators(AbilityActionCreator... creators) {
@@ -132,8 +132,8 @@ public class AbilityManager {
 	
 	public AbilityPrerequisite createPrerequisite(String action) {
 		return cachedPrerequisites.computeIfAbsent(action, a -> {
-			if(a.contains(":")) {
-				String[] args = a.split(":", 2);
+			if(a.contains("~")) {
+				String[] args = a.split("~", 2);
 				String command = args[0];
 				String data = args[1];
 				if(data.isEmpty()) a = command;

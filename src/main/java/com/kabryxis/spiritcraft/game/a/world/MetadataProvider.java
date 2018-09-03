@@ -5,8 +5,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 
-import java.util.List;
-
 public class MetadataProvider {
 	
 	private final Plugin plugin;
@@ -28,13 +26,10 @@ public class MetadataProvider {
 	}
 	
 	public <T> T getMetadataValue(Block block, String key, Class<T> clazz) {
-		List<MetadataValue> metadatas = block.getMetadata(key);
-		for(MetadataValue metadata : metadatas) {
-			if(metadata.getOwningPlugin() == plugin) {
-				Object value = metadata.value();
-				if(clazz.isInstance(value)) return clazz.cast(value);
-				return null;
-			}
+		MetadataValue metadataValue = block.getMetadata(key).stream().filter(metadata -> metadata.getOwningPlugin() == plugin).findFirst().orElse(null);
+		if(metadataValue != null) {
+			Object value = metadataValue.value();
+			if(clazz.isInstance(value)) return clazz.cast(value);
 		}
 		return null;
 	}

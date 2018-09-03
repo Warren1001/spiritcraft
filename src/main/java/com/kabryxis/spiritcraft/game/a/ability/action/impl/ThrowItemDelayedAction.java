@@ -18,10 +18,10 @@ public class ThrowItemDelayedAction extends AbstractSpiritAbilityAction {
 	private List<AbilityCaller> finish = new ArrayList<>();
 	
 	public ThrowItemDelayedAction(AbilityManager abilityManager) {
-		super("throw_item_delayed", TriggerType.values());
-		registerSubCommandHandler("delay", false, true, data -> delay = Integer.parseInt(data));
-		registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
-		registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
+		super("throw_item_delayed");
+		getParseHandler().registerSubCommandHandler("delay", false, long.class, l -> delay = l);
+		getParseHandler().registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
+		getParseHandler().registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
 	}
 	
 	@Override
@@ -35,7 +35,11 @@ public class ThrowItemDelayedAction extends AbstractSpiritAbilityAction {
 			
 			@Override
 			public void onFinish() {
-				finish.forEach(ability -> ability.triggerSafely(player, new AbilityTrigger(item)));
+				AbilityTrigger itemTrigger = new AbilityTrigger();
+				itemTrigger.type = TriggerType.THROW;
+				itemTrigger.triggerer = player;
+				itemTrigger.item = item;
+				finish.forEach(ability -> ability.triggerSafely(player, itemTrigger));
 			}
 			
 		};

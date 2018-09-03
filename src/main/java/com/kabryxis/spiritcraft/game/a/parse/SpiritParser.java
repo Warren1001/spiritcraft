@@ -5,10 +5,23 @@ public class SpiritParser implements Parser {
 	@Override
 	public void parse(String parse, ParseHandler handler) {
 		if(parse != null && !parse.isEmpty()) {
-			if(parse.contains(";")) {
-				String[] parseEntries = parse.split(";");
-				for(String parseEntry : parseEntries) {
-					parseSubCommand(handler, parseEntry);
+			if(parse.contains(",")) {
+				int lastIndexOfEnd = -1;
+				int lastIndexOfStart = -1;
+				for(int index = 0; index < parse.length(); index++) {
+					char c = parse.charAt(index);
+					if(c == ',') {
+						if(lastIndexOfEnd > lastIndexOfStart || lastIndexOfStart == -1) {
+							parseSubCommand(handler, parse.substring(lastIndexOfEnd + 1, index));
+							lastIndexOfEnd = index;
+						}
+					}
+					else if(c == '~') lastIndexOfStart = index;
+					else if(c == ';') {
+						if(lastIndexOfStart > lastIndexOfEnd) parseSubCommand(handler, parse.substring(lastIndexOfEnd + 1, index));
+						lastIndexOfEnd = index;
+					}
+					if(index == parse.length() - 1) parseSubCommand(handler, parse.substring(lastIndexOfEnd + 1));
 				}
 			}
 			else parseSubCommand(handler, parse);
@@ -17,8 +30,8 @@ public class SpiritParser implements Parser {
 	}
 	
 	private void parseSubCommand(ParseHandler handler, String subCommand) {
-		if(subCommand.contains("~")) {
-			String[] subArgs = subCommand.split("~", 2);
+		if(subCommand.contains(":")) {
+			String[] subArgs = subCommand.split(":", 2);
 			handler.parsed(subArgs[0], subArgs[1]);
 		}
 		else handler.parsed(subCommand, null);

@@ -4,24 +4,31 @@ import com.kabryxis.kabutils.data.MathHelp;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
 
-public class ChargeTask extends AbilityRunnable {
+public class ChargeTask extends AbilityTimerRunnable {
 	
 	protected final SpiritPlayer owner;
 	protected final int itemSlot;
 	protected final short maxDurability;
-	protected final int updatesPerSecond;
+	protected final long interval;
 	protected final int segments;
 	protected final int segmentAmount;
+	protected final long timeout;
 	
 	protected int tick = 0;
+	private long stopTime = 0L;
 	
-	public ChargeTask(SpiritPlayer owner, int itemSlot, double duration, int updatesPerSecond) {
+	public ChargeTask(SpiritPlayer owner, double duration, long interval, long timeout) {
 		this.owner = owner;
-		this.itemSlot = itemSlot;
+		this.itemSlot = owner.getInventory().getHeldItemSlot();
 		this.maxDurability = getItem().getType().getMaxDurability();
-		this.updatesPerSecond = updatesPerSecond;
-		this.segments = MathHelp.ceil(duration * updatesPerSecond);
+		this.interval = interval;
+		this.segments = MathHelp.ceil(duration * (20.0 / interval));
 		this.segmentAmount = maxDurability / segments;
+		this.timeout = timeout;
+	}
+	
+	public ChargeTask(SpiritPlayer owner, double duration, long interval) {
+		this(owner, duration, interval, 0L);
 	}
 	
 	private ItemStack getItem() {
@@ -29,11 +36,11 @@ public class ChargeTask extends AbilityRunnable {
 	}
 	
 	public void start() {
-		startRepeating(0L, 20L / updatesPerSecond);
+		start(0L, interval);
 	}
 	
 	@Override
-	public void run() {
+	public void tick() {
 		if(tick == segments) {
 			getItem().setDurability((short)0);
 			stop();
@@ -44,9 +51,19 @@ public class ChargeTask extends AbilityRunnable {
 	}
 	
 	@Override
+	public boolean isRunning() {
+		return super.isRunning() || System.currentTimeMillis() - stopTime <= 1000;
+	}
+	
+	@Override
 	public void stop() {
 		super.stop();
 		tick = 0;
+	}
+	
+	@Override
+	public void onStop() {
+		stopTime = System.currentTimeMillis();
 	}
 	
 }

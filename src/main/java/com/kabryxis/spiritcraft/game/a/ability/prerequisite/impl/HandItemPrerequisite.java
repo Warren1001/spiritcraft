@@ -19,15 +19,15 @@ public class HandItemPrerequisite extends AbilityParsingAbilityPrerequisite {
 	
 	public HandItemPrerequisite() {
 		super("hand");
-		registerSubCommandHandler("type", false, true, data -> {
+		getParseHandler().registerSubCommandHandler("type", false, true, data -> {
 			builder.type(Material.getMaterial(data.toUpperCase()));
 			flags.add(ItemBuilder.ItemCompareFlag.TYPE);
 		});
-		registerSubCommandHandler("data", false, true, data -> {
-			builder.data((byte)Integer.parseInt(data));
+		getParseHandler().registerSubCommandHandler("data", false, byte.class, b -> {
+			builder.data(b);
 			flags.add(ItemBuilder.ItemCompareFlag.DATA);
 		});
-		registerSubCommandHandler("name", false, true, data -> {
+		getParseHandler().registerSubCommandHandler("name", false, true, data -> {
 			builder.name(ChatColor.translateAlternateColorCodes('&', data));
 			flags.add(Strings.contains(builder.name(), ChatColor.COLOR_CHAR) ? ItemBuilder.ItemCompareFlag.NAME : ItemBuilder.ItemCompareFlag.COLORLESS_NAME);
 		});
