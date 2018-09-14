@@ -1,31 +1,70 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.kabryxis.kabutils.data.MathHelp;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
-import com.kabryxis.spiritcraft.game.Schematic;
-import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
+import com.boydti.fawe.FaweCache;
+import com.boydti.fawe.object.collection.BlockVectorSet;
+import com.boydti.fawe.object.schematic.Schematic;
+import com.boydti.fawe.util.EditSessionBuilder;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
+import com.kabryxis.kabutils.random.RandomArrayList;
+import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.game.Game;
-import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import com.kabryxis.spiritcraft.game.a.objective.Objective;
+import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
+import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
+import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionOperationException;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import org.bukkit.block.Block;
 
-import java.util.Random;
+import java.util.*;
 
 public class ArenaData {
 	
+	private static final BaseBlock AIR = FaweCache.getBlock(0, 0);
+	
+	private final Map<Block, Objective> objectiveLocations = new HashMap<>();
+	private final Set<Vector> modifiedPositions = new BlockVectorSet();
+	private final Set<SchematicWrapper> otherSchematics = new HashSet<>();
+	
 	private final Game game;
 	private final Arena arena;
-	private final DimData normalDimData;
-	private final SpiritDimData spiritDimData;
+	private final ArenaSchematic schematic;
+	private final Set<BlockVector2D> occupiedChunks;
+	private final EditSession editSession;
+	private final RandomArrayList<Location> ghostSpawns, hunterSpawns;
 	
-	public ArenaData(Game game, Arena arena, Schematic schematic) {
+	public ArenaData(Game game, Arena arena, ArenaSchematic schematic) {
 		this.game = game;
 		this.arena = arena;
-		this.normalDimData = new DimData(this, schematic, arena.getNormalDimInfo());
-		this.spiritDimData = new SpiritDimData(this, game.getWorldManager().getSchematicManager().getSpirit(schematic.getName()), arena.getSpiritDimInfo());
+		this.schematic = schematic;
+		this.occupiedChunks = arena.getOccupiedChunks();
+		Clipboard clipboard = Objects.requireNonNull(schematic.getSchematic().getClipboard());
+		Vector loc = arena.getVectorLocation();
+		Vector origin = clipboard.getOrigin();
+		for(int cx = ((loc.getBlockX() - origin.getBlockX()) >> 4) - 1; cx <= ((loc.getBlockX() - origin.getBlockX() + clipboard.getDimensions().getBlockX()) >> 4) + 1; cx++) {
+			for(int cz = ((loc.getBlockZ() - origin.getBlockZ()) >> 4) - 1; cz <= ((loc.getBlockZ() - origin.getBlockZ() + clipboard.getDimensions().getBlockZ()) >> 4) + 1; cz++) {
+				occupiedChunks.add(new BlockVector2D(cx, cz));
+			}
+		}
+		this.editSession = new EditSessionBuilder(arena.getLocation().getWorld().getName()).fastmode(true).autoQueue(true).checkMemory(false)
+				.changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
+		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
+				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
+		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
+				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
+		ConfigSection objectivesChild = schematic.getData().getChild("objectives");
+		if(objectivesChild != null) {
+			objectivesChild.getChildren().forEach(child -> {
+				Block location = Locations.deserialize(arena.getLocation().getWorld(), child.get("location", String.class)).getBlock();
+				objectiveLocations.put(location, new Objective(this, game.getObjectiveManager(), location, child));
+			});
+		}
 	}
 	
 	public Game getGame() {
@@ -36,57 +75,75 @@ public class ArenaData {
 		return arena;
 	}
 	
-	public DimData getNormalDimData() {
-		return normalDimData;
+	public ArenaSchematic getSchematic() {
+		return schematic;
 	}
 	
-	public SpiritDimData getSpiritDimData() {
-		return spiritDimData;
+	public EditSession getEditSession() {
+		return editSession;
 	}
 	
-	public void teleportToOtherDim(Entity entity) {
-		Location loc = entity.getLocation().clone().add(0, 0.75, 0);
-		String currWorldName = loc.getWorld().getName();
-		World normalWorld = arena.getNormalDimInfo().getLocation().getWorld();
-		World spiritWorld = arena.getSpiritDimInfo().getLocation().getWorld();
-		PlayerChangedDimEvent.DimType newDimType;
-		if(currWorldName.equals(normalWorld.getName())) {
-			loc.setWorld(spiritWorld);
-			newDimType = PlayerChangedDimEvent.DimType.SPIRIT;
-		}
-		else if(currWorldName.equals(spiritWorld.getName())) {
-			loc.setWorld(normalWorld);
-			newDimType = PlayerChangedDimEvent.DimType.NORMAL;
-		}
-		else throw new IllegalStateException(entity + " could not be found in a game world when trying to teleport between worlds.");
-		Runnable run = () -> {
-			entity.teleport(loc);
-			double movX = new Random().nextInt(10) / 10.0 + 0.1;
-			if(new Random().nextBoolean()) movX *= -1;
-			double movY = 0.5;
-			double movZ = 0.8 - Math.abs(movX);
-			if(new Random().nextBoolean()) movZ *= -1;
-			entity.setVelocity(new Vector(movX, movY, movZ));
-		};
-		if(entity instanceof Player) {
-			SpiritPlayer player = game.getPlayerManager().getPlayer((Player)entity);
-			game.getPlugin().getServer().getPluginManager().callEvent(new PlayerChangedDimEvent(player, newDimType));
-			player.teleport(loc.clone().add(0, 300, 0));
-			BukkitThreads.syncLater(run, 10L + MathHelp.floor(player.getPing() / 50.0));
-		}
-		else run.run();
+	public Objective getObjective(Block location) {
+		return objectiveLocations.get(location);
+	}
+	
+	public Location getRandomGhostSpawn() {
+		return ghostSpawns.random();
+	}
+	
+	public Location getRandomHunterSpawn() {
+		return hunterSpawns.random();
 	}
 	
 	public void load() {
-		arena.load();
-		normalDimData.loadSchematic();
-		spiritDimData.loadSchematic();
+		game.getWorldManager().loadChunks(this, arena.getLocation().getWorld(), occupiedChunks);
+		paste0(schematic, false);
+	}
+	
+	public void pasteAnotherSchematic(SchematicWrapper schematic, boolean air) {
+		otherSchematics.add(schematic);
+		paste0(schematic, air);
+	}
+	
+	private void paste0(SchematicWrapper schematicWrapper, boolean air) {
+		Schematic schematic = schematicWrapper.getSchematic();
+		Clipboard clipboard = Objects.requireNonNull(schematic.getClipboard());
+		Set<BlockVector2D> chunkVectors = new HashSet<>();
+		Vector loc = arena.getVectorLocation();
+		Vector origin = clipboard.getOrigin();
+		for(int cx = (loc.getBlockX() - origin.getBlockX()) >> 4; cx <= (loc.getBlockX() - origin.getBlockX() + clipboard.getDimensions().getBlockX()) >> 4; cx++) {
+			for(int cz = (loc.getBlockZ() - origin.getBlockZ()) >> 4; cz <= (loc.getBlockZ() - origin.getBlockZ() + clipboard.getDimensions().getBlockZ()) >> 4; cz++) {
+				chunkVectors.add(new BlockVector2D(cx, cz));
+			}
+		}
+		schematic.paste(editSession, loc, air);
+		editSession.fixLighting(chunkVectors);
+	}
+	
+	public void modifiedPosition(Vector position) {
+		modifiedPositions.add(position);
+	}
+	
+	public void modifiedPosition(Block block) {
+		modifiedPosition(Vector.toBlockPoint(block.getX(), block.getY(), block.getZ()));
 	}
 	
 	public void unload() {
-		normalDimData.eraseSchematic();
-		spiritDimData.eraseSchematic();
-		arena.unload();
+		try {
+			editSession.setBlocks(modifiedPositions, (Pattern)position -> AIR);
+			for(SchematicWrapper otherSchematic : otherSchematics) {
+				Region otherEraseRegion = Objects.requireNonNull(otherSchematic.getSchematic().getClipboard()).getRegion();
+				otherEraseRegion.shift(arena.getVectorLocation());
+				editSession.setBlocks(otherEraseRegion, AIR);
+			}
+			Region eraseRegion = Objects.requireNonNull(schematic.getSchematic().getClipboard()).getRegion();
+			eraseRegion.shift(arena.getVectorLocation());
+			editSession.setBlocks(eraseRegion, AIR);
+			editSession.flushQueue();
+			game.getWorldManager().unloadChunks(this);
+		} catch(RegionOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

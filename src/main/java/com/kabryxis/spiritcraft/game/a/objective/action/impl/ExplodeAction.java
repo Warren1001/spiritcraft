@@ -5,7 +5,7 @@ import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveAction;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveActionCreator;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -23,14 +23,17 @@ public class ExplodeAction implements ObjectiveActionCreator, ObjectiveAction, L
 	
 	private final Map<Block, Data> dataMap = new HashMap<>();
 	
+	private final Game game;
+	
 	public ExplodeAction(Game game) {
+		this.game = game;
 		game.getPlugin().getServer().getPluginManager().registerEvents(this, game.getPlugin());
 	}
 	
 	@Override
-	public ExplodeAction create(DimData dimData, Block location, String data) {
+	public ExplodeAction create(ArenaData arenaData, Block location, String data) {
 		String[] infos = data.split(";");
-		Location start = dimData.getDimInfo().getLocation();
+		Location start = arenaData.getArena().getLocation();
 		int minX = 0, minY = 0, minZ = 0;
 		int maxX = 0, maxY = 0, maxZ = 0;
 		Location center = null;

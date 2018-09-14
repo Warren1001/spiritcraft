@@ -98,7 +98,7 @@ public class Game {
 		abilityManager.registerActionCreator(spiritAbilityActionCreator);
 		abilityManager.loadAbilities();
 		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager); // TODO
-		worldManager.loadChunks(this, lobbySpawn);
+		worldManager.loadChunks(this, lobbySpawn, 9);
 		loadNext();
 	}
 	
@@ -164,7 +164,7 @@ public class Game {
 		hunterPlayers = new ArrayList<>(playingPlayers.size() - numOfGhosts);
 		chooseRoles(playingPlayers, numOfGhosts, ghostPlayers, hunterPlayers);
 		for(SpiritPlayer ghostPlayer : ghostPlayers) {
-			ghostPlayer.teleport(currentArenaData.getNormalDimData().getRandomGhostSpawn());
+			ghostPlayer.teleport(currentArenaData.getRandomGhostSpawn());
 			ghostPlayer.setPlayerType(PlayerType.GHOST);
 			ghostPlayer.setGameMode(GameMode.SURVIVAL);
 			ghostPlayer.hide();
@@ -172,7 +172,7 @@ public class Game {
 			ghostPlayer.startParticleTimer();
 		}
 		for(SpiritPlayer hunterPlayer : hunterPlayers) {
-			hunterPlayer.teleport(currentArenaData.getNormalDimData().getRandomHunterSpawn());
+			hunterPlayer.teleport(currentArenaData.getRandomHunterSpawn());
 			hunterPlayer.setPlayerType(PlayerType.HUNTER);
 			hunterPlayer.setGameMode(GameMode.SURVIVAL);
 			itemManager.giveHunterKit(hunterPlayer);

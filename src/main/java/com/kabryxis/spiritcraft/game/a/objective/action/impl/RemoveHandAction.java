@@ -3,7 +3,7 @@ package com.kabryxis.spiritcraft.game.a.objective.action.impl;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveAction;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveActionCreator;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,7 +17,7 @@ public class RemoveHandAction implements ObjectiveActionCreator, ObjectiveAction
 	private final Map<Block, Data> dataMap = new HashMap<>();
 	
 	@Override
-	public RemoveHandAction create(DimData dimData, Block location, String data) {
+	public RemoveHandAction create(ArenaData arenaData, Block location, String data) {
 		dataMap.put(location, new Data(Integer.parseInt(data)));
 		return this;
 	}

@@ -4,7 +4,8 @@ import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveAction;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveActionCreator;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.ObjectivePrerequisite;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.ObjectivePrerequisiteCreator;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.Arena;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.block.Block;
 
@@ -38,14 +39,14 @@ public class ObjectiveManager {
 		prerequisiteCreators.put(key, creator);
 	}
 	
-	public ObjectiveAction createAction(DimData dimData, Block location, String action) {
+	public ObjectiveAction createAction(ArenaData arenaData, Block location, String action) {
 		String[] args = action.split(":", 2);
-		return actionCreators.get(args[0]).create(dimData, location, args[1]);
+		return actionCreators.get(args[0]).create(arenaData, location, args[1]);
 	}
 	
-	public ObjectivePrerequisite createPrerequisite(DimData dimData, Block location, String action) {
+	public ObjectivePrerequisite createPrerequisite(ArenaData arenaData, Block location, String action) {
 		String[] args = action.split(":", 2);
-		return prerequisiteCreators.get(args[0]).create(dimData, location, args[1]);
+		return prerequisiteCreators.get(args[0]).create(arenaData, location, args[1]);
 	}
 	
 }

@@ -1,6 +1,5 @@
-package com.kabryxis.spiritcraft.game;
+package com.kabryxis.spiritcraft.deprecated;
 
-import com.kabryxis.spiritcraft.game.a.world.SchematicManager;
 import com.kabryxis.kabutils.data.Data;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.spigot.world.schematic.BlockSelection;

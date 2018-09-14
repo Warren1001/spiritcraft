@@ -7,7 +7,6 @@ import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
 import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
@@ -65,7 +64,7 @@ public class GameListener implements GlobalListener {
 				long curr = System.currentTimeMillis();
 				if(curr - lastPortalTimestamp.getOrDefault(epeeEntity, 0L) > 1000) {
 					lastPortalTimestamp.put(epeeEntity, curr);
-					game.getCurrentArenaData().teleportToOtherDim(epeeEntity);
+					//game.getCurrentArenaData().teleportToOtherDim(epeeEntity);
 				}
 				break;
 			case "PlayerInteractEvent":
@@ -83,8 +82,7 @@ public class GameListener implements GlobalListener {
 				}
 				if(pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
 					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
-					DimData dimData = player.getCurrentDimData();
-					Objective objective = dimData.getObjective(pie.getClickedBlock());
+					Objective objective = game.getCurrentArenaData().getObjective(pie.getClickedBlock());
 					if(objective != null) {
 						objective.trigger(player, ObjectiveTrigger.RIGHT_CLICK);
 						pie.setCancelled(true);

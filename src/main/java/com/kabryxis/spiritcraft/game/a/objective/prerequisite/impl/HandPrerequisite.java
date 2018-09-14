@@ -4,7 +4,7 @@ import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.ObjectivePrerequisite;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.ObjectivePrerequisiteCreator;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,7 +19,7 @@ public class HandPrerequisite implements ObjectivePrerequisiteCreator, Objective
 	private final Map<Block, Data> dataMap = new HashMap<>();
 	
 	@Override
-	public ObjectivePrerequisite create(DimData dimData, Block location, String data) {
+	public ObjectivePrerequisite create(ArenaData arenaData, Block location, String data) {
 		String[] dataArgs = data.split(";");
 		ItemBuilder builder = ItemBuilder.newItemBuilder();
 		Set<ItemBuilder.ItemCompareFlag> flags = new HashSet<>();

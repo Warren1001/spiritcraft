@@ -1,26 +1,27 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.boydti.fawe.util.EditSessionBuilder;
-import com.kabryxis.spiritcraft.game.Schematic;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.spigot.world.ChunkLoader;
 import com.kabryxis.kabutils.spigot.world.EmptyGenerator;
 import com.kabryxis.kabutils.spigot.world.WorldLoader;
-import com.sk89q.worldedit.EditSession;
+import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
+import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
+import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import org.bukkit.*;
 import org.bukkit.generator.ChunkGenerator;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WorldManager implements WorldLoader {
 	
-	private static final int CHUNK_RADIUS = 6;
-	
 	private final Map<String, WorldCreator> worldCreators = new HashMap<>();
-	private final Map<String, EditSession> editSessions = new HashMap<>();
 	private final Map<String, ChunkGenerator> chunkGenerators = new HashMap<>();
 	
 	private final Game game;
@@ -50,6 +51,7 @@ public class WorldManager implements WorldLoader {
 			setWorldCreator(worldName, worldCreator);
 		});
 		this.schematicManager = new SchematicManager(new File(pluginFolder, "schematics"));
+		Files.forEachFileWithEnding(schematicManager.getFolder(), ClipboardFormat.SCHEMATIC.getExtension(), file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(file)));
 		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
 	}
 	
@@ -84,29 +86,26 @@ public class WorldManager implements WorldLoader {
 		return world;
 	}
 	
-	public EditSession getEditSession(World world) {
-		return editSessions.computeIfAbsent(world.getName(), name -> new EditSessionBuilder(name).fastmode(true).build());
-	}
-	
 	public ArenaData constructArenaData() {
 		Arena arena = arenaManager.random();
-		Schematic schematic = schematicManager.random(arena);
+		ArenaSchematic schematic = schematicManager.random(arena);
 		return new ArenaData(game, arena, schematic);
 	}
 	
-	public void loadChunks(Object key, Location center) {
-		Chunk centerChunk = center.getChunk();
-		for(int cx = -CHUNK_RADIUS; cx <= CHUNK_RADIUS; cx++) {
-			for(int cz = -CHUNK_RADIUS; cz <= CHUNK_RADIUS; cz++) {
-				Chunk chunk = centerChunk.getWorld().getChunkAt(centerChunk.getX() + cx, centerChunk.getZ() + cz);
-				chunkLoader.keepInMemory(key, chunk);
-				chunk.load();
+	public void loadChunks(Object key, World world, Set<BlockVector2D> chunkVectors) {
+		chunkLoader.keepInMemory(key, chunkVectors.stream().map(vector -> world.getChunkAt(vector.getBlockX(), vector.getBlockZ())).collect(Collectors.toSet()));
+	}
+	
+	public void loadChunks(Object key, Location loc, int radius) {
+		for(int cx = loc.getChunk().getX() - radius; cx <= loc.getChunk().getX() + radius; cx++) {
+			for(int cz = loc.getChunk().getZ() - radius; cz <= loc.getChunk().getZ() + radius; cz++) {
+				chunkLoader.keepInMemory(key, loc.getWorld().getChunkAt(cx, cz));
 			}
 		}
 	}
 	
-	public void unloadChunks() {
-		chunkLoader.releaseFromMemory(this);
+	public void unloadChunks(Object key) {
+		chunkLoader.releaseFromMemory(key);
 	}
 	
 }

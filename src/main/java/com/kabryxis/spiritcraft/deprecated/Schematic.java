@@ -1,4 +1,4 @@
-package com.kabryxis.spiritcraft.game;
+package com.kabryxis.spiritcraft.deprecated;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;

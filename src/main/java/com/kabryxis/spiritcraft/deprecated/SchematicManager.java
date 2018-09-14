@@ -1,16 +1,14 @@
-package com.kabryxis.spiritcraft.game.a.world;
+package com.kabryxis.spiritcraft.deprecated;
 
-import com.kabryxis.spiritcraft.game.Schematic;
-import com.kabryxis.spiritcraft.game.SchematicLoader;
 import com.kabryxis.kabutils.data.file.FileEndingFilter;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.conditional.ConditionalWeightedRandomArrayList;
+import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
 import com.kabryxis.kabutils.spigot.world.schematic.BlockSelection;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class SchematicManager {
 
@@ -73,8 +71,8 @@ public class SchematicManager {
 		schematicRegistry.add(schematic);
 	}
 	
-	public Schematic random(Predicate<Object>... objs) {
-		return schematicRegistry.random(objs);
+	public Schematic random(ObjectPredicate... predicates) {
+		return schematicRegistry.random(predicates);
 	}
 	
 	public Schematic get(String name) {

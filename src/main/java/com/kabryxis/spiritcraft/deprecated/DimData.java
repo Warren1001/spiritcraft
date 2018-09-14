@@ -1,9 +1,8 @@
-package com.kabryxis.spiritcraft.game.a.world;
+package com.kabryxis.spiritcraft.deprecated;
 
 import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.object.collection.BlockVectorSet;
 import com.kabryxis.kabutils.random.RandomArrayList;
-import com.kabryxis.spiritcraft.game.Schematic;
 import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.EditSession;
@@ -14,7 +13,9 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class DimData {
 	
@@ -32,15 +33,13 @@ public class DimData {
 		this.arenaData = arenaData;
 		this.schematic = schematic;
 		this.dimInfo = dimInfo;
-		List<String> ghostSpawnsStrings = schematic.getData().getList("spawns.ghost", String.class);
-		this.ghostSpawns = new RandomArrayList<>(ghostSpawnsStrings.size(), ghostSpawnsStrings.size());
-		constructLocations(ghostSpawns, ghostSpawnsStrings);
-		List<String> hunterSpawnStrings = schematic.getData().getList("spawns.hunter", String.class);
-		this.hunterSpawns = new RandomArrayList<>(hunterSpawnStrings.size(), hunterSpawnStrings.size());
-		constructLocations(hunterSpawns, hunterSpawnStrings);
+		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(this::constructLocation).collect(() ->
+				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
+		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(this::constructLocation).collect(() ->
+				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
 		schematic.getData().getChild("objectives").getChildren().forEach(child -> {
 			Block location = constructLocation(child.get("location", String.class)).getBlock();
-			objectiveLocations.put(location, new Objective(arenaData.getGame().getObjectiveManager(), this, location, child));
+			//objectiveLocations.put(location, new Objective(arenaData.getGame().getObjectiveManager(), this, location, child));
 		});
 	}
 	
@@ -74,12 +73,8 @@ public class DimData {
 	
 	public void eraseSchematic() {
 		EditSession editSession = dimInfo.getEditSession();
-		editSession.setBlocks(modifiedPositions, (Pattern)position -> ArenaManager.AIR);
+		editSession.setBlocks(modifiedPositions, (Pattern)position -> AIR);
 		editSession.flushQueue();
-	}
-	
-	public void constructLocations(Collection<Location> locs, List<String> list) {
-		list.forEach(s -> locs.add(constructLocation(s)));
 	}
 	
 	public Location getRandomGhostSpawn() {

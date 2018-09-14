@@ -3,7 +3,7 @@ package com.kabryxis.spiritcraft.game.a.objective;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.objective.action.ObjectiveAction;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.ObjectivePrerequisite;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.block.Block;
 
@@ -20,7 +20,7 @@ public class Objective {
 	private final ObjectiveManager objectiveManager;
 	private final Block block;
 	
-	public Objective(ObjectiveManager objectiveManager, DimData dimData, Block block, ConfigSection section) {
+	public Objective(ArenaData arenaData, ObjectiveManager objectiveManager, Block block, ConfigSection section) {
 		this.objectiveManager = objectiveManager;
 		this.block = block;
 		ConfigSection triggersChild = section.getChild("triggers");
@@ -28,11 +28,11 @@ public class Objective {
 			ObjectiveTrigger trigger = ObjectiveTrigger.valueOf(triggerChild.get("type", String.class).toUpperCase());
 			List<String> prerequisiteStrings = triggerChild.getList("requires", String.class);
 			List<ObjectivePrerequisite> prerequisites = new ArrayList<>(prerequisiteStrings.size());
-			prerequisiteStrings.forEach(prerequisiteString -> prerequisites.add(objectiveManager.createPrerequisite(dimData, block, prerequisiteString)));
+			prerequisiteStrings.forEach(prerequisiteString -> prerequisites.add(objectiveManager.createPrerequisite(arenaData, block, prerequisiteString)));
 			objectivePrerequisites.put(trigger, prerequisites);
 			List<String> actionStrings = triggerChild.getList("actions", String.class);
 			List<ObjectiveAction> actions = new ArrayList<>(actionStrings.size());
-			actionStrings.forEach(actionString -> actions.add(objectiveManager.createAction(dimData, block, actionString)));
+			actionStrings.forEach(actionString -> actions.add(objectiveManager.createAction(arenaData, block, actionString)));
 			objectiveActions.put(trigger, actions);
 		});
 	}

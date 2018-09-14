@@ -1,10 +1,10 @@
 package com.kabryxis.spiritcraft.game.a.objective.prerequisite;
 
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import org.bukkit.block.Block;
 
 public interface ObjectivePrerequisiteCreator {
 	
-	ObjectivePrerequisite create(DimData dimData, Block location, String data);
+	ObjectivePrerequisite create(ArenaData arenaData, Block location, String data);
 	
 }

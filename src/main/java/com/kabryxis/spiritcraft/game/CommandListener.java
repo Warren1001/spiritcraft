@@ -1,25 +1,25 @@
 package com.kabryxis.spiritcraft.game;
 
+import com.boydti.fawe.FaweCache;
+import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
-import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
-import com.kabryxis.kabutils.spigot.world.schematic.BlockSelection;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.ability.CloudTask;
 import com.kabryxis.spiritcraft.game.ability.FireBreathTask;
 import com.kabryxis.spiritcraft.game.ability.WorldEndTask;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.inventivetalent.particle.ParticleEffect;
@@ -47,60 +47,7 @@ public class CommandListener implements Listener {
 	private Location distanceLoc;
 	private BlockFace[] facesToCheck = {BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH, BlockFace.NORTH};
 	
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(event.getPlayer());
-		Action action = event.getAction();
-		if(checkRelationalLoc) {
-			if(action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
-				Block block = event.getClickedBlock();
-				BlockSelection selection = player.getSelection();
-				selection.extreme();
-				player.sendMessage((block.getX() - selection.getLowestX()) + "," + (block.getY() - selection.getLowestY()) + "," + (block.getZ() - selection.getLowestZ()));
-				event.setCancelled(true);
-			}
-			return;
-		}
-		if(Items.isType(event.getItem(), Material.STONE_AXE)) {
-			if(action == Action.LEFT_CLICK_BLOCK) {
-				player.getSelection().setLeft(event.getClickedBlock().getLocation());
-				event.setCancelled(true);
-			}
-			else if(action == Action.RIGHT_CLICK_BLOCK) {
-				player.getSelection().setRight(event.getClickedBlock().getLocation());
-				event.setCancelled(true);
-			}
-		}
-		else if(Items.isType(event.getItem(), Material.STICK)) {
-			if(action == Action.LEFT_CLICK_BLOCK) {
-				player.getSelection().addBlock(event.getClickedBlock());
-				event.setCancelled(true);
-			}
-			else if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-				if(player.getPlayer().isSneaking()) player.getSelection().addSelection(false);
-				else player.getSelection().addSelection(true);
-				event.setCancelled(true);
-			}
-		}
-		else if(Items.isType(event.getItem(), Material.STRING)) {
-			if(action == Action.LEFT_CLICK_BLOCK) {
-				player.getSelection().removeBlock(event.getClickedBlock());
-				event.setCancelled(true);
-			}
-			else if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-				player.getSelection().removeSelection();
-				event.setCancelled(true);
-			}
-		}
-		else if(Items.isType(event.getItem(), Material.STONE_HOE)) {
-			if(action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
-				explodeLoc = event.getClickedBlock().getLocation();
-				event.setCancelled(true);
-			}
-		}
-	}
-	
-	@Com(aliases = {"test"})
+	@Com(name = "test")
 	public boolean onTest(BukkitCommandIssuer issuer, String alias, String[] args) {
 		Player player = issuer.getPlayer();
 		if(args.length == 1) {
@@ -135,14 +82,26 @@ public class CommandListener implements Listener {
 			}
 			else if(args[0].equalsIgnoreCase("vinify")) {
 				SpiritPlayer p = plugin.getGame().getPlayerManager().getPlayer(player);
-				BlockSelection selection = p.getSelection();
-				selection.extreme();
-				selection.getBlocks().stream().filter(block -> block.getType() == Material.AIR).forEach(block -> setDataForFaces(selection.getLowestY(), block));
+				EditSession editSession = new EditSessionBuilder(p.getWorld().getName()).fastmode(true).build();
+				Region selection = p.getSelection();
+				selection.forEach(pos -> {
+					if(editSession.getLazyBlock(pos).getId() == 0) setDataForFaces(selection.getMinimumPoint().getBlockY(), p.getWorld(), editSession, pos);
+				});
+				editSession.flushQueue();
 			}
 			else if(args[0].equalsIgnoreCase("unvinify")) {
 				SpiritPlayer p = plugin.getGame().getPlayerManager().getPlayer(player);
-				BlockSelection selection = p.getSelection();
-				selection.getBlocks().stream().filter(block -> block.getType() == Material.VINE).forEach(block -> block.setType(Material.AIR));
+				EditSession editSession = new EditSessionBuilder(p.getWorld().getName()).fastmode(true).build();
+				p.getSelection().forEach(pos -> {
+					if(editSession.getLazyBlock(pos).getId() == Material.VINE.getId()) {
+						try {
+							editSession.setBlock(pos, FaweCache.getBlock(0, 0));
+						} catch(MaxChangedBlocksException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				editSession.flushQueue();
 			}
 			else if(args[0].equalsIgnoreCase("load")) {
 				plugin.getGame().getPlayerManager().getPlayer(player).updatePlayer(player);
@@ -280,18 +239,19 @@ public class CommandListener implements Listener {
 		return faces;
 	}
 	
-	private void setDataForFaces(int lowestY, Block block) {
+	private void setDataForFaces(int lowestY, World world, EditSession editSession, com.sk89q.worldedit.Vector pos) {
+		Block block = world.getBlockAt(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
 		Set<BlockFace> faces = getNearbyFaces(block);
 		if(faces.isEmpty()) {
-			if(block.getRelative(BlockFace.UP).getType().isSolid()) block.setTypeIdAndData(Material.VINE.getId(), (byte)0, false);
+			if(block.getRelative(BlockFace.UP).getType().isSolid()) editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), 0), true);
 		}
 		else {
-			byte data = (byte)addUpFaces(faces);
-			block.setTypeIdAndData(Material.VINE.getId(), data, false);
+			int data = addUpFaces(faces);
+			editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
 			for(int y = block.getY() - 1; y >= 0; y--) {
 				Block down = block.getWorld().getBlockAt(block.getX(), y, block.getZ());
 				if(y < lowestY || down.getType() != Material.AIR) break;
-				down.setTypeIdAndData(Material.VINE.getId(), data, false);
+				editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
 			}
 		}
 	}
@@ -319,7 +279,7 @@ public class CommandListener implements Listener {
 		}
 	}
 	
-	@Com(aliases = {"tpw"})
+	@Com(name = "tpw")
 	public boolean onTpw(BukkitCommandIssuer issuer, String alias, String[] args) {
 		if(args.length == 1) {
 			World world = Bukkit.getWorld(args[0]);
@@ -334,7 +294,7 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(aliases = {"game"})
+	@Com(name = "game")
 	public boolean onGame(BukkitCommandIssuer issuer, String alias, String[] args) {
 		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(issuer.getPlayer());
 		if(args.length == 1) {
@@ -350,8 +310,8 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(aliases = {"sch"})
-	public boolean onSch(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com(name = "schdata")
+	public boolean onSchData(BukkitCommandIssuer issuer, String alias, String[] args) {
 		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(issuer.getPlayer());
 		if(args.length == 2) {
 			if(args[0].equalsIgnoreCase("name")) {
@@ -383,7 +343,7 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(aliases = {"spiritcraft", "spirit", "sc"})
+	@Com(name = "spiritcraft", aliases = {"spirit", "sc"})
 	public boolean onSpiritcraft(BukkitCommandIssuer issuer, String alias, String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("join")) {

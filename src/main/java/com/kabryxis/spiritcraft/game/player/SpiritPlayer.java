@@ -1,18 +1,17 @@
 package com.kabryxis.spiritcraft.game.player;
 
+import com.boydti.fawe.object.FawePlayer;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
 import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
-import com.kabryxis.kabutils.spigot.world.schematic.BlockSelection;
 import com.kabryxis.spiritcraft.game.ParticleData;
 import com.kabryxis.spiritcraft.game.ParticleTask;
-import com.kabryxis.spiritcraft.game.SchematicCreator;
 import com.kabryxis.spiritcraft.game.a.game.Game;
-import com.kabryxis.spiritcraft.game.a.world.ArenaData;
-import com.kabryxis.spiritcraft.game.a.world.DimData;
+import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
 import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
@@ -27,8 +26,7 @@ public class SpiritPlayer extends GamePlayer {
 	private final PlayerItemInfo ghostItemInfo, hunterItemInfo;
 	private final WrappedEntityPlayer entityPlayer;
 	
-	private BlockSelection selection;
-	private SchematicCreator creator;
+	private SchematicDataCreator creator;
 	
 	private List<String> errorMessages = new ArrayList<>();
 	
@@ -77,12 +75,12 @@ public class SpiritPlayer extends GamePlayer {
 		return ghost ? ghostItemInfo : hunterItemInfo;
 	}
 	
-	public BlockSelection getSelection() {
-		return selection == null ? (selection = new BlockSelection(player)) : selection;
+	public Region getSelection() {
+		return FawePlayer.wrap(player).getSelection();
 	}
 	
-	public SchematicCreator getCreator() {
-		return creator == null ? (creator = new SchematicCreator(this)) : creator;
+	public SchematicDataCreator getCreator() {
+		return creator == null ? (creator = new SchematicDataCreator(this)) : creator;
 	}
 	
 	public boolean hasErrorMessages() {
@@ -151,9 +149,9 @@ public class SpiritPlayer extends GamePlayer {
 		return playerType == PlayerType.GHOST || playerType == PlayerType.HUNTER;
 	}
 	
-	public boolean isInSpiritDim() {
+	/*public boolean isInSpiritDim() {
 		return game.getCurrentArenaData().getSpiritDimData().getDimInfo().getLocation().getWorld().getName().equals(getLocation().getWorld().getName());
-	}
+	}*/
 	
 	public void setPlayerType(PlayerType playerType) {
 		this.playerType = playerType;
@@ -212,7 +210,7 @@ public class SpiritPlayer extends GamePlayer {
 		return entityPlayer.getPing();
 	}
 	
-	public DimData getCurrentDimData() {
+	/*public DimData getCurrentDimData() {
 		String playerWorldName = player.getWorld().getName();
 		ArenaData arenaData = game.getCurrentArenaData();
 		if(playerWorldName.equals(arenaData.getNormalDimData().getDimInfo().getLocation().getWorld().getName())) return arenaData.getNormalDimData();
@@ -221,6 +219,6 @@ public class SpiritPlayer extends GamePlayer {
 			sendMessage("where the hell are you? (cannot find you in normal or spirit dimension)");
 			return null; // TODO maybe throw error
 		}
-	}
+	}*/
 	
 }

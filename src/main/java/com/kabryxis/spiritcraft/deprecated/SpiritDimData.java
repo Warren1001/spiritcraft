@@ -1,7 +1,6 @@
-package com.kabryxis.spiritcraft.game.a.world;
+package com.kabryxis.spiritcraft.deprecated;
 
 import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
-import com.kabryxis.spiritcraft.game.Schematic;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
 import org.inventivetalent.particle.ParticleEffect;
