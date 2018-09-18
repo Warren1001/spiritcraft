@@ -1,7 +1,8 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
-import com.kabryxis.kabutils.random.weighted.conditional.ConditionalWeighted;
+import com.kabryxis.kabutils.random.weighted.Weighted;
+import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.sk89q.worldedit.BlockVector;
@@ -13,7 +14,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Arena implements ConditionalWeighted {
+public class Arena implements Weighted, ObjectPredicate {
 	
 	private final Set<BlockVector2D> occupiedChunks = new HashSet<>();
 	

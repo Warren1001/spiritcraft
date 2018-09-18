@@ -81,7 +81,7 @@ public class Game {
 		spiritAbilityPrerequisiteCreator.registerCreator("hand", HandItemPrerequisite::new);
 		spiritAbilityPrerequisiteCreator.registerCreator("block", BlockPrerequisite::new);
 		abilityManager.registerPrerequisiteCreator(spiritAbilityPrerequisiteCreator);
-		SpiritAbilityActionCreator spiritAbilityActionCreator = new SpiritAbilityActionCreator(parser);
+		SpiritAbilityActionCreator spiritAbilityActionCreator = new SpiritAbilityActionCreator(parser); // TODO move below to setup method inside class, called from constructor
 		spiritAbilityActionCreator.registerCreator("charge", () -> new ChargeAction(abilityManager));
 		spiritAbilityActionCreator.registerCreator("cloud", CloudAction::new);
 		spiritAbilityActionCreator.registerCreator("explode", ExplodeAction::new);
@@ -97,7 +97,7 @@ public class Game {
 		spiritAbilityActionCreator.registerCreator("throw_item_timer", () -> new ThrowItemTimerAction(abilityManager));
 		abilityManager.registerActionCreator(spiritAbilityActionCreator);
 		abilityManager.loadAbilities();
-		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager); // TODO
+		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager);
 		worldManager.loadChunks(this, lobbySpawn, 9);
 		loadNext();
 	}

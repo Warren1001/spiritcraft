@@ -2,14 +2,14 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.FileEndingFilter;
 import com.kabryxis.kabutils.data.file.yaml.Config;
+import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.kabutils.random.weighted.WeightedRandomArrayList;
-import com.kabryxis.kabutils.random.weighted.conditional.SelfConditionalWeightedRandomArrayList;
 
 import java.io.File;
 
 public class ArenaManager {
 	
-	private final WeightedRandomArrayList<Arena> arenaRegistry = new SelfConditionalWeightedRandomArrayList<>(2);
+	private final RandomArrayList<Arena> arenaRegistry = new WeightedRandomArrayList<>(2);
 	
 	private final WorldManager worldManager;
 	private final File folder;

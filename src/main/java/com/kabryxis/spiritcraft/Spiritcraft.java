@@ -5,15 +5,19 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.kabryxis.kabutils.command.CommandManager;
-import com.kabryxis.kabutils.spigot.command.CommandMapHook;
+import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
+import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
 import com.kabryxis.kabutils.spigot.event.Listeners;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.spiritcraft.game.AttackHiddenPlayerAdapter;
-import com.kabryxis.spiritcraft.game.CommandListener;
 import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.LobbyListener;
-import org.bukkit.ChatColor;
+import com.kabryxis.spiritcraft.game.a.game.NewCommandListener;
+import com.kabryxis.spiritcraft.game.a.game.TestCommand;
+import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,9 +51,12 @@ public class Spiritcraft extends JavaPlugin {
 			
 		});
 		game = new Game(this);
-		commandManager = new CommandManager(ChatColor.RED + "You do not have permission to use this command!");
-		commandManager.addExtraWork(new CommandMapHook(commandManager));
-		commandManager.registerListener(new CommandListener(this));
+		commandManager = new BukkitCommandManager();
+		commandManager.registerArgumentConverter(SpiritPlayer.class, arg -> game.getPlayerManager().getPlayer(Bukkit.getPlayer(arg)));
+		commandManager.registerArgumentConverter(World.class, arg -> game.getWorldManager().getWorld(arg));
+		commandManager.registerIssuerConverter(SpiritPlayer.class, issuer -> game.getPlayerManager().getPlayer(((BukkitCommandIssuer)issuer).getPlayer()));
+		//commandManager.registerListener(new CommandListener(this));
+		commandManager.registerListeners(new NewCommandListener(), new TestCommand(this));
 		listener = new LobbyListener(game);
 		Listeners.registerListener(listener, this);
 		//Listeners.registerListener(new LobbyListener(this), new WorldExecutor(game.getWorldManager().getWorld("spirit_lobby")));

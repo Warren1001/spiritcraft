@@ -13,10 +13,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
@@ -39,6 +36,7 @@ public class LobbyListener implements GlobalListener {
 		switch(event.getEventName()) {
 			case "PlayerJoinEvent":
 				PlayerJoinEvent pje = (PlayerJoinEvent)event;
+				pje.setJoinMessage(null);
 				Player pjeBukkitPlayer = pje.getPlayer();
 				game.getPlayerManager().getPlayer(pjeBukkitPlayer).updatePlayer(pjeBukkitPlayer);
 				break;
@@ -48,6 +46,7 @@ public class LobbyListener implements GlobalListener {
 				break;
 			case "PlayerQuitEvent":
 				PlayerQuitEvent pqe = (PlayerQuitEvent)event;
+				pqe.setQuitMessage(null);
 				Player pqeBukkitPlayer = pqe.getPlayer();
 				SpiritPlayer pqePlayer = game.getPlayerManager().getPlayer(pqeBukkitPlayer);
 				if(pqePlayer.getPlayerType() == PlayerType.WAITING) {
@@ -67,7 +66,7 @@ public class LobbyListener implements GlobalListener {
 				}
 				edbbe.setCancelled(true);
 				break;
-			case "ItemSpawnEvent": // TODO figure out how to get rid of item drops from blocks
+			case "ItemSpawnEvent":
 			case "EntitySpawnEvent":
 				EntitySpawnEvent ese = (EntitySpawnEvent)event;
 				Entity entity = ese.getEntity();
@@ -93,11 +92,11 @@ public class LobbyListener implements GlobalListener {
 				break;
 			case "PlayerGameModeChangeEvent":
 				PlayerGameModeChangeEvent pgmce = (PlayerGameModeChangeEvent)event;
-				if(pgmce.getNewGameMode() == GameMode.SPECTATOR) {
-					BukkitThreads.sync(() -> {
-						pgmce.getPlayer().setSpectatorTarget(Bukkit.getPlayer("SecondWind"));
-					});
-				}
+				if(pgmce.getNewGameMode() == GameMode.SPECTATOR) BukkitThreads.sync(() -> pgmce.getPlayer().setSpectatorTarget(Bukkit.getPlayer("SecondWind")));
+				break;
+			case "PlayerPickupItemEvent":
+				PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
+				if(ppie.getItem().hasMetadata("nopickup")) ppie.setCancelled(true);
 				break;
 			case "EntityDamageEvent":
 			case "EntityDamageByEntityEvent":

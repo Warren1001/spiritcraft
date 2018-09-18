@@ -1,11 +1,12 @@
 package com.kabryxis.spiritcraft.deprecated;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
-import com.kabryxis.kabutils.random.weighted.conditional.ConditionalWeighted;
+import com.kabryxis.kabutils.random.weighted.Weighted;
+import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 
-public class Arena implements ConditionalWeighted {
+public class Arena implements Weighted, ObjectPredicate {
 	
 	private final WorldManager worldManager;
 	private final Config data;

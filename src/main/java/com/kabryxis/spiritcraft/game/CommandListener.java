@@ -10,6 +10,7 @@ import com.kabryxis.spiritcraft.game.ability.CloudTask;
 import com.kabryxis.spiritcraft.game.ability.FireBreathTask;
 import com.kabryxis.spiritcraft.game.ability.WorldEndTask;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.regions.Region;
@@ -19,13 +20,18 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class CommandListener implements Listener {
@@ -37,6 +43,29 @@ public class CommandListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && light) {
+			Block block = event.getClickedBlock();
+			event.getPlayer().sendMessage(block.getType().name() + ":" + block.getData() + " (" + block.getType().getId() + ":" + block.getData() + ")");
+			if(block.getType() == Material.REDSTONE_LAMP_OFF) {
+				EditSession editSession = new EditSessionBuilder(block.getWorld().getName()).fastmode(true).build();
+				try {
+					editSession.setBlock(new BlockVector(block.getX(), block.getY(), block.getZ()), FaweCache.getBlock(Material.REDSTONE_LAMP_ON.getId(), 0));
+					editSession.flushQueue();
+				} catch(MaxChangedBlocksException e) {
+					e.printStackTrace();
+				}
+				event.getPlayer().sendMessage("on");
+			}
+			else if(block.getType() == Material.REDSTONE_LAMP_ON) {
+				block.setType(Material.REDSTONE_LAMP_OFF, false);
+				event.getPlayer().sendMessage("off");
+			}
+			event.setCancelled(true);
+		}
+	}
+	
 	private Location explodeLoc;
 	
 	private boolean checkRelationalLoc = false;
@@ -46,9 +75,10 @@ public class CommandListener implements Listener {
 	private SuspendTask suspendTask;
 	private Location distanceLoc;
 	private BlockFace[] facesToCheck = {BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH, BlockFace.NORTH};
+	private boolean light = false;
 	
-	@Com(name = "test")
-	public boolean onTest(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com
+	public boolean test(BukkitCommandIssuer issuer, String alias, String[] args) {
 		Player player = issuer.getPlayer();
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("stop")) {
@@ -103,8 +133,9 @@ public class CommandListener implements Listener {
 				});
 				editSession.flushQueue();
 			}
-			else if(args[0].equalsIgnoreCase("load")) {
-				plugin.getGame().getPlayerManager().getPlayer(player).updatePlayer(player);
+			else if(args[0].equalsIgnoreCase("light")) {
+				light = !light;
+				player.sendMessage("light: " + light);
 			}
 			else if(args[0].equalsIgnoreCase("purge")) {
 				player.getWorld().getEntities().stream().filter(entity -> entity.getType() != EntityType.PLAYER).forEach(Entity::remove);
@@ -178,6 +209,45 @@ public class CommandListener implements Listener {
 			else if(args[0].equalsIgnoreCase("setslot")) {
 				player.getInventory().setHeldItemSlot(0);
 			}
+			else if(args[0].equalsIgnoreCase("overloadsound")) {
+				task = BukkitThreads.syncTimer(new BukkitRunnable() {
+					
+					private final int speedInterval = 100;
+					
+					private int soundInterval = 30;
+					private int lastTicked = 0;
+					private int tick = -1;
+					
+					@Override
+					public void run() {
+						tick++;
+						//System.out.println("tick:" + tick + ",lastTicked:" + lastTicked + ",-:" + (tick - lastTicked));
+						if(tick != 0 && tick % speedInterval == 0) {
+							soundInterval -= soundInterval <= 5 ? 1 : 5;
+							System.out.println("soundInterval: " + soundInterval);
+							if(soundInterval == 2) {
+								cancel();
+								return;
+							}
+						}
+						if(tick == 0 || tick - lastTicked >= soundInterval) {
+							player.getWorld().playSound(player.getLocation(), Sound.PORTAL, 10F, 10F);
+							lastTicked = tick;
+						}
+					}
+					
+				}, 0L, 1L);
+			}
+			else if(args[0].equalsIgnoreCase("glassbreak")) {
+				SpiritPlayer spiritPlayer = plugin.getGame().getPlayerManager().getPlayer(player);
+				Region selection = spiritPlayer.getSelection();
+				selection.forEach(bv -> {
+					Block block = spiritPlayer.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+					if(block.getType() == Material.REDSTONE_LAMP_OFF || block.getType() == Material.REDSTONE_LAMP_ON) {
+						BukkitThreads.syncLater(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
+					}
+				});
+			}
 		}
 		else if(args.length == 2) {
 			if(args[0].equalsIgnoreCase("speed")) {
@@ -248,9 +318,9 @@ public class CommandListener implements Listener {
 		else {
 			int data = addUpFaces(faces);
 			editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
-			for(int y = block.getY() - 1; y >= 0; y--) {
+			for(int y = block.getY() - 1; y >= lowestY; y--) {
 				Block down = block.getWorld().getBlockAt(block.getX(), y, block.getZ());
-				if(y < lowestY || down.getType() != Material.AIR) break;
+				if(down.getType() != Material.AIR) break;
 				editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
 			}
 		}
@@ -279,8 +349,8 @@ public class CommandListener implements Listener {
 		}
 	}
 	
-	@Com(name = "tpw")
-	public boolean onTpw(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com
+	public boolean tpw(BukkitCommandIssuer issuer, String alias, String[] args) {
 		if(args.length == 1) {
 			World world = Bukkit.getWorld(args[0]);
 			if(world == null) world = new WorldCreator(args[0]).createWorld();
@@ -294,8 +364,8 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(name = "game")
-	public boolean onGame(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com
+	public boolean game(BukkitCommandIssuer issuer, String alias, String[] args) {
 		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(issuer.getPlayer());
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("start")) {
@@ -310,8 +380,8 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(name = "schdata")
-	public boolean onSchData(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com
+	public boolean schdata(BukkitCommandIssuer issuer, String alias, String[] args) {
 		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(issuer.getPlayer());
 		if(args.length == 2) {
 			if(args[0].equalsIgnoreCase("name")) {
@@ -343,8 +413,8 @@ public class CommandListener implements Listener {
 		return true;
 	}
 	
-	@Com(name = "spiritcraft", aliases = {"spirit", "sc"})
-	public boolean onSpiritcraft(BukkitCommandIssuer issuer, String alias, String[] args) {
+	@Com(aliases = {"spirit", "sc"})
+	public boolean spiritcraft(BukkitCommandIssuer issuer, String alias, String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("join")) {
 				if(!issuer.isPlayer()) return true;
