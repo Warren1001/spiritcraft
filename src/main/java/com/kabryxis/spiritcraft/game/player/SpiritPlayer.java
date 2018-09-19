@@ -25,8 +25,7 @@ public class SpiritPlayer extends GamePlayer {
 	private final Config data;
 	private final PlayerItemInfo ghostItemInfo, hunterItemInfo;
 	private final WrappedEntityPlayer entityPlayer;
-	
-	private SchematicDataCreator creator;
+	private final SchematicDataCreator schematicDataCreator;
 	
 	private List<String> errorMessages = new ArrayList<>();
 	
@@ -42,6 +41,7 @@ public class SpiritPlayer extends GamePlayer {
 		this.ghostItemInfo = new PlayerItemInfo(game.getItemManager().getItemData(true), this, true);
 		this.hunterItemInfo = new PlayerItemInfo(game.getItemManager().getItemData(false), this, false);
 		this.entityPlayer = WrappedEntityPlayer.newInstance();
+		this.schematicDataCreator = new SchematicDataCreator(this);
 		data.load();
 	}
 	
@@ -79,8 +79,8 @@ public class SpiritPlayer extends GamePlayer {
 		return FawePlayer.wrap(player).getSelection();
 	}
 	
-	public SchematicDataCreator getCreator() {
-		return creator == null ? (creator = new SchematicDataCreator(this)) : creator;
+	public SchematicDataCreator getDataCreator() {
+		return schematicDataCreator;
 	}
 	
 	public boolean hasErrorMessages() {

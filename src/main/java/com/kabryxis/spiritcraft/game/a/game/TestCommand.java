@@ -95,4 +95,9 @@ public class TestCommand {
 		player.getWorld().getEntities().stream().filter(entity -> entity.getType() != EntityType.PLAYER).forEach(Entity::remove);
 	}
 	
+	@Com
+	public void printoffsets(SpiritPlayer player, boolean print) {
+		player.getDataCreator().printOffsetLocation(print);
+	}
+	
 }

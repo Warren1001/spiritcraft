@@ -14,15 +14,15 @@ public class NewCommandListener {
 		else player.teleport(new Location(world, x, y, z));
 	}
 	
-	@Com
-	public void game(SpiritPlayer player, String string) {
+	@Com(args = "1,2")
+	public void game(SpiritPlayer player, int length, String string, boolean loadNext) {
 		if(string.equalsIgnoreCase("start")) {
 			player.sendMessage("Starting!");
 			player.getGame().start();
 		}
 		else if(string.equalsIgnoreCase("stop") || string.equalsIgnoreCase("end")) {
 			player.sendMessage("Stopping!");
-			player.getGame().end(true);
+			player.getGame().end(length != 2 || loadNext);
 		}
 	}
 	
@@ -30,27 +30,27 @@ public class NewCommandListener {
 	public void schdata(SpiritPlayer player, int length, String string1, String string2) {
 		if(length == 1) {
 			if(string1.equalsIgnoreCase("create")) {
-				player.getCreator().create();
+				player.getDataCreator().create();
 				player.getPlayer().sendMessage("Created schematic.");
 			}
 		}
 		else if(length == 2) {
 			if(string1.equalsIgnoreCase("name")) {
-				player.getCreator().name(string2);
+				player.getDataCreator().name(string2);
 				player.getPlayer().sendMessage("Set name to '" + string2 + "'.");
 			}
 			else if(string1.equalsIgnoreCase("weight")) {
-				player.getCreator().weight(Integer.parseInt(string2));
+				player.getDataCreator().weight(Integer.parseInt(string2));
 				player.getPlayer().sendMessage("Set weight to '" + string2 + "'.");
 			}
 			else if(string1.equalsIgnoreCase("spawn")) {
 				Location loc = player.getPlayer().getLocation();
 				if(string2.equalsIgnoreCase("ghost")) {
-					player.getCreator().addGhostSpawn(loc);
+					player.getDataCreator().addGhostSpawn(loc);
 					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to ghost spawns.");
 				}
 				else if(string2.equalsIgnoreCase("hunter")) {
-					player.getCreator().addHunterSpawn(loc);
+					player.getDataCreator().addHunterSpawn(loc);
 					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to hunter spawns.");
 				}
 			}

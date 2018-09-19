@@ -10,7 +10,6 @@ import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
 import com.kabryxis.kabutils.spigot.event.Listeners;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.spiritcraft.game.AttackHiddenPlayerAdapter;
-import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.LobbyListener;
 import com.kabryxis.spiritcraft.game.a.game.NewCommandListener;
@@ -29,12 +28,12 @@ public class Spiritcraft extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		Listeners.registerEvent(PlayerChangedDimEvent.class); // TODO contemplate the necessity of a new event
+		//Listeners.registerEvent(PlayerChangedDimEvent.class); // TODO contemplate the necessity of a new event
 	}
 	
 	@Override
 	public void onDisable() {
-		if(game.isInProgress()) game.end(false);
+		if(game.isLoaded()) game.end(false);
 	}
 	
 	@Override

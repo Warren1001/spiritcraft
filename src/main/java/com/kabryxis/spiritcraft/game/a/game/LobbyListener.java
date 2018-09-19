@@ -2,8 +2,10 @@ package com.kabryxis.spiritcraft.game.a.game;
 
 import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
+import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import com.sk89q.worldedit.Vector;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -98,32 +101,41 @@ public class LobbyListener implements GlobalListener {
 				PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
 				if(ppie.getItem().hasMetadata("nopickup")) ppie.setCancelled(true);
 				break;
+			case "PlayerInteractEvent":
+				PlayerInteractEvent pie = (PlayerInteractEvent)event;
+				if(pie.getAction() == Action.LEFT_CLICK_BLOCK || pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
+					SchematicDataCreator dataCreator = player.getDataCreator();
+					if(dataCreator.printOffsetLocation()) {
+						Vector offset = dataCreator.getOffsetLocation(pie.getClickedBlock().getLocation());
+						player.sendMessage(offset.getX() + "," + offset.getY() + "," + offset.getZ());
+					}
+				}
+				break;
+			case "FoodLevelChangeEvent":
+				((Player)((FoodLevelChangeEvent)event).getEntity()).setSaturation(Float.MAX_VALUE);
+				System.out.println("foodlevelchangeevent called");
+				break;
 			case "EntityDamageEvent":
 			case "EntityDamageByEntityEvent":
-			case "FoodLevelChangeEvent":
 			case "ItemMergeEvent":
 			case "ThunderChangeEvent":
-				//case "PlayerDropItemEvent":
-				//case "PlayerPickupItemEvent":
-				//case "BlockBreakEvent":
-				//case "BlockPlaceEvent":
 				((Cancellable)event).setCancelled(true);
 				break;
 			case "ChunkUnloadEvent":
-				//case "PlayerMoveEvent":
+			case "PlayerMoveEvent":
 			case "BlockPhysicsEvent":
-				//case "PlayerAnimationEvent":
+			case "PlayerAnimationEvent":
 			case "ChunkLoadEvent":
-				//case "PlayerStatisticIncrementEvent":
-				//case "PlayerToggleSprintEvent":
+			case "PlayerStatisticIncrementEvent":
+			case "PlayerToggleSprintEvent":
 			case "WorldSaveEvent":
-				//case "PlayerItemHeldEvent":
+			case "PlayerItemHeldEvent":
 			case "EntityPortalEnterEvent":
 			case "PlayerChangedDimEvent":
 			case "PlayerChangedWorldEvent":
 			case "PlayerVelocityEvent":
-				//case "PlayerInteractEvent":
-				//case "BlockDamageEvent":
+			case "BlockDamageEvent":
 				break;
 			default:
 				//System.out.println(event.getEventName());

@@ -61,6 +61,8 @@ public class Game {
 	private List<SpiritPlayer> spectators;
 	private CountdownTask countdownTask;
 	private boolean inProgress = false;
+	private boolean finishedSetup = false;
+	private boolean startWhenFinished = false;
 	
 	public Game(Spiritcraft plugin) {
 		this.plugin = plugin;
@@ -154,7 +156,20 @@ public class Game {
 		return inProgress;
 	}
 	
+	public boolean isLoaded() {
+		return currentArenaData != null;
+	}
+	
+	public void finishSetup() {
+		finishedSetup = true;
+		if(startWhenFinished) start();
+	}
+	
 	public void start() {
+		if(!finishedSetup) {
+			startWhenFinished = true;
+			return;
+		}
 		inProgress = true;
 		allPlayers = playerManager.getAllPlayers();
 		spectators = allPlayers.stream().filter(player -> player.getPlayerType() == PlayerType.SPECTATOR).collect(Collectors.toList());
@@ -177,6 +192,7 @@ public class Game {
 			hunterPlayer.setGameMode(GameMode.SURVIVAL);
 			itemManager.giveHunterKit(hunterPlayer);
 		}
+		currentArenaData.relight();
 		countdownTask = new CountdownTask(this, 300);
 		countdownTask.start();
 	}
@@ -240,10 +256,13 @@ public class Game {
 		ghostPlayers = null;
 		hunterPlayers = null;
 		spectators = null;
-		forEachPlayer(player -> player.resetAll(lobbySpawn));
+		if(allPlayers != null) forEachPlayer(player -> player.resetAll(lobbySpawn));
 		allPlayers = null;
 		inProgress = false;
+		finishedSetup = false;
+		startWhenFinished = false;
 		currentArenaData.unload();
+		currentArenaData = null;
 		if(loadNext) loadNext();
 	}
 	

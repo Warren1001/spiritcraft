@@ -32,9 +32,31 @@ public class SchematicDataCreator {
 	}
 	
 	private String name;
+	private Vector offset;
 	
 	public SchematicDataCreator name(String name) {
 		this.name = name;
+		SchematicWrapper schematicWrapper = player.getGame().getWorldManager().getSchematicManager().getSchematic(name);
+		Schematic schematic = null;
+		if(schematicWrapper == null) {
+			try {
+				schematic = ClipboardFormat.SCHEMATIC.load(new File("plugins" + File.separator + "WorldEdit" +
+						File.separator + "schematics" + File.separator + player.getUniqueId(), name + ".schematic"));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else schematic = schematicWrapper.getSchematic();
+		if(schematic == null) {
+			player.sendMessage("Could not find a schematic named '" + name + "'.");
+			return this;
+		}
+		offset = Objects.requireNonNull(schematic.getClipboard()).getOrigin();
+		return this;
+	}
+	
+	public SchematicDataCreator offset(Location location) {
+		this.offset = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		return this;
 	}
 	
@@ -61,25 +83,30 @@ public class SchematicDataCreator {
 		return this;
 	}
 	
+	private boolean printOffsetLocation = false;
+	
+	public SchematicDataCreator printOffsetLocation(boolean printOffsetLocation) {
+		this.printOffsetLocation = printOffsetLocation;
+		return this;
+	}
+	
+	public boolean printOffsetLocation() {
+		return printOffsetLocation;
+	}
+	
+	public Vector getOffsetLocation(Location location) {
+		if(offset == null) {
+			player.sendMessage("You must specify a name to get the corresponding schematic or manually specify an offset before you can get offseted locations.");
+			return null;
+		}
+		return new Vector(location.getX() - offset.getX(), location.getY() - offset.getY(), location.getZ() - offset.getZ());
+	}
+	
 	public void create() {
 		if(name == null) {
 			player.sendMessage("You did not specify the name for a schematic, how are we suppose to know which schematic's data to modify??");
 			return;
 		}
-		Schematic schematic = player.getGame().getWorldManager().getSchematicManager().getSchematic(name).getSchematic();
-		if(schematic == null) {
-			try {
-				schematic = ClipboardFormat.SCHEMATIC.load(new File("plugins" + File.separator + "WorldEdit" +
-						File.separator + "schematics" + File.separator + player.getUniqueId(), name + ".schematic"));
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if(schematic == null) {
-			player.sendMessage("Could not find a schematic named '" + name + "'.");
-			return;
-		}
-		Vector offset = Objects.requireNonNull(schematic.getClipboard()).getOrigin();
 		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + "-data.yml"));
 		if(ghostSpawns != null) data.set("spawns.ghost", ghostSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
 		if(hunterSpawns != null) data.set("spawns.hunter", hunterSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));

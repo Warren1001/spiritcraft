@@ -68,7 +68,7 @@ public class CommandListener implements Listener {
 	
 	private Location explodeLoc;
 	
-	private boolean checkRelationalLoc = false;
+	private boolean checkRelationalLoc = false; // TODO origin is literal origin, schematics dont seem to record an offset
 	private WorldEndTask worldEndTask;
 	
 	private BukkitTask task;
@@ -385,28 +385,28 @@ public class CommandListener implements Listener {
 		SpiritPlayer player = plugin.getGame().getPlayerManager().getPlayer(issuer.getPlayer());
 		if(args.length == 2) {
 			if(args[0].equalsIgnoreCase("name")) {
-				player.getCreator().name(args[1].toLowerCase());
+				player.getDataCreator().name(args[1].toLowerCase());
 				player.getPlayer().sendMessage("Set name to '" + args[1].toLowerCase() + "'.");
 			}
 			else if(args[0].equalsIgnoreCase("weight")) {
-				player.getCreator().weight(Integer.parseInt(args[1]));
+				player.getDataCreator().weight(Integer.parseInt(args[1]));
 				player.getPlayer().sendMessage("Set weight to '" + args[1] + "'.");
 			}
 			else if(args[0].equalsIgnoreCase("spawn")) {
 				Location loc = player.getPlayer().getLocation();
 				if(args[1].equalsIgnoreCase("ghost")) {
-					player.getCreator().addGhostSpawn(loc);
+					player.getDataCreator().addGhostSpawn(loc);
 					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to ghost spawns.");
 				}
 				else if(args[1].equalsIgnoreCase("hunter")) {
-					player.getCreator().addHunterSpawn(loc);
+					player.getDataCreator().addHunterSpawn(loc);
 					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to hunter spawns.");
 				}
 			}
 		}
 		else if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("create")) {
-				player.getCreator().create();
+				player.getDataCreator().create();
 				player.getPlayer().sendMessage("Created schematic.");
 			}
 		}
