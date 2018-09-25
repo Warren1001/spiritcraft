@@ -4,7 +4,9 @@ import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.string.Strings;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
-import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbilityParsingAbilityPrerequisite;
+import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbilityPrerequisite;
+import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbstractSpiritAbilityPrerequisite;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,22 +14,22 @@ import org.bukkit.Material;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HandItemPrerequisite extends AbilityParsingAbilityPrerequisite {
+public class HandItemPrerequisite extends AbstractSpiritAbilityPrerequisite {
 	
 	private final ItemBuilder builder = ItemBuilder.newItemBuilder();
 	private final Set<ItemBuilder.ItemCompareFlag> flags = new HashSet<>();
 	
-	public HandItemPrerequisite() {
-		super("hand");
-		getParseHandler().registerSubCommandHandler("type", false, true, data -> {
+	public HandItemPrerequisite(GameObjectManager<AbilityPrerequisite> objectManager) {
+		super(objectManager, "hand");
+		handleSubCommand("type", false, true, data -> {
 			builder.type(Material.getMaterial(data.toUpperCase()));
 			flags.add(ItemBuilder.ItemCompareFlag.TYPE);
 		});
-		getParseHandler().registerSubCommandHandler("data", false, byte.class, b -> {
+		handleSubCommand("data", false, byte.class, b -> {
 			builder.data(b);
 			flags.add(ItemBuilder.ItemCompareFlag.DATA);
 		});
-		getParseHandler().registerSubCommandHandler("name", false, true, data -> {
+		handleSubCommand("name", false, true, data -> {
 			builder.name(ChatColor.translateAlternateColorCodes('&', data));
 			flags.add(Strings.contains(builder.name(), ChatColor.COLOR_CHAR) ? ItemBuilder.ItemCompareFlag.NAME : ItemBuilder.ItemCompareFlag.COLORLESS_NAME);
 		});

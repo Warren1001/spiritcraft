@@ -151,7 +151,7 @@ public class DeadBody {
 	
 	private static BlockFace getBlockFace(byte direction) {
 		switch(direction) {
-			case 0x01:
+			case 1:
 				return BlockFace.EAST;
 			case 2:
 				return BlockFace.SOUTH;

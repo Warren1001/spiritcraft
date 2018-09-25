@@ -37,4 +37,9 @@ public class SpiritParser implements Parser {
 		else handler.parsed(subCommand, null);
 	}
 	
+	@Override
+	public String[] splitData(String data) {
+		return data.contains("~") ? data.split("~", 2) : new String[] { data, null };
+	}
+	
 }

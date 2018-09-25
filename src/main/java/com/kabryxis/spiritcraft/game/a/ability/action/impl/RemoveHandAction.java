@@ -2,7 +2,9 @@ package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,10 +14,10 @@ public class RemoveHandAction extends AbstractSpiritAbilityAction {
 	private int amountToRemove = 1;
 	private long duration = 0L;
 	
-	public RemoveHandAction() {
-		super("remove_hand");
-		getParseHandler().registerSubCommandHandler("amount", false, int.class, i -> amountToRemove = i);
-		getParseHandler().registerSubCommandHandler("duration", false, long.class, l -> duration = l);
+	public RemoveHandAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "remove_hand");
+		handleSubCommand("amount", false, int.class, i -> amountToRemove = i);
+		handleSubCommand("duration", false, long.class, l -> duration = l);
 	}
 	
 	@Override

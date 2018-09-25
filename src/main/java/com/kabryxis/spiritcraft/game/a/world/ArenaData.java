@@ -22,16 +22,12 @@ import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class ArenaData {
 	
 	private static final BaseBlock AIR = FaweCache.getBlock(0, 0);
-	
-	private final Map<Block, Objective> objectiveLocations = new HashMap<>();
 	
 	private final Game game;
 	private final Arena arena;
@@ -54,12 +50,7 @@ public class ArenaData {
 		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
 		ConfigSection objectivesChild = schematic.getData().getChild("objectives");
-		if(objectivesChild != null) {
-			objectivesChild.getChildren().forEach(child -> {
-				Block location = Locations.deserialize(arena.getLocation().getWorld(), child.get("location", String.class)).getBlock();
-				objectiveLocations.put(location, new Objective(this, game.getObjectiveManager(), location, child));
-			});
-		}
+		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
 		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getSchematic().getClipboard()));
 		for(int cx = (region.getMinimumPoint().getBlockX() >> 4) - 1; cx <= (region.getMaximumPoint().getBlockX()) + 1; cx++) {
 			for(int cz = (region.getMinimumPoint().getBlockZ() >> 4) - 1; cz <= (region.getMaximumPoint().getBlockZ()) + 1; cz++) {
@@ -85,7 +76,7 @@ public class ArenaData {
 	}
 	
 	public Objective getObjective(Block location) {
-		return objectiveLocations.get(location);
+		return game.getObjectiveManager().getObjective(location);
 	}
 	
 	public Location getRandomGhostSpawn() {
@@ -113,12 +104,9 @@ public class ArenaData {
 	
 	private void paste0(SchematicWrapper schematicWrapper, boolean air, boolean callFinish) {
 		Schematic schematic = schematicWrapper.getSchematic();
-		Clipboard clipboard = Objects.requireNonNull(schematic.getClipboard());
-		Vector loc = arena.getVectorLocation();
-		Vector origin = clipboard.getOrigin();
-		Vector min = loc.add(clipboard.getMinimumPoint()).subtract(origin);
-		Vector max = loc.add(clipboard.getMaximumPoint()).subtract(origin);
-		Region region = new CuboidRegion(min, max);
+		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getClipboard()));
+		Vector min = region.getMinimumPoint();
+		Vector max = region.getMaximumPoint();
 		if(totalRegion == null) totalRegion = region;
 		else {
 			boolean createNewRegion = false;
@@ -165,7 +153,7 @@ public class ArenaData {
 	}
 	
 	public void relight() {
-		BukkitThreads.syncLater(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L);
+		BukkitThreads.syncLater(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
 	}
 	
 }

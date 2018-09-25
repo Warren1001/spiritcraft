@@ -1,7 +1,9 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 
@@ -11,11 +13,11 @@ public class ExplodeAction extends AbstractSpiritAbilityAction {
 	private boolean setFire = false;
 	private boolean destroy = false;
 	
-	public ExplodeAction() { // TODO custom explosion damage handling to get who caused the dmg
-		super("explode");
-		getParseHandler().registerSubCommandHandler("power", false, float.class, f -> power = f);
-		getParseHandler().registerSubCommandHandler("setsfire", false, boolean.class, b -> setFire = b);
-		getParseHandler().registerSubCommandHandler("destroys", false, boolean.class, b -> destroy = b);
+	public ExplodeAction(GameObjectManager<AbilityAction> objectManager) { // TODO custom explosion damage handling to get who caused the dmg
+		super(objectManager, "explode");
+		handleSubCommand("power", false, float.class, f -> power = f);
+		handleSubCommand("setsfire", false, boolean.class, b -> setFire = b);
+		handleSubCommand("destroys", false, boolean.class, b -> destroy = b);
 	}
 	
 	@Override

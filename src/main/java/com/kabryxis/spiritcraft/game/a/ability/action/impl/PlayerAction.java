@@ -1,16 +1,18 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
 public class PlayerAction extends AbstractSpiritAbilityAction {
 	
 	private double damage = 0.0;
 	
-	public PlayerAction() {
-		super("player");
-		getParseHandler().registerSubCommandHandler("damage", false, double.class, d -> damage = d);
+	public PlayerAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "player");
+		handleSubCommand("damage", false, double.class, d -> damage = d);
 	}
 	
 	@Override
@@ -19,7 +21,7 @@ public class PlayerAction extends AbstractSpiritAbilityAction {
 	}
 	
 	private void execute(SpiritPlayer player) {
-		if(damage > 0.0) player.damage(Math.min(damage, player.getMaxHealth()));
+		if(damage > 0.0) player.damage(damage);
 	}
 	
 }

@@ -60,6 +60,14 @@ public class Arena implements Weighted, ObjectPredicate {
 		return vectorLocation;
 	}
 	
+	public Location toLocation(Vector offset) {
+		return location.clone().add(offset.getX(), offset.getY(), offset.getZ());
+	}
+	
+	public Vector toOffset(Location loc) {
+		return new Vector(loc.getX() - location.getX(), loc.getY() - location.getY(), loc.getZ() - location.getZ());
+	}
+	
 	@Override
 	public int getWeight() {
 		return data.get("weight", Integer.class, 1000);

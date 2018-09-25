@@ -4,4 +4,6 @@ public interface Parser {
 	
 	void parse(String parse, ParseHandler handler);
 	
+	String[] splitData(String data);
+	
 }

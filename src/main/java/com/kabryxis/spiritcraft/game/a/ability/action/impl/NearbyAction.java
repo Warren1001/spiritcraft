@@ -1,11 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
@@ -16,20 +16,17 @@ import java.util.List;
 
 public class NearbyAction extends AbstractSpiritAbilityAction {
 	
-	private final Game game;
-	
 	private double radius = 1.0;
 	private AffectType affects = AffectType.ALL;
 	private int amount = Integer.MAX_VALUE;
 	private List<AbilityCaller> abilities = new ArrayList<>();
 	
-	public NearbyAction(AbilityManager abilityManager) {
-		super("nearby");
-		game = abilityManager.getGame();
-		getParseHandler().registerSubCommandHandler("radius", false, double.class, d -> radius = d);
-		getParseHandler().registerSubCommandHandler("affects", false, true, data -> affects = AffectType.valueOf(data.toUpperCase()));
-		getParseHandler().registerSubCommandHandler("amount", false, int.class, i -> amount = i);
-		getParseHandler().registerSubCommandHandler("ability", true, false, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, abilities::add));
+	public NearbyAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "nearby");
+		handleSubCommand("radius", false, double.class, d -> radius = d);
+		handleSubCommand("affects", false, true, data -> affects = AffectType.valueOf(data.toUpperCase()));
+		handleSubCommand("amount", false, int.class, i -> amount = i);
+		handleSubCommand("ability", true, false, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, abilities::add));
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.kabryxis.kabutils.command.CommandManager;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
 import com.kabryxis.kabutils.spigot.event.Listeners;
@@ -14,22 +15,30 @@ import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.LobbyListener;
 import com.kabryxis.spiritcraft.game.a.game.NewCommandListener;
 import com.kabryxis.spiritcraft.game.a.game.TestCommand;
+import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import com.sk89q.worldedit.Vector;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.function.Function;
+
 public class Spiritcraft extends JavaPlugin {
+	
+	static {
+		Function<String, Vector> vectorFunction = string -> {
+			String[] args = string.split(",");
+			return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+		};
+		ConfigSection.DESERIALIZERS.put(Vector.class, vectorFunction);
+		CommandHandler.registerDataConverter(Vector.class, vectorFunction);
+	}
 	
 	private CommandManager commandManager;
 	private Game game;
 	private LobbyListener listener;
-	
-	@Override
-	public void onLoad() {
-		//Listeners.registerEvent(PlayerChangedDimEvent.class); // TODO contemplate the necessity of a new event
-	}
 	
 	@Override
 	public void onDisable() {

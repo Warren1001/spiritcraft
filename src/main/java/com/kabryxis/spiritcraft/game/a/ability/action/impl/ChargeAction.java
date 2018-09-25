@@ -1,9 +1,10 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.ability.ChargeTask;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
@@ -22,13 +23,13 @@ public class ChargeAction extends AbstractSpiritAbilityAction {
 	private List<AbilityCaller> start = new ArrayList<>();
 	private List<AbilityCaller> finish = new ArrayList<>();
 	
-	public ChargeAction(AbilityManager abilityManager) {
-		super("charge");
-		getParseHandler().registerSubCommandHandler("duration", false, double.class, d -> duration = d);
-		getParseHandler().registerSubCommandHandler("interval", false, long.class, l -> interval = l);
-		getParseHandler().registerSubCommandHandler("timeout", false, long.class, l -> timeout = l);
-		getParseHandler().registerSubCommandHandler("start", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, start::add));
-		getParseHandler().registerSubCommandHandler("finish", true, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, finish::add));
+	public ChargeAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "charge");
+		handleSubCommand("duration", false, double.class, d -> duration = d);
+		handleSubCommand("interval", false, long.class, l -> interval = l);
+		handleSubCommand("timeout", false, long.class, l -> timeout = l);
+		handleSubCommand("start", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, start::add));
+		handleSubCommand("finish", true, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, finish::add));
 	}
 	
 	@Override

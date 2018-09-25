@@ -1,10 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.ability.ThrowItemTimerRunnable;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
@@ -18,13 +19,13 @@ public class ThrowItemTimerAction extends AbstractSpiritAbilityAction {
 	private List<AbilityCaller> tick = new ArrayList<>();
 	private List<AbilityCaller> finish = new ArrayList<>();
 	
-	public ThrowItemTimerAction(AbilityManager abilityManager) {
-		super("throw_item_timer");
-		getParseHandler().registerSubCommandHandler("duration", false, long.class, l -> duration = l);
-		getParseHandler().registerSubCommandHandler("interval", false, long.class, l -> interval = l);
-		getParseHandler().registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
-		getParseHandler().registerSubCommandHandler("tick", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, tick::add));
-		getParseHandler().registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
+	public ThrowItemTimerAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "throw_item_timer");
+		handleSubCommand("duration", false, long.class, l -> duration = l);
+		handleSubCommand("interval", false, long.class, l -> interval = l);
+		handleSubCommand("thrown", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, thrown::add));
+		handleSubCommand("tick", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, true, tick::add));
+		handleSubCommand("finish", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, true, finish::add));
 	}
 	
 	@Override

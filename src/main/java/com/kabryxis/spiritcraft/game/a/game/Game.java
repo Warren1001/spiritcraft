@@ -8,11 +8,10 @@ import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.action.impl.*;
-import com.kabryxis.spiritcraft.game.a.ability.action.impl.creator.SpiritAbilityActionCreator;
 import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.BlockPrerequisite;
 import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.HandItemPrerequisite;
-import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.creator.SpiritAbilityPrerequisiteCreator;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveManager;
+import com.kabryxis.spiritcraft.game.a.objective.action.impl.ExplodeAction;
 import com.kabryxis.spiritcraft.game.a.objective.action.impl.RemoveHandAction;
 import com.kabryxis.spiritcraft.game.a.objective.prerequisite.impl.HandPrerequisite;
 import com.kabryxis.spiritcraft.game.a.parse.Parser;
@@ -75,29 +74,26 @@ public class Game {
 		particleManager = new ParticleManager(new File(plugin.getDataFolder(), "particles"));
 		soundManager = new SoundManager(new File(plugin.getDataFolder(), "sounds"));
 		deadBodyManager = new DeadBodyManager(this);
-		objectiveManager = new ObjectiveManager();
-		objectiveManager.registerActionCreators("explode", new com.kabryxis.spiritcraft.game.a.objective.action.impl.ExplodeAction(this), "remove_hand", new RemoveHandAction());
-		objectiveManager.registerPrerequisiteCreator("hand", new HandPrerequisite());
+		objectiveManager = new ObjectiveManager(this);
+		objectiveManager.registerActionCreator("explode", ExplodeAction::new);
+		objectiveManager.registerActionCreator("remove_hand", RemoveHandAction::new);
+		objectiveManager.registerPrerequisiteCreator("hand", HandPrerequisite::new);
 		abilityManager = new AbilityManager(this, new File(plugin.getDataFolder(), "abilities"));
-		SpiritAbilityPrerequisiteCreator spiritAbilityPrerequisiteCreator = new SpiritAbilityPrerequisiteCreator(parser);
-		spiritAbilityPrerequisiteCreator.registerCreator("hand", HandItemPrerequisite::new);
-		spiritAbilityPrerequisiteCreator.registerCreator("block", BlockPrerequisite::new);
-		abilityManager.registerPrerequisiteCreator(spiritAbilityPrerequisiteCreator);
-		SpiritAbilityActionCreator spiritAbilityActionCreator = new SpiritAbilityActionCreator(parser); // TODO move below to setup method inside class, called from constructor
-		spiritAbilityActionCreator.registerCreator("charge", () -> new ChargeAction(abilityManager));
-		spiritAbilityActionCreator.registerCreator("cloud", CloudAction::new);
-		spiritAbilityActionCreator.registerCreator("explode", ExplodeAction::new);
-		spiritAbilityActionCreator.registerCreator("fire_breath", FireBreathAction::new);
-		spiritAbilityActionCreator.registerCreator("infront", () -> new InFrontAction(abilityManager));
-		spiritAbilityActionCreator.registerCreator("looking", () -> new LookingAction(abilityManager));
-		spiritAbilityActionCreator.registerCreator("nearby", () -> new NearbyAction(abilityManager));
-		spiritAbilityActionCreator.registerCreator("player", PlayerAction::new);
-		spiritAbilityActionCreator.registerCreator("sound", () -> new PlaySoundAction(soundManager));
-		spiritAbilityActionCreator.registerCreator("potion", PotionEffectAction::new);
-		spiritAbilityActionCreator.registerCreator("remove_hand", com.kabryxis.spiritcraft.game.a.ability.action.impl.RemoveHandAction::new);
-		spiritAbilityActionCreator.registerCreator("throw_item_delayed", () -> new ThrowItemDelayedAction(abilityManager));
-		spiritAbilityActionCreator.registerCreator("throw_item_timer", () -> new ThrowItemTimerAction(abilityManager));
-		abilityManager.registerActionCreator(spiritAbilityActionCreator);
+		abilityManager.registerPrerequisiteCreator("hand", HandItemPrerequisite::new);
+		abilityManager.registerPrerequisiteCreator("block", BlockPrerequisite::new);
+		abilityManager.registerActionCreator("charge", ChargeAction::new);
+		abilityManager.registerActionCreator("cloud", CloudAction::new);
+		abilityManager.registerActionCreator("explode", com.kabryxis.spiritcraft.game.a.ability.action.impl.ExplodeAction::new);
+		abilityManager.registerActionCreator("fire_breath", FireBreathAction::new);
+		abilityManager.registerActionCreator("infront", InFrontAction::new);
+		abilityManager.registerActionCreator("looking", LookingAction::new);
+		abilityManager.registerActionCreator("nearby", NearbyAction::new);
+		abilityManager.registerActionCreator("player", PlayerAction::new);
+		abilityManager.registerActionCreator("sound", PlaySoundAction::new);
+		abilityManager.registerActionCreator("potion", PotionEffectAction::new);
+		abilityManager.registerActionCreator("remove_hand", com.kabryxis.spiritcraft.game.a.ability.action.impl.RemoveHandAction::new);
+		abilityManager.registerActionCreator("throw_item_delayed", ThrowItemDelayedAction::new);
+		abilityManager.registerActionCreator("throw_item_timer", ThrowItemTimerAction::new);
 		abilityManager.loadAbilities();
 		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager);
 		worldManager.loadChunks(this, lobbySpawn, 9);
@@ -106,6 +102,10 @@ public class Game {
 	
 	public Spiritcraft getPlugin() {
 		return plugin;
+	}
+	
+	public Parser getParser() {
+		return parser;
 	}
 	
 	public WorldManager getWorldManager() {

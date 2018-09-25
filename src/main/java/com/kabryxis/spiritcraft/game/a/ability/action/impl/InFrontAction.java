@@ -1,9 +1,10 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 
@@ -16,11 +17,11 @@ public class InFrontAction extends AbstractSpiritAbilityAction {
 	private double velmod = 0.0;
 	private List<AbilityCaller> abilities = new ArrayList<>();
 	
-	public InFrontAction(AbilityManager abilityManager) {
-		super("infront");
-		getParseHandler().registerSubCommandHandler("lookmod", false, double.class, d -> lookmod = d);
-		getParseHandler().registerSubCommandHandler("velmod", false, double.class, d -> velmod = d);
-		getParseHandler().registerSubCommandHandler("ability", true, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, abilities::add));
+	public InFrontAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "infront");
+		handleSubCommand("lookmod", false, double.class, d -> lookmod = d);
+		handleSubCommand("velmod", false, double.class, d -> velmod = d);
+		handleSubCommand("ability", true, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, abilities::add));
 	}
 	
 	@Override

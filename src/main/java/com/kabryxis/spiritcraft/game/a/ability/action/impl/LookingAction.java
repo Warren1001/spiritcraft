@@ -1,10 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
 import java.util.ArrayList;
@@ -15,10 +16,10 @@ public class LookingAction extends AbstractSpiritAbilityAction {
 	private int maxRange = 16;
 	private List<AbilityCaller> abilities = new ArrayList<>();
 	
-	public LookingAction(AbilityManager abilityManager) {
-		super("looking", TriggerType.values());
-		getParseHandler().registerSubCommandHandler("range", false, int.class, i -> maxRange = i);
-		getParseHandler().registerSubCommandHandler("ability", true, true, data -> abilityManager.requestAbilityFromCommand(getName(), data, false, abilities::add));
+	public LookingAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "looking");
+		handleSubCommand("range", false, int.class, i -> maxRange = i);
+		handleSubCommand("ability", true, true, data -> game.getAbilityManager().requestAbilityFromCommand(getName(), data, false, abilities::add));
 	}
 	
 	@Override

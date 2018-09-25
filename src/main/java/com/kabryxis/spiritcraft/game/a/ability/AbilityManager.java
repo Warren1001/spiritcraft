@@ -5,10 +5,9 @@ import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
-import com.kabryxis.spiritcraft.game.a.ability.action.AbilityActionCreator;
 import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbilityPrerequisite;
-import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbilityPrerequisiteCreator;
 import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
 import java.io.File;
@@ -17,25 +16,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class AbilityManager {
 	
-	private final Map<String, AbilityActionCreator> actionCreators = new HashMap<>();
-	private final Map<String, AbilityPrerequisiteCreator> prerequisiteCreators = new HashMap<>();
 	private final Map<String, Ability> abilities = new HashMap<>();
-	private final Map<String, AbilityAction> cachedActions = new HashMap<>();
-	private final Map<String, AbilityPrerequisite> cachedPrerequisites = new HashMap<>();
 	private final Set<Worker> abilityRequests = new HashSet<>();
 	
 	private final Game game;
 	private final File folder;
+	private final GameObjectManager<AbilityAction> actionManager;
+	private final GameObjectManager<AbilityPrerequisite> prerequisiteManager;
 	
 	private boolean finishedConstructing = false;
 	
 	public AbilityManager(Game game, File folder) {
 		this.game = game;
 		this.folder = folder;
+		this.actionManager = new GameObjectManager<>(game, AbilityAction.class);
+		this.prerequisiteManager = new GameObjectManager<>(game, AbilityPrerequisite.class);
 		folder.mkdirs();
 	}
 	
@@ -46,8 +46,8 @@ public class AbilityManager {
 	public void loadAbilities() {
 		finishedConstructing = false;
 		abilities.clear();
-		cachedActions.clear();
-		cachedPrerequisites.clear();
+		actionManager.clear();
+		prerequisiteManager.clear();
 		Files.forEachFileWithEnding(folder, ".yml", file -> {
 			Config config = new Config(file);
 			config.loadSync();
@@ -61,19 +61,17 @@ public class AbilityManager {
 		return abilities.computeIfAbsent(section.getName(), name -> new Ability(this, section));
 	}
 	
-	public void requestAbilitiesFromCommand(String originCommand, String abilityCommands, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
-		if(abilityCommands.contains("||")) {
-			String[] abilityCommandsArray = abilityCommands.split(Pattern.quote("||"));
-			for(String abilityCommand : abilityCommandsArray) {
-				requestAbilityFromCommand(originCommand, abilityCommand, requiresThrown, action);
+	public void requestAbilityFromCommand(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
+		if(abilityCommand.contains("||")) {
+			String[] abilityCommandsArray = abilityCommand.split(Pattern.quote("||"));
+			for(String command : abilityCommandsArray) {
+				requestAbilityFromCommand(originCommand, command, requiresThrown, action);
 			}
 		}
-		else requestAbilityFromCommand(originCommand, abilityCommands, requiresThrown, action);
-	}
-	
-	public void requestAbilityFromCommand(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
-		if(finishedConstructing) requestAbilityFromCommand0(originCommand, abilityCommand, requiresThrown, action);
-		else abilityRequests.add(() -> requestAbilityFromCommand0(originCommand, abilityCommand, requiresThrown, action));
+		else {
+			if(finishedConstructing) requestAbilityFromCommand0(originCommand, abilityCommand, requiresThrown, action);
+			else abilityRequests.add(() -> requestAbilityFromCommand0(originCommand, abilityCommand, requiresThrown, action));
+		}
 	}
 	
 	private void requestAbilityFromCommand0(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
@@ -93,54 +91,24 @@ public class AbilityManager {
 		return abilities.get(name);
 	}
 	
-	public AbilityAction createAction(String action) {
-		return cachedActions.computeIfAbsent(action, a -> {
-			if(a.contains("~")) {
-				String[] args = a.split("~", 2);
-				String command = args[0];
-				String data = args[1];
-				if(data.isEmpty()) a = command;
-				else return actionCreators.get(command).create(command, data);
-			}
-			return actionCreators.get(a).create(a, null);
-		});
-	}
-	
 	public void handle(SpiritPlayer player, AbilityTrigger trigger) {
 		abilities.values().forEach(ability -> ability.trigger(player, trigger));
 	}
 	
-	public void registerActionCreators(AbilityActionCreator... creators) {
-		for(AbilityActionCreator creator : creators) {
-			registerActionCreator(creator);
-		}
+	public void registerActionCreator(String name, Function<GameObjectManager<AbilityAction>, AbilityAction> creator) {
+		actionManager.registerCreator(name, creator);
 	}
 	
-	public void registerActionCreator(AbilityActionCreator creator) {
-		creator.getHandledCommands().forEach(cmd -> actionCreators.put(cmd, creator));
+	public AbilityAction createAction(String action) {
+		return actionManager.create(action);
 	}
 	
-	public void registerPrerequisiteCreators(AbilityPrerequisiteCreator... creators) {
-		for(AbilityPrerequisiteCreator creator : creators) {
-			registerPrerequisiteCreator(creator);
-		}
-	}
-	
-	public void registerPrerequisiteCreator(AbilityPrerequisiteCreator creator) {
-		creator.getHandledCommands().forEach(cmd -> prerequisiteCreators.put(cmd, creator));
+	public void registerPrerequisiteCreator(String name, Function<GameObjectManager<AbilityPrerequisite>, AbilityPrerequisite> creator) {
+		prerequisiteManager.registerCreator(name, creator);
 	}
 	
 	public AbilityPrerequisite createPrerequisite(String action) {
-		return cachedPrerequisites.computeIfAbsent(action, a -> {
-			if(a.contains("~")) {
-				String[] args = a.split("~", 2);
-				String command = args[0];
-				String data = args[1];
-				if(data.isEmpty()) a = command;
-				else return prerequisiteCreators.get(command).create(command, data);
-			}
-			return prerequisiteCreators.get(a).create(a, null);
-		});
+		return prerequisiteManager.create(action);
 	}
 	
 }

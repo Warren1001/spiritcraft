@@ -1,10 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.ability.ThrowItemDelayedRunnable;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
@@ -17,11 +18,11 @@ public class ThrowItemDelayedAction extends AbstractSpiritAbilityAction {
 	private List<AbilityCaller> thrown = new ArrayList<>();
 	private List<AbilityCaller> finish = new ArrayList<>();
 	
-	public ThrowItemDelayedAction(AbilityManager abilityManager) {
-		super("throw_item_delayed");
-		getParseHandler().registerSubCommandHandler("delay", false, long.class, l -> delay = l);
-		getParseHandler().registerSubCommandHandler("thrown", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, false, thrown::add));
-		getParseHandler().registerSubCommandHandler("finish", false, true, data -> abilityManager.requestAbilitiesFromCommand(getName(), data, true, finish::add));
+	public ThrowItemDelayedAction(GameObjectManager<AbilityAction> objectManager) {
+		super(objectManager, "throw_item_delayed");
+		handleSubCommand("delay", false, long.class, l -> delay = l);
+		handleSubCommand("thrown", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, thrown::add));
+		handleSubCommand("finish", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, true, finish::add));
 	}
 	
 	@Override
