@@ -29,7 +29,7 @@ public class CountdownTask extends BukkitRunnable {
 		}
 		int seconds = (timeLeft % 60);
 		String stringSeconds = seconds < 10 ? "0" + seconds : String.valueOf(seconds);
-		packet.setMessage(ChatColor.GOLD.toString() + (timeLeft / 60) + ":" + stringSeconds);
+		packet.setHandle(ChatColor.GOLD.toString() + (timeLeft / 60) + ":" + stringSeconds);
 		game.forEachPlayer(player -> packet.send(player.getPlayer()));
 		timeLeft--;
 	}
@@ -37,8 +37,7 @@ public class CountdownTask extends BukkitRunnable {
 	@Override
 	public synchronized void cancel() throws IllegalStateException {
 		super.cancel();
-		packet.setMessage("");
-		game.forEachPlayer(player -> packet.send(player.getPlayer()));
+		game.forEachPlayer(player -> WrappedPacketPlayOutChat.EMPTY.send(player.getPlayer()));
 	}
 	
 	public BukkitTask start() {

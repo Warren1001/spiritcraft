@@ -32,7 +32,7 @@ public class Spiritcraft extends JavaPlugin {
 			String[] args = string.split(",");
 			return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		};
-		ConfigSection.DESERIALIZERS.put(Vector.class, vectorFunction);
+		ConfigSection.addDeserializer(Vector.class, vectorFunction);
 		CommandHandler.registerDataConverter(Vector.class, vectorFunction);
 	}
 	
@@ -65,8 +65,7 @@ public class Spiritcraft extends JavaPlugin {
 		commandManager.registerIssuerConverter(SpiritPlayer.class, issuer -> game.getPlayerManager().getPlayer(((BukkitCommandIssuer)issuer).getPlayer()));
 		//commandManager.registerListener(new CommandListener(this));
 		commandManager.registerListeners(new NewCommandListener(), new TestCommand(this));
-		listener = new LobbyListener(game);
-		Listeners.registerListener(listener, this);
+		listener = Listeners.registerListener(new LobbyListener(game), this);
 		//Listeners.registerListener(new LobbyListener(this), new WorldExecutor(game.getWorldManager().getWorld("spirit_lobby")));
 		//Listeners.registerListener(new GameListener(this), new WorldExecutor(game.getWorldManager().getWorld("spirit_overworld"), game.getWorldManager().getWorld("spirit_end"))); // TODO find better implementation
 		if(getConfig().getBoolean("world-mode", false)) {

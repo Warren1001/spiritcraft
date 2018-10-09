@@ -1,9 +1,15 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.kabryxis.kabutils.data.set.CacheSet;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
+import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.ParticleTask;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
+import com.kabryxis.spiritcraft.game.a.cooldown.CooldownEntry;
+import com.kabryxis.spiritcraft.game.a.cooldown.CooldownHandler;
 import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
 import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
@@ -25,12 +31,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.inventivetalent.particle.ParticleEffect;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class GameListener implements GlobalListener {
 	
-	private final Map<Entity, Long> lastPortalTimestamp = new HashMap<>();
+	private final Set<Entity> lastPortalTimestamp = new CacheSet<>(CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.SECONDS));
+	private final Cache<Player, Action> lastInteractTimestamp = CacheBuilder.newBuilder().expireAfterWrite(50, TimeUnit.MILLISECONDS).build();
 	
 	private final Game game;
 	
@@ -52,43 +59,48 @@ public class GameListener implements GlobalListener {
 				if(defender.getPlayerType() != PlayerType.GHOST) break;
 				Location loc = defender.getPlayer().getLocation().add(0, 0.75, 0);
 				ParticleEffect.BLOCK_DUST.sendData(defender.getPlayer().getWorld().getPlayers(), loc.getX(), loc.getY(), loc.getZ(), 0.2, 0.66, 0.2, 0, 50, new ItemStack(Material.REDSTONE_BLOCK));
-				defender.getPlayer().getWorld().playSound(loc, Sound.ZOMBIE_HURT, 1F, 0.1F);
+				defender.getPlayer().getWorld().playSound(loc, Sound.ZOMBIE_HURT, 1F, 0.1F); // TODO call by soundmanager
 				break;
 			case "EntityDamageEvent":
 				EntityDamageEvent ede = (EntityDamageEvent)event;
-				if(ede.getCause() == EntityDamageEvent.DamageCause.FALL && game.getPlayerManager().getPlayer((Player)ede.getEntity()).getPlayerType() == PlayerType.GHOST) ede.setCancelled(true);
+				Entity edeEntity = ede.getEntity();
+				if(ede.getCause() == EntityDamageEvent.DamageCause.FALL && edeEntity instanceof Player &&
+						game.getPlayerManager().getPlayer((Player)edeEntity).getPlayerType() == PlayerType.GHOST) ede.setCancelled(true);
 				break;
 			case "EntityPortalEnterEvent":
 				EntityPortalEnterEvent epee = (EntityPortalEnterEvent)event;
 				Entity epeeEntity = epee.getEntity();
-				long curr = System.currentTimeMillis();
-				if(curr - lastPortalTimestamp.getOrDefault(epeeEntity, 0L) > 1000) {
-					lastPortalTimestamp.put(epeeEntity, curr);
+				if(lastPortalTimestamp.add(epeeEntity)) {
 					//game.getCurrentArenaData().teleportToOtherDim(epeeEntity);
 				}
 				break;
 			case "PlayerInteractEvent":
 				PlayerInteractEvent pie = (PlayerInteractEvent)event;
+				Player bukkitPlayer = pie.getPlayer();
 				Action action = pie.getAction();
+				if(lastInteractTimestamp.getIfPresent(bukkitPlayer) == action) break;
 				if(action != Action.PHYSICAL) {
-					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
+					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
 					AbilityTrigger trigger = new AbilityTrigger();
+					trigger.cooldownHandler = new CooldownHandler(player.getCooldownManager());
 					trigger.triggerer = player;
 					trigger.type = action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK;
 					trigger.hand = pie.getItem();
 					trigger.block = pie.getClickedBlock();
+					trigger.abilityId = Items.getTagData(trigger.hand, "AbiId", int.class);
+					trigger.cooldownHandler.setCooldown(new CooldownEntry(Items.getTagData(trigger.hand, "cd", long.class), trigger));
 					game.getAbilityManager().handle(player, trigger);
 					if(trigger.cancel) pie.setCancelled(true);
 				}
 				if(pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
+					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
 					Objective objective = game.getCurrentArenaData().getObjective(pie.getClickedBlock());
 					if(objective != null) {
 						objective.trigger(player, ObjectiveTrigger.RIGHT_CLICK);
 						pie.setCancelled(true);
-						return;
 					}
 				}
+				lastInteractTimestamp.put(bukkitPlayer, action);
 				break;
 			case "PlayerChangedDimEvent":
 				PlayerChangedDimEvent pcde = (PlayerChangedDimEvent)event;

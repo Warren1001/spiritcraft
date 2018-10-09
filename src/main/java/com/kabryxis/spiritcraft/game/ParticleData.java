@@ -32,7 +32,7 @@ public class ParticleData {
 	
 	public void load(ConfigSection section) {
 		effect = ParticleEffect.valueOf(section.get("effect", String.class).toUpperCase());
-		preview = ItemBuilder.newItemBuilder(section.getChild("item"));
+		preview = new ItemBuilder(section.get("item", ConfigSection.class));
 		offsetX = section.get("offset.x", Double.class, 0.125);
 		offsetY = section.get("offset.y", Double.class, 0.5);
 		offsetZ = section.get("offset.z", Double.class, 0.125);

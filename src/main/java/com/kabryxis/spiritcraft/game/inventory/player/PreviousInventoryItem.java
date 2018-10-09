@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PreviousInventoryItem implements InteractablePlayerItem {
 	
-	private final ItemBuilder itemBase = ItemBuilder.newItemBuilder(Material.BARRIER).name(ChatColor.GOLD + "Return to");
+	private final ItemBuilder itemBase = new ItemBuilder(Material.BARRIER).name(ChatColor.GOLD + "Return to");
 	
 	private final InventoryManager inventoryManager;
 	

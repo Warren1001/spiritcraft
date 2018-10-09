@@ -246,6 +246,7 @@ public class Game {
 	
 	public void onEvent(Event event) {
 		gameListener.onEvent(event);
+		objectiveManager.callEvent(event);
 	}
 	
 	public void end(boolean loadNext) {

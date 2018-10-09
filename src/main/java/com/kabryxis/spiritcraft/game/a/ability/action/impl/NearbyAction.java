@@ -4,7 +4,7 @@ import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
-import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.ability.action.SpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NearbyAction extends AbstractSpiritAbilityAction {
+public class NearbyAction extends SpiritAbilityAction {
 	
 	private double radius = 1.0;
 	private AffectType affects = AffectType.ALL;
@@ -26,11 +26,12 @@ public class NearbyAction extends AbstractSpiritAbilityAction {
 		handleSubCommand("radius", false, double.class, d -> radius = d);
 		handleSubCommand("affects", false, true, data -> affects = AffectType.valueOf(data.toUpperCase()));
 		handleSubCommand("amount", false, int.class, i -> amount = i);
-		handleSubCommand("ability", true, false, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, abilities::add));
+		handleSubCommand("ability", true, false, data -> game.getAbilityManager().requestAbilitiesFromCommand(name, data, false, abilities::add));
 	}
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
+		super.trigger(player, trigger);
 		Location loc = trigger.getOptimalLocation(player.getLocation());
 		List<SpiritPlayer> affected = new ArrayList<>();
 		loc.getWorld().getNearbyEntities(loc, radius, radius, radius).stream().filter(Player.class::isInstance).forEach(entity -> {

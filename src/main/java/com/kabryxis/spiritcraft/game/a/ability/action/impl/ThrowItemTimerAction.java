@@ -4,7 +4,7 @@ import com.kabryxis.spiritcraft.game.a.ability.AbilityCaller;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
-import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.ability.action.SpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.ability.ThrowItemTimerRunnable;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -12,7 +12,7 @@ import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThrowItemTimerAction extends AbstractSpiritAbilityAction {
+public class ThrowItemTimerAction extends SpiritAbilityAction {
 	
 	private long duration = 3000L, interval = 20L;
 	private List<AbilityCaller> thrown = new ArrayList<>();
@@ -23,13 +23,14 @@ public class ThrowItemTimerAction extends AbstractSpiritAbilityAction {
 		super(objectManager, "throw_item_timer");
 		handleSubCommand("duration", false, long.class, l -> duration = l);
 		handleSubCommand("interval", false, long.class, l -> interval = l);
-		handleSubCommand("thrown", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, false, thrown::add));
-		handleSubCommand("tick", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, true, tick::add));
-		handleSubCommand("finish", false, true, data -> game.getAbilityManager().requestAbilityFromCommand(name, data, true, finish::add));
+		handleSubCommand("thrown", false, true, data -> game.getAbilityManager().requestAbilitiesFromCommand(name, data, false, thrown::add));
+		handleSubCommand("tick", false, true, data -> game.getAbilityManager().requestAbilitiesFromCommand(name, data, true, tick::add));
+		handleSubCommand("finish", false, true, data -> game.getAbilityManager().requestAbilitiesFromCommand(name, data, true, finish::add));
 	}
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
+		super.trigger(player, trigger);
 		new ThrowItemTimerRunnable(player, interval, duration) {
 			
 			@Override

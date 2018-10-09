@@ -1,5 +1,6 @@
 package com.kabryxis.spiritcraft.game.ability;
 
+import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -47,12 +48,7 @@ public class WorldEndTask extends BukkitRunnable {
 						if(index < 0) index = 0;
 						else if(index > 359) index = 359;
 						if(rand.nextInt(400) + 1 > Math.max(8, 360.0 / Math.max(1, (index + 1) / 120.0))) continue;
-						FloatingBlockSet blockSet = floatingBlocks[index];
-						if(blockSet == null) {
-							blockSet = new FloatingBlockSet();
-							floatingBlocks[index] = blockSet;
-						}
-						blockSet.add(rand.nextInt(4) <= 1 ? new TickingBlock(center, block) : new FloatingBlock(block));
+						Arrays.computeIfAbsent(floatingBlocks, index, FloatingBlockSet::new).add(rand.nextInt(4) <= 1 ? new TickingBlock(center, block) : new FloatingBlock(block));
 					}
 				}
 			}

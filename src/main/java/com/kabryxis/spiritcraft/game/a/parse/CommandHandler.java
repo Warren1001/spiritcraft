@@ -26,6 +26,8 @@ public class CommandHandler implements ParseHandler {
 		dataConverters.put(long.class, Long::parseLong);
 		dataConverters.put(Byte.class, Integer::parseInt);
 		dataConverters.put(byte.class, Integer::parseInt);
+		dataConverters.put(Short.class, Short::parseShort);
+		dataConverters.put(short.class, Short::parseShort);
 	}
 	
 	public static <T> void registerDataConverter(Class<T> clazz, Function<String, T> converter) {

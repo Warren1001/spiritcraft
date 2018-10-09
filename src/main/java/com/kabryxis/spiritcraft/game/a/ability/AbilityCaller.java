@@ -12,7 +12,7 @@ public interface AbilityCaller {
 	
 	default void validateTrigger(AbilityTrigger trigger) {
 		TriggerType triggerType = trigger.type;
-		Validate.isTrue(hasTriggerType(triggerType), "The ability '" + getName() + "' cannot be triggered by " + triggerType.name() + ".");
+		Validate.isTrue(hasTriggerType(triggerType), "The ability '%s' cannot be triggered by %s.", getName(), triggerType.name());
 	}
 	
 	void trigger(SpiritPlayer player, AbilityTrigger trigger);

@@ -17,7 +17,7 @@ public class SpiritSoundPlayer implements SoundPlayer {
 	
 	public SpiritSoundPlayer(ConfigSection section) {
 		this.name = section.getName();
-		this.sound = Sound.valueOf(section.get("sound", String.class).toUpperCase());
+		this.sound = section.get("sound", Sound.class);
 		this.volume = section.get("volume", Float.class, 1F);
 		this.pitch = section.get("pitch", Float.class, 1F);
 		this.ghost = section.get("ghost", Boolean.class, false);
@@ -44,7 +44,7 @@ public class SpiritSoundPlayer implements SoundPlayer {
 	} // TODO quiet ghost
 	
 	public void playSound(Location location, Sound sound, float volume, float pitch) {
-		System.out.println("sound:" + sound.name() + ",volume:" + volume + ",pitch:" + pitch);
+		//System.out.println("sound:" + sound.name() + ",volume:" + volume + ",pitch:" + pitch);
 		location.getWorld().playSound(location, sound, volume, pitch);
 	}
 	

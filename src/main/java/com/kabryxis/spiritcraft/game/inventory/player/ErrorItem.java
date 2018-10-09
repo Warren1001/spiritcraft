@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class ErrorItem implements InteractablePlayerItem {
 	
-	private final ItemBuilder itemBase = ItemBuilder.newItemBuilder(Material.OBSIDIAN).name(ChatColor.GRAY + "Error Log");
+	private final ItemBuilder itemBase = new ItemBuilder(Material.OBSIDIAN).name(ChatColor.GRAY + "Error Log");
 	private final int messagesToDisplay = 4;
 	
 	private final Game game;

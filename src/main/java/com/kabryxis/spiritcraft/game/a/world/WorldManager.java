@@ -42,10 +42,8 @@ public class WorldManager implements WorldLoader {
 		worldCreatorData.getChildren().forEach(child -> {
 			String worldName = child.getName();
 			WorldCreator worldCreator = new WorldCreator(worldName);
-			String environmentString = child.get("environment", String.class);
-			if(environmentString != null) worldCreator.environment(World.Environment.valueOf(environmentString.toUpperCase()));
-			String typeString = child.get("type", String.class);
-			if(typeString != null) worldCreator.type(WorldType.getByName(typeString));
+			worldCreator.environment(child.get("environment", World.Environment.class));
+			worldCreator.type(child.get("type", WorldType.class));
 			String generatorString = child.get("generator", String.class);
 			if(generatorString != null) worldCreator.generator(chunkGenerators.get(generatorString));
 			setWorldCreator(worldName, worldCreator);

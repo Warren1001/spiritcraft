@@ -4,10 +4,16 @@ import com.boydti.fawe.object.FawePlayer;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
 import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
+import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
+import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventories;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
 import com.kabryxis.spiritcraft.game.ParticleData;
 import com.kabryxis.spiritcraft.game.ParticleTask;
+import com.kabryxis.spiritcraft.game.a.cooldown.CooldownManager;
+import com.kabryxis.spiritcraft.game.a.cooldown.ItemBarCooldown;
+import com.kabryxis.spiritcraft.game.a.cooldown.PlayerCooldownManager;
 import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.tracker.ItemTracker;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
 import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
@@ -26,6 +32,8 @@ public class SpiritPlayer extends GamePlayer {
 	private final PlayerItemInfo ghostItemInfo, hunterItemInfo;
 	private final WrappedEntityPlayer entityPlayer;
 	private final SchematicDataCreator schematicDataCreator;
+	private final ItemTracker itemTracker;
+	private final CooldownManager cooldownManager;
 	
 	private List<String> errorMessages = new ArrayList<>();
 	
@@ -42,6 +50,8 @@ public class SpiritPlayer extends GamePlayer {
 		this.hunterItemInfo = new PlayerItemInfo(game.getItemManager().getItemData(false), this, false);
 		this.entityPlayer = WrappedEntityPlayer.newInstance();
 		this.schematicDataCreator = new SchematicDataCreator(this);
+		this.itemTracker = new ItemTracker(this);
+		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(itemTracker.track(item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
 		data.load();
 	}
 	
@@ -56,7 +66,9 @@ public class SpiritPlayer extends GamePlayer {
 	@Override
 	public void updatePlayer(Player player) {
 		this.player = player;
-		entityPlayer.setPlayer(player);
+		entityPlayer.setHandle(player);
+		WrappedInventories.wrapPlayerInventory(player, itemTracker);
+		itemTracker.updateReferences();
 	}
 	
 	public WrappedEntityPlayer getEntityPlayer() {
@@ -81,6 +93,14 @@ public class SpiritPlayer extends GamePlayer {
 	
 	public SchematicDataCreator getDataCreator() {
 		return schematicDataCreator;
+	}
+	
+	public ItemTracker getItemTracker() {
+		return itemTracker;
+	}
+	
+	public CooldownManager getCooldownManager() {
+		return cooldownManager;
 	}
 	
 	public boolean hasErrorMessages() {
@@ -111,7 +131,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public void setCurrency(int currency) {
-		data.set("currency", currency);
+		data.put("currency", currency);
 		data.save();
 	}
 	
@@ -120,7 +140,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public void setItemSpace(int space) {
-		data.set("space", space);
+		data.put("space", space);
 		data.save();
 	}
 	
@@ -129,7 +149,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public void setParticleEffect(String particleName) {
-		data.set("particle-effect", particleName);
+		data.put("particle-effect", particleName);
 		data.save();
 	}
 	
@@ -148,10 +168,6 @@ public class SpiritPlayer extends GamePlayer {
 	public boolean isInGame() {
 		return playerType == PlayerType.GHOST || playerType == PlayerType.HUNTER;
 	}
-	
-	/*public boolean isInSpiritDim() {
-		return game.getCurrentArenaData().getSpiritDimData().getDimInfo().getLocation().getWorld().getName().equals(getLocation().getWorld().getName());
-	}*/
 	
 	public void setPlayerType(PlayerType playerType) {
 		this.playerType = playerType;
@@ -191,7 +207,7 @@ public class SpiritPlayer extends GamePlayer {
 	public void reset(ResetFlag... flags) {
 		if(particleTask != null) {
 			particleTask.cancel();
-			particleTask = null; // TODO find better way to handle tasks rather than creating new instances
+			particleTask = null;
 		}
 		super.reset(flags);
 		playerType = PlayerType.WAITING;
@@ -203,22 +219,11 @@ public class SpiritPlayer extends GamePlayer {
 		if(yaw >= 45.0F && yaw <= 135.0F) return BlockFace.EAST;
 		if(yaw >= 135.0F && yaw <= 225.0F) return BlockFace.SOUTH;
 		if(yaw >= 225.0F && yaw <= 315.0F) return BlockFace.WEST;
-		else return BlockFace.NORTH;
+		return BlockFace.NORTH;
 	}
 	
 	public int getPing() {
 		return entityPlayer.getPing();
 	}
-	
-	/*public DimData getCurrentDimData() {
-		String playerWorldName = player.getWorld().getName();
-		ArenaData arenaData = game.getCurrentArenaData();
-		if(playerWorldName.equals(arenaData.getNormalDimData().getDimInfo().getLocation().getWorld().getName())) return arenaData.getNormalDimData();
-		else if(playerWorldName.equals(arenaData.getSpiritDimData().getDimInfo().getLocation().getWorld().getName())) return arenaData.getSpiritDimData();
-		else {
-			sendMessage("where the hell are you? (cannot find you in normal or spirit dimension)");
-			return null; // TODO maybe throw error
-		}
-	}*/
 	
 }

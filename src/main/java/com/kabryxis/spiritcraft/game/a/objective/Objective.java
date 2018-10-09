@@ -23,7 +23,7 @@ public class Objective {
 	public Objective(ObjectiveManager objectiveManager, Block loc, ConfigSection section) {
 		this.objectiveManager = objectiveManager;
 		this.loc = loc;
-		ConfigSection triggersChild = section.getChild("triggers");
+		ConfigSection triggersChild = section.get("triggers", ConfigSection.class);
 		triggersChild.getChildren().forEach(triggerChild -> {
 			ObjectiveTrigger trigger = ObjectiveTrigger.valueOf(triggerChild.get("type", String.class).toUpperCase());
 			List<String> prerequisiteStrings = triggerChild.getList("requires", String.class);

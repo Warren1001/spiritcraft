@@ -1,9 +1,13 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
 import com.kabryxis.kabutils.command.Com;
+import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
+import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
+import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.spiritcraft.Spiritcraft;
+import com.kabryxis.spiritcraft.game.a.tracker.ItemTrackerTest;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.ChatColor;
@@ -83,7 +87,7 @@ public class TestCommand {
 	@Com
 	public void spawnitem(SpiritPlayer player, Material type, String name) {
 		plugin.allowNextItemSpawn();
-		Item item = player.getWorld().dropItem(player.getLocation(), ItemBuilder.newItemBuilder(type).enchant(Enchantment.DURABILITY, 1).build());
+		Item item = player.getWorld().dropItem(player.getLocation(), new ItemBuilder(type).enchant(Enchantment.DURABILITY, 1).build());
 		item.setVelocity(new Vector(0, 0, 0));
 		item.setCustomName(ChatColor.translateAlternateColorCodes('&', name.replace('_', ' ')));
 		item.setCustomNameVisible(true);
@@ -98,6 +102,38 @@ public class TestCommand {
 	@Com
 	public void printoffsets(SpiritPlayer player, boolean print) {
 		player.getDataCreator().printOffsetLocation(print);
+	}
+	
+	@Com
+	public void tracker(SpiritPlayer player) {
+		if(task != null) task.cancel();
+		int abilityId = Items.getTagData(player.getInventory().getItemInHand(), "AbiId", int.class);
+		task = BukkitThreads.syncTimer(new ItemTrackerTest(player.getItemTracker().track(item -> item.hasItemMeta() && Items.getTagData(item, "AbiId", int.class) == abilityId)), 0L, 5L);
+	}
+	
+	@Com(args = "0,1")
+	public void abiid(SpiritPlayer player, int length, int id) {
+		WrappedItemStack wrappedItemStack = WrappedItemStack.newInstance(player.getInventory().getItemInHand());
+		if(length == 0) player.sendMessage("AbiId:" + wrappedItemStack.getTag(false).get("AbiId", int.class));
+		else {
+			wrappedItemStack.getTag(true).set("AbiId", id);
+			player.getInventory().setItemInHand(wrappedItemStack.getBukkitItemStack());
+		}
+	}
+	
+	@Com
+	public void setamount(SpiritPlayer player, int amount) {
+		player.getInventory().getItemInHand().setAmount(amount);
+	}
+	
+	@Com
+	public void inventory(SpiritPlayer player) {
+		player.getGame().getItemManager().openInventory(player);
+	}
+	
+	@Com
+	public void saveitems(BukkitCommandIssuer issuer) {
+		plugin.getGame().getItemManager().getGlobalItemData().save();
 	}
 	
 }

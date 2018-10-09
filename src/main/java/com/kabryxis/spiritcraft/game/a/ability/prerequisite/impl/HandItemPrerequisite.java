@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class HandItemPrerequisite extends AbstractSpiritAbilityPrerequisite {
 	
-	private final ItemBuilder builder = ItemBuilder.newItemBuilder();
+	private final ItemBuilder builder = new ItemBuilder();
 	private final Set<ItemBuilder.ItemCompareFlag> flags = new HashSet<>();
 	
 	public HandItemPrerequisite(GameObjectManager<AbilityPrerequisite> objectManager) {

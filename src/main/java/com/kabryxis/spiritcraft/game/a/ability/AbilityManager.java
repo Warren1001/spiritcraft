@@ -4,11 +4,13 @@ import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
+import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
 import com.kabryxis.spiritcraft.game.a.ability.prerequisite.AbilityPrerequisite;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.HashMap;
@@ -61,11 +63,10 @@ public class AbilityManager {
 		return abilities.computeIfAbsent(section.getName(), name -> new Ability(this, section));
 	}
 	
-	public void requestAbilityFromCommand(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
+	public void requestAbilitiesFromCommand(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
 		if(abilityCommand.contains("||")) {
-			String[] abilityCommandsArray = abilityCommand.split(Pattern.quote("||"));
-			for(String command : abilityCommandsArray) {
-				requestAbilityFromCommand(originCommand, command, requiresThrown, action);
+			for(String command : abilityCommand.split(Pattern.quote("||"))) {
+				requestAbilitiesFromCommand(originCommand, command, requiresThrown, action);
 			}
 		}
 		else {
@@ -77,22 +78,21 @@ public class AbilityManager {
 	private void requestAbilityFromCommand0(String originCommand, String abilityCommand, boolean requiresThrown, Consumer<? super AbilityCaller> action) {
 		AbilityCaller abilityCaller = getAbility(abilityCommand);
 		if(abilityCaller == null) abilityCaller = createAction(abilityCommand);
-		if(abilityCaller == null) {
-			System.out.println("The command '" + originCommand + "' requested the ability '" + abilityCommand + "' but the ability does not exist.");
-			abilityCaller = new NullAbilityCaller(originCommand, abilityCommand);
-		}
-		else if(requiresThrown && !abilityCaller.hasTriggerType(TriggerType.THROW)) {
-			System.out.println("The ability '" + abilityCommand + "' needs to be thrown by command '" + originCommand + "', but the ability does not support being thrown.");
-		}
-		action.accept(abilityCaller);
+		if(abilityCaller == null) System.out.println(String.format("The command '%s' requested the ability '%s' but the ability does not exist.", originCommand, abilityCommand));
+		else if(requiresThrown && !abilityCaller.hasTriggerType(TriggerType.THROW))
+			System.out.println(String.format("The ability '%s' needs to be thrown by command '%s', but the ability does not support being thrown.", abilityCommand, originCommand));
+		else action.accept(abilityCaller);
 	}
 	
 	public Ability getAbility(String name) {
 		return abilities.get(name);
 	}
 	
-	public void handle(SpiritPlayer player, AbilityTrigger trigger) {
-		abilities.values().forEach(ability -> ability.trigger(player, trigger));
+	public void handle(SpiritPlayer player, AbilityTrigger trigger) { // TODO needs to accurately check abilitygroup
+		if(!player.getCooldownManager().isCooldownActive(trigger)) {
+			abilities.values().forEach(ability -> ability.trigger(player, trigger));
+			if(!trigger.handleCooldownManually) trigger.cooldownHandler.startCooldown();
+		}
 	}
 	
 	public void registerActionCreator(String name, Function<GameObjectManager<AbilityAction>, AbilityAction> creator) {
@@ -109,6 +109,10 @@ public class AbilityManager {
 	
 	public AbilityPrerequisite createPrerequisite(String action) {
 		return prerequisiteManager.create(action);
+	}
+	
+	public int getAbilityId(ItemStack item) {
+		return Items.getTagData(item, "AbiId", int.class);
 	}
 	
 }

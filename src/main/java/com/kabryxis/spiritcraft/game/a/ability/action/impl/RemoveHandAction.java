@@ -3,13 +3,13 @@ package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
-import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.ability.action.SpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class RemoveHandAction extends AbstractSpiritAbilityAction {
+public class RemoveHandAction extends SpiritAbilityAction {
 	
 	private int amountToRemove = 1;
 	private long duration = 0L;
@@ -22,6 +22,7 @@ public class RemoveHandAction extends AbstractSpiritAbilityAction {
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
+		super.trigger(player, trigger);
 		ItemStack itemStack = trigger.hand;
 		int amountToRemove = Math.min(itemStack.getAmount(), this.amountToRemove);
 		int amount = itemStack.getAmount() - amountToRemove;

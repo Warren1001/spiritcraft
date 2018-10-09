@@ -49,7 +49,7 @@ public class ArenaData {
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
 		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
-		ConfigSection objectivesChild = schematic.getData().getChild("objectives");
+		ConfigSection objectivesChild = schematic.getData().get("objectives", ConfigSection.class);
 		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
 		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getSchematic().getClipboard()));
 		for(int cx = (region.getMinimumPoint().getBlockX() >> 4) - 1; cx <= (region.getMaximumPoint().getBlockX()) + 1; cx++) {
@@ -143,6 +143,7 @@ public class ArenaData {
 		editSession.setBlocks(totalRegion, AIR);
 		editSession.flushQueue();
 		game.getWorldManager().unloadChunks(this);
+		game.getObjectiveManager().clear();
 	}
 	
 	private Region getModifyingRegion(Clipboard clipboard) {

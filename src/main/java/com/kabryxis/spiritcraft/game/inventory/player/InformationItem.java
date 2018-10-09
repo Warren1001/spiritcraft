@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class InformationItem implements InteractablePlayerItem {
 	
-	private final ItemBuilder itemBase = ItemBuilder.newItemBuilder(Material.SIGN).name(ChatColor.AQUA + "Information");
+	private final ItemBuilder itemBase = new ItemBuilder(Material.SIGN).name(ChatColor.AQUA + "Information");
 	
 	private final Game game;
 	

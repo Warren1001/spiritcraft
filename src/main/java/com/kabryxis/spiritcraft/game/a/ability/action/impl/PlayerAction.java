@@ -2,11 +2,11 @@ package com.kabryxis.spiritcraft.game.a.ability.action.impl;
 
 import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
 import com.kabryxis.spiritcraft.game.a.ability.action.AbilityAction;
-import com.kabryxis.spiritcraft.game.a.ability.action.AbstractSpiritAbilityAction;
+import com.kabryxis.spiritcraft.game.a.ability.action.SpiritAbilityAction;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 
-public class PlayerAction extends AbstractSpiritAbilityAction {
+public class PlayerAction extends SpiritAbilityAction {
 	
 	private double damage = 0.0;
 	
@@ -17,6 +17,7 @@ public class PlayerAction extends AbstractSpiritAbilityAction {
 	
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
+		super.trigger(player, trigger);
 		execute(player);
 	}
 	

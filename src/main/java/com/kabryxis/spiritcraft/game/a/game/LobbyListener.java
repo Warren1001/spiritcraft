@@ -113,8 +113,16 @@ public class LobbyListener implements GlobalListener {
 				}
 				break;
 			case "FoodLevelChangeEvent":
-				((Player)((FoodLevelChangeEvent)event).getEntity()).setSaturation(Float.MAX_VALUE);
-				System.out.println("foodlevelchangeevent called");
+				FoodLevelChangeEvent flce = (FoodLevelChangeEvent)event;
+				flce.setFoodLevel(20);
+				((Player)flce.getEntity()).setSaturation(Float.MAX_VALUE);
+				break;
+			case "PlayerDropItemEvent":
+				//PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
+				game.getPlugin().allowNextItemSpawn();
+				break;
+			case "InventoryClickEvent":
+				//new RuntimeException().printStackTrace();
 				break;
 			case "EntityDamageEvent":
 			case "EntityDamageByEntityEvent":

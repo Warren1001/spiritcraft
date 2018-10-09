@@ -108,9 +108,9 @@ public class SchematicDataCreator {
 			return;
 		}
 		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + "-data.yml"));
-		if(ghostSpawns != null) data.set("spawns.ghost", ghostSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
-		if(hunterSpawns != null) data.set("spawns.hunter", hunterSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
-		data.set("weight", weight);
+		if(ghostSpawns != null) data.put("spawns.ghost", ghostSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
+		if(hunterSpawns != null) data.put("spawns.hunter", hunterSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
+		data.put("weight", weight);
 		data.save();
 	}
 	

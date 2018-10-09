@@ -28,25 +28,25 @@ public class PlayerItemInfo {
 	}
 	
 	public boolean owns(String item) {
-		ConfigSection itemSection = data.getChild("inventory." + type);
+		ConfigSection itemSection = data.get("inventory." + type, ConfigSection.class);
 		return itemSection != null && itemSection.getList("owns", String.class, Collections.emptyList()).contains(item);
 	}
 	
 	public void bought(String item) {
-		ConfigSection itemSection = data.getChild("inventory." + type, true);
+		ConfigSection itemSection = data.get("inventory." + type, ConfigSection.class, new ConfigSection(), true);
 		List<String> itemsOwned = itemSection.getList("owns", String.class, new ArrayList<>());
 		itemsOwned.add(item);
-		itemSection.set("owns", itemsOwned);
+		itemSection.put("owns", itemsOwned);
 		data.save();
 	}
 	
 	public boolean isSelected(String item) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class, new ConfigSection(), true);
 		return selectedSection != null && selectedSection.getChildren().stream().anyMatch(section -> section.get("name", String.class).equals(item));
 	}
 	
 	public int getTotalAmount(String item) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class);
 		int amount = 0;
 		if(selectedSection != null) {
 			for(ConfigSection section : selectedSection.getChildren()) {
@@ -57,20 +57,20 @@ public class PlayerItemInfo {
 	}
 	
 	public void increaseAmount(String item) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected", true);
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class, new ConfigSection(), true);
 		Optional<ConfigSection> optional = selectedSection.getChildren().stream().filter(section -> section.get("name", String.class).equals(item)).findFirst();
 		if(optional.isPresent()) {
 			ConfigSection section = optional.get();
-			section.set("amount", section.get("amount", Integer.class, 1) + 1);
+			section.put("amount", section.get("amount", Integer.class, 1) + 1);
 			data.save();
 		}
 		else {
 			for(int i = 35; i >= 0; i--) { // 36 - 40 are designated for armor / offhand
-				ConfigSection slotSection = selectedSection.getChild(String.valueOf(i));
+				ConfigSection slotSection = selectedSection.get(String.valueOf(i), ConfigSection.class);
 				if(slotSection == null) {
-					slotSection = selectedSection.getChild(String.valueOf(i), true);
-					slotSection.set("name", item);
-					slotSection.set("amount", 1);
+					slotSection = selectedSection.get(String.valueOf(i), ConfigSection.class, new ConfigSection(), true);
+					slotSection.put("name", item);
+					slotSection.put("amount", 1);
 					data.save();
 					return;
 				}
@@ -80,21 +80,21 @@ public class PlayerItemInfo {
 	}
 	
 	public void decreaseAmount(String item) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class);
 		if(selectedSection == null) throw new IllegalStateException("Player does not have any items selected.");
 		Optional<ConfigSection> optional = selectedSection.getChildren().stream().filter(section -> section.get("name", String.class).equals(item)).findFirst();
 		if(optional.isPresent()) {
 			ConfigSection section = optional.get();
 			int amount = section.get("amount", Integer.class, 1);
 			if(amount == 1) selectedSection.remove(section.getName());
-			else section.set("amount", amount - 1);
+			else section.put("amount", amount - 1);
 			data.save();
 		}
 		else throw new IllegalArgumentException("Item '" + item + "' is not selected, couldn't decrease the amount the player has.");
 	}
 	
 	public void populateSelectedConfiguration(ItemStack[] itemStacks) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class);
 		if(selectedSection == null) return;
 		selectedSection.getChildren().forEach(section -> {
 			String slotName = section.getName();
@@ -128,7 +128,7 @@ public class PlayerItemInfo {
 	public void saveSelectedConfiguration(ItemStack[] itemStacks) {
 		String key = "inventory." + type + ".selected";
 		data.remove(key);
-		ConfigSection selectedSection = data.getChild(key, true);
+		ConfigSection selectedSection = data.get(key, ConfigSection.class, new ConfigSection(), true);
 		for(int slot = 0; slot < 45; slot++) {
 			if(slot > (Version.VERSION.isVersionAtLeast(Version.v1_9_R1) ? 4 : 3) && slot < 9) continue; // unused filled slots
 			ItemStack itemStack = itemStacks[slot];
@@ -145,16 +145,16 @@ public class PlayerItemInfo {
 			else if(slot == 4) slotKey = "o"; // offhand
 			else if(slot >= 36) slotKey = String.valueOf(slot - 36); // hotbar
 			else slotKey = String.valueOf(slot - 9); // inside inventory
-			ConfigSection section = selectedSection.getChild(slotKey, true);
-			section.set("name", itemInfo.getName());
+			ConfigSection section = selectedSection.get(slotKey, ConfigSection.class, new ConfigSection(), true);
+			section.put("name", itemInfo.getName());
 			int amount = itemStack.getAmount();
-			if(amount > 1) section.set("amount", amount);
+			if(amount > 1) section.put("amount", amount);
 		}
 		data.save();
 	}
 	
 	public void giveKit() {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class);
 		if(selectedSection == null) return;
 		PlayerInventory inv = player.getPlayer().getInventory();
 		selectedSection.getChildren().forEach(section -> {
@@ -183,7 +183,7 @@ public class PlayerItemInfo {
 	}
 	
 	public int getAmountOfItemsOfSameType(String item) {
-		ConfigSection selectedSection = data.getChild("inventory." + type + ".selected");
+		ConfigSection selectedSection = data.get("inventory." + type + ".selected", ConfigSection.class);
 		int amount = 0;
 		if(selectedSection != null) {
 			Set<String> alreadyCheckedItems = Sets.newHashSet(item);

@@ -44,7 +44,7 @@ public class BasicItemInfo {
 		this.previewSlot = section.get("slot", Integer.class);
 		this.weight = section.get("weight", Integer.class);
 		this.value = section.get("value", Integer.class);
-		this.prebuilt = ItemBuilder.newItemBuilder(section.getChild("item"));
+		this.prebuilt = new ItemBuilder(section.get("item", ConfigSection.class));
 		this.noOwnLore = Arrays.asList(ChatColor.RESET.toString(), ChatColor.GREEN + "Click to buy for " + value + " coins!");
 	}
 	
