@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.kabryxis.kabutils.data.file.FileEndingFilter;
+import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.kabutils.random.weighted.WeightedRandomArrayList;
@@ -17,15 +17,7 @@ public class ArenaManager {
 	public ArenaManager(WorldManager worldManager, File folder) {
 		this.worldManager = worldManager;
 		this.folder = folder;
-		folder.mkdirs();
-		File[] files = folder.listFiles(new FileEndingFilter(".yml"));
-		if(files != null) {
-			for(File file : files) {
-				Config data = new Config(file);
-				data.loadSync();
-				arenaRegistry.add(new Arena(worldManager, data));
-			}
-		}
+		if(!folder.mkdirs()) Files.forEachFileWithEnding(folder, ".yml", file -> arenaRegistry.add(new Arena(worldManager, new Config(file, true))));
 	}
 	
 	public WorldManager getWorldManager() {
@@ -36,8 +28,8 @@ public class ArenaManager {
 		return folder;
 	}
 	
-	public void reloadAll() { // TODO handle entries that have been removed or added to disk, reload currently loaded data if necessary
-		arenaRegistry.forEach(Arena::reloadData);
+	public void reloadAll() {
+		arenaRegistry.forEach(Arena::reloadData); // TODO handle entries that have been removed or added to disk, reload currently loaded data if necessary
 	}
 	
 	public Arena random() {

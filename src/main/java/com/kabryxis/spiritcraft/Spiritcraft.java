@@ -2,14 +2,14 @@ package com.kabryxis.spiritcraft;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import com.kabryxis.kabutils.command.CommandManager;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
 import com.kabryxis.kabutils.spigot.event.Listeners;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
+import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicPacketAdapter;
+import com.kabryxis.kabutils.spigot.serialization.SpigotSerialization;
 import com.kabryxis.spiritcraft.game.AttackHiddenPlayerAdapter;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.LobbyListener;
@@ -28,6 +28,7 @@ import java.util.function.Function;
 public class Spiritcraft extends JavaPlugin {
 	
 	static {
+		SpigotSerialization.registerSerializers();
 		Function<String, Vector> vectorFunction = string -> {
 			String[] args = string.split(",");
 			return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
@@ -41,23 +42,11 @@ public class Spiritcraft extends JavaPlugin {
 	private LobbyListener listener;
 	
 	@Override
-	public void onDisable() {
-		if(game.isLoaded()) game.end(false);
-	}
-	
-	@Override
 	public void onEnable() {
 		saveDefaultConfig();
 		ItemBuilder.DEFAULT.flag(ItemFlag.HIDE_ATTRIBUTES);
 		ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new AttackHiddenPlayerAdapter(this)).syncStart();
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this, PacketType.Play.Client.SPECTATE) {
-			
-			@Override
-			public void onPacketReceiving(PacketEvent event) {
-				event.setCancelled(true);
-			}
-			
-		});
+		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicPacketAdapter(this, true, PacketType.Play.Client.SPECTATE));
 		game = new Game(this);
 		commandManager = new BukkitCommandManager();
 		commandManager.registerArgumentConverter(SpiritPlayer.class, arg -> game.getPlayerManager().getPlayer(Bukkit.getPlayer(arg)));
@@ -71,6 +60,11 @@ public class Spiritcraft extends JavaPlugin {
 		if(getConfig().getBoolean("world-mode", false)) {
 			// TODO
 		}
+	}
+	
+	@Override
+	public void onDisable() {
+		if(game.isLoaded()) game.end(false);
 	}
 	
 	public Game getGame() {

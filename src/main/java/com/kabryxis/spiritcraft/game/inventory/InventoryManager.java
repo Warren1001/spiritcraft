@@ -2,10 +2,9 @@ package com.kabryxis.spiritcraft.game.inventory;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
+import com.kabryxis.kabutils.spigot.event.Listeners;
+import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicPacketAdapter;
 import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.inventory.player.ErrorItem;
@@ -31,31 +30,28 @@ public class InventoryManager implements Listener {
 	private final Map<Player, DynamicInventory> currentlyOpen = new HashMap<>();
 	private final Map<Player, DynamicInventory> previouslyOpen = new HashMap<>();
 	
+	private final Game game;
 	private final PreviousInventoryItem previousInventoryItem;
 	private final InformationItem informationItem;
 	private final ErrorItem errorItem;
 	
 	public InventoryManager(Game game) {
+		this.game = game;
 		previousInventoryItem = new PreviousInventoryItem(this);
 		informationItem = new InformationItem(game);
 		errorItem = new ErrorItem(game);
 		Plugin plugin = game.getPlugin();
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.WINDOW_ITEMS) {
-			
-			@Override
-			public void onPacketSending(PacketEvent event) {
-				Player player = event.getPlayer();
-				DynamicInventory inventory = getCurrentlyOpen(player);
-				if(inventory != null) {
-					PacketContainer packet = event.getPacket();
-					ItemStack[] items = getFromModifier(packet);
-					inventory.constructPlayerItems(player, items);
-					writeToModifier(packet, items);
-				}
+		Listeners.registerListener(this, plugin);
+		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicPacketAdapter(plugin, false, event -> {
+			Player player = event.getPlayer();
+			DynamicInventory inventory = getCurrentlyOpen(player);
+			if(inventory != null) {
+				PacketContainer packet = event.getPacket();
+				ItemStack[] items = getFromModifier(packet);
+				inventory.constructPlayerItems(player, items);
+				writeToModifier(packet, items);
 			}
-			
-		});
+		}, PacketType.Play.Server.WINDOW_ITEMS));
 	}
 	
 	public DynamicInventory getCurrentlyOpen(Player player) {
@@ -103,7 +99,7 @@ public class InventoryManager implements Listener {
 	}
 	
 	public void updateInventory(Player player) {
-		BukkitThreads.sync(player::updateInventory);
+		game.getTaskManager().start(player::updateInventory);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -4,9 +4,7 @@ import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.spiritcraft.Spiritcraft;
-import com.kabryxis.spiritcraft.game.ability.CloudTask;
 import com.kabryxis.spiritcraft.game.ability.FireBreathTask;
 import com.kabryxis.spiritcraft.game.ability.WorldEndTask;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -24,14 +22,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
-import org.inventivetalent.particle.ParticleEffect;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 public class CommandListener implements Listener {
@@ -72,7 +65,6 @@ public class CommandListener implements Listener {
 	private WorldEndTask worldEndTask;
 	
 	private BukkitTask task;
-	private SuspendTask suspendTask;
 	private Location distanceLoc;
 	private BlockFace[] facesToCheck = {BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH, BlockFace.NORTH};
 	private boolean light = false;
@@ -84,10 +76,9 @@ public class CommandListener implements Listener {
 			if(args[0].equalsIgnoreCase("stop")) {
 				if(task != null) task.cancel();
 				if(worldEndTask != null) worldEndTask.cancel();
-				if(suspendTask != null) suspendTask.cancel();
 			}
 			else if(args[0].equalsIgnoreCase("cloud")) {
-				new CloudTask(player.getLocation());
+				//new CloudTask(player.getLocation());
 			}
 			else if(args[0].equalsIgnoreCase("breath")) {
 				new FireBreathTask(plugin.getGame().getPlayerManager().getPlayer(player));
@@ -168,7 +159,7 @@ public class CommandListener implements Listener {
 					System.out.println(velocity);
 					player.setVelocity(player.getVelocity().add(velocity));
 				}, 0L, 1L);*/
-				task = BukkitThreads.syncTimer(() -> {
+				/*task = BukkitThreads.syncTimer(() -> {
 					Location playerLoc = player.getLocation();
 					double dist = loc.distanceSquared(playerLoc);
 					if(dist > 128.0) return;
@@ -189,14 +180,10 @@ public class CommandListener implements Listener {
 					velocity.setZ(((int)(velocity.getZ() * 10000)) / 10000.0);
 					if(Math.abs(velocity.getX()) < 0.001) velocity.setX(0);
 					if(Math.abs(velocity.getY()) < 0.001) velocity.setY(0);
-					if(Math.abs(velocity.getZ()) < 0.001) velocity.setZ(0);*/
+					if(Math.abs(velocity.getZ()) < 0.001) velocity.setZ(0);
 					//System.out.println(dist + ": " + velocity + " - " + velocity.multiply(strength));
 					player.setVelocity(player.getVelocity().add(new Vector(motX * strength, 0, motZ * strength)));
-				}, 0L, 1L);
-			}
-			else if(args[0].equalsIgnoreCase("suspend")) {
-				if(suspendTask != null) suspendTask.cancel();
-				suspendTask = new SuspendTask(player);
+				}, 0L, 1L);*/
 			}
 			else if(args[0].equalsIgnoreCase("worldend")) {
 				if(worldEndTask != null) worldEndTask.cancel();
@@ -210,7 +197,7 @@ public class CommandListener implements Listener {
 				player.getInventory().setHeldItemSlot(0);
 			}
 			else if(args[0].equalsIgnoreCase("overloadsound")) {
-				task = BukkitThreads.syncTimer(new BukkitRunnable() {
+				/*task = BukkitThreads.syncTimer(new BukkitRunnable() {
 					
 					private final int speedInterval = 100;
 					
@@ -236,7 +223,7 @@ public class CommandListener implements Listener {
 						}
 					}
 					
-				}, 0L, 1L);
+				}, 0L, 1L);*/
 			}
 			else if(args[0].equalsIgnoreCase("glassbreak")) {
 				SpiritPlayer spiritPlayer = plugin.getGame().getPlayerManager().getPlayer(player);
@@ -244,7 +231,7 @@ public class CommandListener implements Listener {
 				selection.forEach(bv -> {
 					Block block = spiritPlayer.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
 					if(block.getType() == Material.REDSTONE_LAMP_OFF || block.getType() == Material.REDSTONE_LAMP_ON) {
-						BukkitThreads.syncLater(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
+						//BukkitThreads.syncLater(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
 					}
 				});
 			}
@@ -262,7 +249,7 @@ public class CommandListener implements Listener {
 				}
 				else if(args[1].equalsIgnoreCase("spamcheck")) {
 					if(task != null) task.cancel();
-					task = BukkitThreads.syncTimer(() -> player.sendMessage(String.valueOf(player.getLocation().distanceSquared(distanceLoc))), 0L, 2L);
+					//task = BukkitThreads.syncTimer(() -> player.sendMessage(String.valueOf(player.getLocation().distanceSquared(distanceLoc))), 0L, 2L);
 				}
 			}
 			else if(args[0].equalsIgnoreCase("spectate")) {
@@ -274,27 +261,20 @@ public class CommandListener implements Listener {
 				player.setSpectatorTarget(otherPlayer);
 			}
 		}
-		else if(args.length == 4) {
-			if(args[0].equalsIgnoreCase("suspend")) {
-				double movX = args[1].equalsIgnoreCase("~") ? 0.00000000000001950438509384058345 : Double.parseDouble(args[1]);
-				double movY = args[2].equalsIgnoreCase("~") ? 0.00000000000001950438509384058345 : Double.parseDouble(args[2]);
-				double movZ = args[3].equalsIgnoreCase("~") ? 0.00000000000001950438509384058345 : Double.parseDouble(args[3]);
-				suspendTask.setMov(movX, movY, movZ);
-			}
-		}
 		else if(args.length == 5) {
 			if(args[0].equalsIgnoreCase("sound")) {
 				if(task != null) task.cancel();
-				task = BukkitThreads.syncTimer(() -> player.playSound(player.getLocation(), Sound.valueOf(args[1].toUpperCase()),
-						Float.parseFloat(args[2]), Float.parseFloat(args[3])), 0L, Integer.parseInt(args[4]));
+				/*task = BukkitThreads.syncTimer(() -> player.playSound(player.getLocation(), Sound.valueOf(args[1].toUpperCase()),
+						Float.parseFloat(args[2]), Float.parseFloat(args[3])), 0L, Integer.parseInt(args[4]));*/
 			}
 		}
 		else if(args.length == 9) {
 			if(args[0].equalsIgnoreCase("particle")) { // TODO test dynamic surrounding blocks?
 				if(task != null) task.cancel();
-				task = BukkitThreads.syncTimer(() -> ParticleEffect.valueOf(args[1].toUpperCase()).send(Collections.singletonList(player.getPlayer()), player.getEyeLocation().clone().add(player.getVelocity().clone()
-						.multiply(Double.parseDouble(args[7]))).add(player.getLocation().getDirection().clone().multiply(Double.parseDouble(args[8]))), Double.parseDouble(args[2]), Double.parseDouble(args[3]),
-						Double.parseDouble(args[4]), Double.parseDouble(args[5]), Integer.parseInt(args[6]), 16), 0L, 1L);
+				/*task = BukkitThreads.syncTimer(() -> ParticleEffect.valueOf(args[1].toUpperCase()).send(Collections.singletonList(player.getPlayer()), player.getEyeLocation().clone()
+					.add(player.getVelocity().clone().multiply(Double.parseDouble(args[7]))).add(player.getLocation().getDirection().clone()
+					.multiply(Double.parseDouble(args[8]))), Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Integer.parseInt(args[6]), 16),
+					0L, 1L);*/
 			}
 		}
 		return true;

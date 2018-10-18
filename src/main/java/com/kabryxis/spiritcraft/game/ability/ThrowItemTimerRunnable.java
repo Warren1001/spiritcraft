@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public abstract class ThrowItemTimerRunnable extends BukkitRunnable {
 		item.setVelocity(p.getLocation().getDirection().multiply(1.2));
 		onThrow();
 		finishTime = System.currentTimeMillis() + duration;
-		BukkitThreads.syncTimer(this, interval, interval);
+		player.getGame().getTaskManager().start(this, interval, interval);
 	}
 	
 	public abstract void onThrow();

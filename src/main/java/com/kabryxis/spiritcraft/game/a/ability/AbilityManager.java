@@ -50,11 +50,7 @@ public class AbilityManager {
 		abilities.clear();
 		actionManager.clear();
 		prerequisiteManager.clear();
-		Files.forEachFileWithEnding(folder, ".yml", file -> {
-			Config config = new Config(file);
-			config.loadSync();
-			createAbility(config);
-		});
+		Files.forEachFileWithEnding(folder, ".yml", file -> createAbility(new Config(file, true)));
 		finishedConstructing = true;
 		abilityRequests.forEach(Worker::work);
 	}

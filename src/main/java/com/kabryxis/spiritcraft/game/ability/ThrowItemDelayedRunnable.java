@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public abstract class ThrowItemDelayedRunnable extends BukkitRunnable {
 		item = p.getWorld().dropItem(p.getEyeLocation(), itemStack);
 		item.setVelocity(p.getLocation().getDirection().multiply(1.2));
 		onThrow();
-		BukkitThreads.syncLater(this, delay);
+		player.getGame().getTaskManager().start(this, delay);
 	}
 	
 	public abstract void onThrow();

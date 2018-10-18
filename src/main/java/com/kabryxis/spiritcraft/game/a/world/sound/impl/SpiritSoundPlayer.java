@@ -17,11 +17,11 @@ public class SpiritSoundPlayer implements SoundPlayer {
 	
 	public SpiritSoundPlayer(ConfigSection section) {
 		this.name = section.getName();
-		this.sound = section.get("sound", Sound.class);
-		this.volume = section.get("volume", Float.class, 1F);
-		this.pitch = section.get("pitch", Float.class, 1F);
-		this.ghost = section.get("ghost", Boolean.class, false);
-		this.quiet = section.get("quiet", Boolean.class, true);
+		this.sound = section.get("sound");
+		this.volume = section.getFloat("volume", 1F);
+		this.pitch = section.getFloat("pitch", 1F);
+		this.ghost = section.get("ghost", false);
+		this.quiet = section.get("quiet", true);
 	}
 	
 	public SpiritSoundPlayer(String name, Sound sound, float volume, float pitch, boolean ghost, boolean quiet) {

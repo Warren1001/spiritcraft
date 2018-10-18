@@ -39,7 +39,7 @@ public class ChargeAction extends SpiritAbilityAction {
 		if(itemBarTimerTask == null || !itemBarTimerTask.isRunning()) {
 			long uuid = Items.getTagData(trigger.hand, "uuidsc", Long.class);
 			if(uuid == 0L) throw new AbilityException("The action 'charge' can only be used on items with a uuid");
-			itemBarTimerTask = new ItemBarTimerTask(player.getItemTracker().track(item -> Items.getTagData(item, "uuidsc", Long.class) == uuid), ltr, duration, interval) {
+			itemBarTimerTask = new ItemBarTimerTask(game, player.getItemTracker().track(item -> Items.getTagData(item, "uuidsc", long.class) == uuid), ltr, duration, interval) {
 				
 				@Override
 				public void onStart() {
@@ -50,8 +50,9 @@ public class ChargeAction extends SpiritAbilityAction {
 				@Override
 				public void onStop() {
 					super.onStop();
+					trigger.handleCooldownManually = false;
 					finish.forEach(ability -> ability.triggerSafely(player, trigger));
-					trigger.cooldownHandler.startCooldown();
+					if(!trigger.handleCooldownManually) trigger.cooldownHandler.startCooldown();
 				}
 				
 			};

@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
+import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.kabryxis.kabutils.data.MathHelp;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,7 +36,7 @@ public class FireBreathTask extends BukkitRunnable {
 		if(iteration <= EXPLODE_ITERATION) offset = (iteration / (double)EXPLODE_ITERATION) / 2.1;
 		else offset = ((iteration - (EXPLODE_ITERATION + 1) + iteration / (double)EXPLODE_ITERATION) / 8.0) + 1;
 		if(offset > 3.0) offset = 3.0;
-		double particleCount = MathHelp.floor(offset * 50);
+		double particleCount = NumberConversions.floor(offset * 50);
 		if(iteration > 210) particleCount /= ((iteration - 210) / 5.0) + 1;
 		//System.out.println(iteration + ":" + offset + "," + particleCount);
 		if(iteration <= EXPLODE_ITERATION || iteration % 2 == 0) ParticleEffect.FLAME.send(owner.getPlayer().getWorld().getPlayers(), loc, offset, offset / 1.5, offset, 0, (int)particleCount);

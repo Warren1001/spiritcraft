@@ -9,13 +9,13 @@ public class ArenaSchematic extends SchematicWrapper implements Weighted {
 	
 	private final Config data;
 	
-	public ArenaSchematic(File schematicFile) {
-		this(schematicFile, new File(schematicFile.getParentFile(), schematicFile.getName().split("\\.", 2)[0] + "-data.yml"));
+	public ArenaSchematic(Config data) {
+		super(new File(data.getFile().getParent(), String.format("%s.sch", data.get("sch", data.getName()))));
+		this.data = data;
 	}
 	
 	public ArenaSchematic(File schematicFile, File dataFile) {
-		this(schematicFile, new Config(dataFile));
-		data.loadSync();
+		this(schematicFile, new Config(dataFile, true));
 	}
 	
 	public ArenaSchematic(File schematicFile, Config schematicData) {
@@ -29,7 +29,7 @@ public class ArenaSchematic extends SchematicWrapper implements Weighted {
 	
 	@Override
 	public int getWeight() {
-		return data.get("weight", Integer.class, 1000);
+		return data.getInt("weight", 1000);
 	}
 	
 }

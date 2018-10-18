@@ -16,7 +16,7 @@ public class CloudAction extends SpiritAbilityAction {
 	@Override
 	public void trigger(SpiritPlayer player, AbilityTrigger trigger) {
 		super.trigger(player, trigger);
-		new CloudTask(trigger.getOptimalLocation(player.getLocation()));
+		new CloudTask(player.getGame(), trigger.getOptimalLocation(player.getLocation()));
 	}
 	
 }

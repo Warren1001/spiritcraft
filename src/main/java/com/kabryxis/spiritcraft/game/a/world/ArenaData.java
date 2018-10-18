@@ -6,12 +6,12 @@ import com.boydti.fawe.object.schematic.Schematic;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.random.RandomArrayList;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.Vector;
@@ -20,6 +20,7 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.Objects;
@@ -31,6 +32,8 @@ public class ArenaData {
 	
 	private final Game game;
 	private final Arena arena;
+	private final Location location;
+	private final Vector vectorLocation;
 	private final Set<BlockVector2D> occupiedChunks;
 	private final ArenaSchematic schematic;
 	private final EditSession editSession;
@@ -41,17 +44,22 @@ public class ArenaData {
 	public ArenaData(Game game, Arena arena, ArenaSchematic schematic) {
 		this.game = game;
 		this.arena = arena;
+		this.location = arena.getLocation().clone();
+		Clipboard clipboard = Objects.requireNonNull(schematic.getSchematic().getClipboard());
+		if(arena.isDynamic()) location.setY(clipboard.getOrigin().getY() + 1);
+		this.vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		World world = location.getWorld();
 		this.occupiedChunks = arena.getOccupiedChunks();
 		this.schematic = schematic;
-		this.editSession = new EditSessionBuilder(arena.getLocation().getWorld().getName()).fastmode(true).checkMemory(false)
+		this.editSession = new EditSessionBuilder(world.getName()).fastmode(true).checkMemory(false)
 				.changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
-		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
+		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(world, string)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
-		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(arena.getLocation().getWorld(), string)).collect(() ->
+		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(world, string)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
-		ConfigSection objectivesChild = schematic.getData().get("objectives", ConfigSection.class);
+		ConfigSection objectivesChild = schematic.getData().get("objectives");
 		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
-		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getSchematic().getClipboard()));
+		Region region = getModifyingRegion(clipboard);
 		for(int cx = (region.getMinimumPoint().getBlockX() >> 4) - 1; cx <= (region.getMaximumPoint().getBlockX()) + 1; cx++) {
 			for(int cz = (region.getMinimumPoint().getBlockZ() >> 4) - 1; cz <= (region.getMaximumPoint().getBlockZ()) + 1; cz++) {
 				occupiedChunks.add(new BlockVector2D(cx, cz));
@@ -87,10 +95,26 @@ public class ArenaData {
 		return hunterSpawns.random();
 	}
 	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public Vector getVectorLocation() {
+		return vectorLocation;
+	}
+	
+	public Location toLocation(Vector offset) {
+		return location.clone().add(offset.getX(), offset.getY(), offset.getZ());
+	}
+	
+	public Vector toOffset(Location loc) {
+		return new Vector(loc.getX() - location.getX(), loc.getY() - location.getY(), loc.getZ() - location.getZ());
+	}
+	
 	public void load() {
-		game.getWorldManager().loadChunks(this, arena.getLocation().getWorld(), occupiedChunks);
+		game.getWorldManager().loadChunks(this, location.getWorld(), occupiedChunks);
 		paste0(schematic, false, true);
-		BukkitThreads.syncLater(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.
+		game.getTaskManager().start(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.
 			editSession.getQueue().getRelighter().fixSkyLighting();
 			game.finishSetup();
 		}, 60L);
@@ -122,7 +146,7 @@ public class ArenaData {
 			}
 			if(createNewRegion) totalRegion = new CuboidRegion(min, max);
 		}
-		schematic.paste(editSession, arena.getVectorLocation(), air);
+		schematic.paste(editSession, vectorLocation, air);
 	}
 	
 	public void modifiedPosition(Vector position) {
@@ -147,14 +171,13 @@ public class ArenaData {
 	}
 	
 	private Region getModifyingRegion(Clipboard clipboard) {
-		Vector loc = arena.getVectorLocation();
 		Vector origin = clipboard.getOrigin();
-		return new CuboidRegion(loc.add(clipboard.getMinimumPoint()).subtract(origin).toBlockVector(),
-				loc.add(clipboard.getMaximumPoint()).subtract(origin).toBlockVector());
+		return new CuboidRegion(vectorLocation.add(clipboard.getMinimumPoint()).subtract(origin).toBlockVector(),
+				vectorLocation.add(clipboard.getMaximumPoint()).subtract(origin).toBlockVector());
 	}
 	
 	public void relight() {
-		BukkitThreads.syncLater(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
+		game.getTaskManager().start(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
 	}
 	
 }

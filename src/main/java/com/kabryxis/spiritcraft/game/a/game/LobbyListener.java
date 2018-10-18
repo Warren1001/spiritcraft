@@ -1,12 +1,10 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.Vector;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -92,10 +90,6 @@ public class LobbyListener implements GlobalListener {
 			case "PlayerToggleSneakEvent":
 				PlayerToggleSneakEvent ptse = (PlayerToggleSneakEvent)event;
 				if(ptse.getPlayer().getGameMode() == GameMode.SPECTATOR) ptse.setCancelled(true);
-				break;
-			case "PlayerGameModeChangeEvent":
-				PlayerGameModeChangeEvent pgmce = (PlayerGameModeChangeEvent)event;
-				if(pgmce.getNewGameMode() == GameMode.SPECTATOR) BukkitThreads.sync(() -> pgmce.getPlayer().setSpectatorTarget(Bukkit.getPlayer("SecondWind")));
 				break;
 			case "PlayerPickupItemEvent":
 				PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;

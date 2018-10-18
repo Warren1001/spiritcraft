@@ -5,7 +5,6 @@ import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.Location;
@@ -21,6 +20,7 @@ public class Arena implements Weighted, ObjectPredicate {
 	private final WorldManager worldManager;
 	private final Config data;
 	
+	private boolean dynamic = false;
 	private Location location;
 	private Vector vectorLocation;
 	private int sizeX, sizeY, sizeZ;
@@ -32,45 +32,43 @@ public class Arena implements Weighted, ObjectPredicate {
 	}
 	
 	public void reloadData() {
-		data.load(config -> reload0());
+		data.loadAsync(config -> reload0());
 	}
 	
 	private void reload0() {
-		location = Locations.deserialize(data.get("location", String.class), worldManager);
-		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		sizeX = data.get("size.x", Integer.class, Integer.MAX_VALUE);
-		sizeY = data.get("size.y", Integer.class, 256);
-		sizeZ = data.get("size.z", Integer.class, Integer.MAX_VALUE);
-		for(int cx = data.get("load.min.cx", Integer.class, (vectorLocation.getBlockX() >> 4) - 3); cx <= data.get("load.max.cx", Integer.class, (vectorLocation.getBlockX() >> 4) + 3); cx++) {
-			for(int cz = data.get("load.min.cz", Integer.class, (vectorLocation.getBlockZ() >> 4) - 3); cz <= data.get("load.max.cz", Integer.class, (vectorLocation.getBlockZ() >> 4) + 3); cz++) {
+		dynamic = data.get("dynamic", false);
+		location = Locations.deserialize(data.get("location"), worldManager);
+		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
+		sizeY = data.getInt("size.y", location.getWorld().getMaxHeight());
+		sizeZ = data.getInt("size.z", Integer.MAX_VALUE);
+		int cx = vectorLocation.getBlockX() >> 4;
+		int cz = vectorLocation.getBlockZ() >> 4;
+		int micx = cx - data.getInt("load.min.cx", 3);
+		int macx = cx + data.getInt("load.max.cx", 3);
+		int micz = cz - data.getInt("load.min.cz", 3);
+		int macz = cz + data.getInt("load.max.cz", 3);
+		for(cx = micx; cx <= macx; cx++) {
+			for(cz = micz; cz <= macz; cz++) {
 				occupiedChunks.add(new BlockVector2D(cx, cz));
 			}
 		}
 	}
 	
-	public Set<BlockVector2D> getOccupiedChunks() {
-		return new HashSet<>(occupiedChunks);
+	public boolean isDynamic() {
+		return dynamic;
 	}
 	
 	public Location getLocation() {
 		return location;
 	}
 	
-	public Vector getVectorLocation() {
-		return vectorLocation;
-	}
-	
-	public Location toLocation(Vector offset) {
-		return location.clone().add(offset.getX(), offset.getY(), offset.getZ());
-	}
-	
-	public Vector toOffset(Location loc) {
-		return new Vector(loc.getX() - location.getX(), loc.getY() - location.getY(), loc.getZ() - location.getZ());
+	public Set<BlockVector2D> getOccupiedChunks() {
+		return new HashSet<>(occupiedChunks);
 	}
 	
 	@Override
 	public int getWeight() {
-		return data.get("weight", Integer.class, 1000);
+		return data.getInt("weight", 1000);
 	}
 	
 	@Override

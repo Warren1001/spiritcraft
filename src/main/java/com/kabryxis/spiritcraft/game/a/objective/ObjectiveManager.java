@@ -29,7 +29,7 @@ public class ObjectiveManager {
 	
 	public void loadObjectives(ConfigSection section) {
 		section.getChildren().forEach(child -> {
-			Block loc = game.getCurrentArenaData().getArena().toLocation(child.get("location", Vector.class)).getBlock();
+			Block loc = game.getCurrentArenaData().toLocation(child.getCustom("location", Vector.class)).getBlock();
 			cacheMap.put(loc, new Objective(this, loc, child));
 		});
 	}

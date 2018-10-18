@@ -3,7 +3,7 @@ package com.kabryxis.spiritcraft.game.ability;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.kabryxis.kabutils.data.MathHelp;
+import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.spigot.entity.Entities;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -24,7 +24,8 @@ public class TickingBlock extends FloatingBlock {
 		packetSpawn = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 		id = block.getType().getId();
 		data = block.getData();
-		packetSpawn.getIntegers().write(1, MathHelp.floor(loc.getX() * 32.0)).write(2, MathHelp.floor(loc.getY() * 32.0)).write(3, MathHelp.floor(loc.getZ() * 32.0)).write(9, 70).write(10, id + (data << 12));
+		packetSpawn.getIntegers().write(1, NumberConversions.floor(loc.getX() * 32.0)).write(2, NumberConversions.floor(loc.getY() * 32.0)).write(3, NumberConversions.floor(loc.getZ() * 32.0))
+				.write(9, 70).write(10, id + (data << 12));
 		packetVelocitySlow = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_VELOCITY);
 		packetVelocityFast = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_VELOCITY);
 		//Vector velocity = loc.clone().subtract(center).toVector().normalize().multiply(0.008);

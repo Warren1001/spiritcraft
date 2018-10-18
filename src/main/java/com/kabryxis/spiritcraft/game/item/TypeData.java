@@ -32,10 +32,10 @@ public class TypeData {
 	public TypeData(ItemData data, String type, ConfigSection section) {
 		this.classType = type;
 		this.itemType = section.getName();
-		this.index = section.get("slot", Integer.class);
-		this.maxAmount = section.get("max-amount", Integer.class, 64);
-		this.prebuilt = new ItemBuilder(section.get("item", ConfigSection.class));
-		ConfigSection itemsSection = section.get("items", ConfigSection.class);
+		this.index = section.getInt("slot");
+		this.maxAmount = section.getInt("max-amount", 64);
+		this.prebuilt = new ItemBuilder((ConfigSection)section.get("item"));
+		ConfigSection itemsSection = section.get("items");
 		itemsSection.getChildren().forEach(child -> {
 			BasicItemInfo itemInfo = new BasicItemInfo(this, type.equals("ghost"), child);
 			itemInfoMap.put(child.getName(), itemInfo);

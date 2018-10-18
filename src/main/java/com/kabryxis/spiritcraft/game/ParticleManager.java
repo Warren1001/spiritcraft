@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game;
 
-import com.kabryxis.kabutils.data.file.FileEndingFilter;
+import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 
 import java.io.File;
@@ -20,13 +20,7 @@ public class ParticleManager {
 	}
 	
 	public void loadAll() {
-		File[] files = folder.listFiles(new FileEndingFilter(".yml"));
-		if(files != null && files.length != 0) {
-			particleDataMap.clear();
-			for(File file : files) {
-				new Config(file).load(data -> registerParticleData(new ParticleData(data)));
-			}
-		}
+		Files.forEachFileWithEnding(folder, ".yml", file -> registerParticleData(new ParticleData(new Config(file, true))));
 	}
 	
 	public void registerParticleData(ParticleData particleData) {

@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game.a.objective.action.impl;
 
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.spiritcraft.game.a.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
@@ -38,8 +37,8 @@ public class ExplodeAction extends AbstractSpiritObjectiveAction {
 		Random rand = new Random();
 		World world = block.getWorld();
 		world.playSound(block.getLocation(), Sound.FIZZ, 5F, 0.5F);
-		Location center = game.getCurrentArenaData().getArena().toLocation(this.center);
-		BukkitThreads.syncLater(() -> {
+		Location center = game.getCurrentArenaData().toLocation(this.center);
+		game.getTaskManager().start(() -> {
 			world.playSound(center, Sound.EXPLODE, 5F, 0.5F);
 			world.playEffect(center, Effect.EXPLOSION_HUGE, 10);
 			for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {

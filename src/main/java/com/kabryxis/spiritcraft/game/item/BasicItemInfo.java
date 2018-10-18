@@ -40,11 +40,11 @@ public class BasicItemInfo {
 		this.ghostItem = ghostItem;
 		this.classItemType = ghostItem ? "ghost" : "hunter";
 		this.name = section.getName();
-		this.maxAmount = section.get("max_amount", Integer.class, 1);
-		this.previewSlot = section.get("slot", Integer.class);
-		this.weight = section.get("weight", Integer.class);
-		this.value = section.get("value", Integer.class);
-		this.prebuilt = new ItemBuilder(section.get("item", ConfigSection.class));
+		this.maxAmount = section.getInt("max_amount", 1);
+		this.previewSlot = section.getInt("slot");
+		this.weight = section.getInt("weight");
+		this.value = section.getInt("value");
+		this.prebuilt = new ItemBuilder((ConfigSection)section.get("item"));
 		this.noOwnLore = Arrays.asList(ChatColor.RESET.toString(), ChatColor.GREEN + "Click to buy for " + value + " coins!");
 	}
 	

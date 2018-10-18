@@ -1,6 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.data.MathHelp;
+import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.spiritcraft.game.a.game.Game;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
@@ -14,15 +15,16 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 	
 	protected int tick = 0;
 	
-	public ItemBarTimerTask(Collection<ItemStack> items, boolean ltr, double duration, long interval) {
+	public ItemBarTimerTask(Game game, Collection<ItemStack> items, boolean ltr, double duration, long interval) {
+		super(game);
 		this.items = items;
 		this.ltr = ltr;
 		this.interval = interval;
-		this.maxTicks = MathHelp.floor(20.0 / interval * duration);
+		this.maxTicks = NumberConversions.floor(20.0 / interval * duration);
 	}
 	
-	public ItemBarTimerTask(Collection<ItemStack> items, double duration, long interval) {
-		this(items, true, duration, interval);
+	public ItemBarTimerTask(Game game, Collection<ItemStack> items, double duration, long interval) {
+		this(game, items, true, duration, interval);
 	}
 	
 	public void start() {
@@ -38,9 +40,9 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 		}
 		if(ltr) items.forEach(item -> {
 			short maxDura = item.getType().getMaxDurability();
-			item.setDurability((short)Math.min(maxDura - 1, maxDura - MathHelp.floor(maxDura * ((double)tick / (double)maxTicks))));
+			item.setDurability((short)Math.min(maxDura - 1, maxDura - NumberConversions.floor(maxDura * ((double)tick / (double)maxTicks))));
 		});
-		else items.forEach(item -> item.setDurability((short)MathHelp.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
+		else items.forEach(item -> item.setDurability((short)NumberConversions.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
 		tick++;
 	}
 	

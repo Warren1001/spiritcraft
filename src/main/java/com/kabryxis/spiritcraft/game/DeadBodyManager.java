@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -26,8 +27,10 @@ public class DeadBodyManager implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	public void dead(SpiritPlayer player) {
-		deadBodies.computeIfAbsent(player, DeadBody::new).died();
+	public void died(SpiritPlayer player) {
+		DeadBody deadBody = deadBodies.computeIfAbsent(player, DeadBody::new);
+		player.setDeadBody(deadBody);
+		deadBody.died();
 	}
 	
 	public void revive(SpiritPlayer player) {
@@ -35,7 +38,7 @@ public class DeadBodyManager implements Listener {
 	}
 	
 	public void show(SpiritPlayer player) {
-		deadBodies.values().forEach(deadBody -> deadBody.show(player));
+		deadBodies.values().stream().filter(deadBody -> deadBody.isSpawned() && player.getWorld().equals(deadBody.getDeathWorld())).forEach(deadBody -> deadBody.show(player));
 	}
 	
 	@EventHandler
@@ -61,6 +64,11 @@ public class DeadBodyManager implements Listener {
 			if(player.getName().equals(customName)) revive(game.getPlayerManager().getPlayer(player));
 			event.setCancelled(true);
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+		show(game.getPlayerManager().getPlayer(event.getPlayer()));
 	}
 	
 }

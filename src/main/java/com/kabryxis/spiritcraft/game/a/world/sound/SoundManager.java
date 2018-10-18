@@ -20,11 +20,7 @@ public class SoundManager {
 	}
 	
 	public void reloadAll() {
-		Files.forEachFileWithEnding(folder, ".yml", file -> {
-			Config data = new Config(file);
-			data.loadSync();
-			registerSoundPlayer(new SpiritSoundPlayer(data));
-		});
+		Files.forEachFileWithEnding(folder, ".yml", file -> registerSoundPlayer(new SpiritSoundPlayer(new Config(file, true))));
 	}
 	
 	public void registerSoundPlayer(SoundPlayer soundPlayer) {

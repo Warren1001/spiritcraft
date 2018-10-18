@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.data.MathHelp;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
+import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.spiritcraft.game.a.game.Game;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,8 +18,9 @@ public class CloudTask extends BukkitRunnable {
 	private static final double DISTANCE = Math.pow(8, 2);
 	private static final int DURATION = 6;
 	private static final int INTERVAL = 1;
-	private static final int ITERATIONS = MathHelp.ceil(DURATION * (20.0 / INTERVAL));
+	private static final int ITERATIONS = NumberConversions.ceil(DURATION * (20.0 / INTERVAL));
 	
+	private final Game game;
 	private final Location loc;
 	private final List<Set<Block>> blocksList = new ArrayList<>(MAX_BLOCK_ITERATIONS);
 	private final BlockFace[] faces = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST };
@@ -28,7 +29,8 @@ public class CloudTask extends BukkitRunnable {
 	private int currentIteration;
 	private int currentBlockIteration;
 	
-	public CloudTask(Location loc) {
+	public CloudTask(Game game, Location loc) {
+		this.game = game;
 		this.loc = loc;
 		for(int i = 0; i < MAX_BLOCK_ITERATIONS; i++) {
 			blocksList.add(new HashSet<>());
@@ -78,7 +80,7 @@ public class CloudTask extends BukkitRunnable {
 		blocks.add(top.getRelative(BlockFace.UP));
 		new HashSet<>(blocks).forEach(b -> addBlocks(b, null));
 		currentBlockIteration = 0;
-		return BukkitThreads.syncTimer(this, 0L, INTERVAL);
+		return game.getTaskManager().start(this, 0L, INTERVAL);
 	}
 	
 }

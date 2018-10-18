@@ -20,13 +20,11 @@ public class ItemManager {
 	
 	public ItemManager(Game game) {
 		this.game = game;
-		globalItemData = new Config(new File(game.getPlugin().getDataFolder(), "items.yml"));
+		globalItemData = new Config(new File(game.getPlugin().getDataFolder(), "items.yml"), true);
 		ghostData = new ItemData(this, true);
 		hunterData = new ItemData(this, false);
-		globalItemData.load(config -> {
-			ghostData.reload();
-			hunterData.reload();
-		});
+		ghostData.reload();
+		hunterData.reload();
 		InventoryManager inventoryManager = game.getInventoryManager();
 		start = new SpiritInventory(inventoryManager, ChatColor.GOLD + "Choose Class type to modify", 2);
 		start.setInteractablePlayerItem(9, inventoryManager.getPreviousInventoryItem());

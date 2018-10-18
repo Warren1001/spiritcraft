@@ -27,7 +27,7 @@ public class AbilityGroup implements AbilityCaller {
 		this.prerequisites = constructPrerequisites(section.getList("requires", String.class));
 		this.actions = constructActions(section.getList("actions", String.class));
 		this.triggerTypes = constructTriggerTypes(section.get("type"));
-		this.cooldown = section.get("cooldown", long.class, 0L);
+		this.cooldown = section.getLong("cooldown");
 	}
 	
 	private List<AbilityPrerequisite> constructPrerequisites(List<String> strings) {
@@ -51,14 +51,14 @@ public class AbilityGroup implements AbilityCaller {
 			triggerTypes.add(TriggerType.valueOf(((String)obj).toUpperCase()));
 		}
 		else if(obj instanceof List) {
-			List genericList = (List)obj;
+			List<?> genericList = (List<?>)obj;
 			triggerTypes = new HashSet<>(genericList.size());
 			for(Object o : genericList) {
 				triggerTypes.add(TriggerType.valueOf(o.toString().toUpperCase()));
 			}
 		}
 		else throw new IllegalArgumentException(String.format("Ability '%s''s trigger '%s''s 'type' must be a String or List", ability.getName(), name));
-		for(Iterator<TriggerType> iterator = triggerTypes.iterator(); iterator.hasNext(); ) {
+		for(Iterator<TriggerType> iterator = triggerTypes.iterator(); iterator.hasNext();) {
 			TriggerType triggerType = iterator.next();
 			Stream<AbilityAction> noTriggerStream = actions.stream().filter(action -> !action.hasTriggerType(triggerType));
 			if(noTriggerStream.count() > 0) {

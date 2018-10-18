@@ -1,8 +1,8 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.kabryxis.kabutils.data.set.CacheSet;
+import com.google.common.collect.Sets;
+import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.ParticleTask;
@@ -31,13 +31,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.inventivetalent.particle.ParticleEffect;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class GameListener implements GlobalListener {
 	
-	private final Set<Entity> lastPortalTimestamp = new CacheSet<>(CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.SECONDS));
-	private final Cache<Player, Action> lastInteractTimestamp = CacheBuilder.newBuilder().expireAfterWrite(50, TimeUnit.MILLISECONDS).build();
+	private final Set<Entity> lastPortalTimestamp = Sets.newSetFromMap(Maps.getFromCache(CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.SECONDS)));
+	private final Map<Player, Action> lastInteractTimestamp = Maps.getFromCache(CacheBuilder.newBuilder().expireAfterWrite(50, TimeUnit.MILLISECONDS));
 	
 	private final Game game;
 	
@@ -71,14 +72,14 @@ public class GameListener implements GlobalListener {
 				EntityPortalEnterEvent epee = (EntityPortalEnterEvent)event;
 				Entity epeeEntity = epee.getEntity();
 				if(lastPortalTimestamp.add(epeeEntity)) {
-					//game.getCurrentArenaData().teleportToOtherDim(epeeEntity);
+					// TODO
 				}
 				break;
 			case "PlayerInteractEvent":
 				PlayerInteractEvent pie = (PlayerInteractEvent)event;
 				Player bukkitPlayer = pie.getPlayer();
 				Action action = pie.getAction();
-				if(lastInteractTimestamp.getIfPresent(bukkitPlayer) == action) break;
+				if(lastInteractTimestamp.get(bukkitPlayer) == action) break;
 				if(action != Action.PHYSICAL) {
 					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
 					AbilityTrigger trigger = new AbilityTrigger();

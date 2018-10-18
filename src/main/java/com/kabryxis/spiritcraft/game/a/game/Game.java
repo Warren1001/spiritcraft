@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.kabryxis.kabutils.data.MathHelp;
 import com.kabryxis.kabutils.random.Randoms;
+import com.kabryxis.kabutils.spigot.concurrent.BukkitTaskManager;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.DeadBodyManager;
@@ -28,6 +28,7 @@ import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
+import org.bukkit.util.NumberConversions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class Game {
 	private final DeadBodyManager deadBodyManager;
 	private final ObjectiveManager objectiveManager;
 	private final AbilityManager abilityManager;
+	private final BukkitTaskManager taskManager;
 	private final Location lobbySpawn;
 	
 	private ArenaData currentArenaData;
@@ -95,6 +97,7 @@ public class Game {
 		abilityManager.registerActionCreator("throw_item_delayed", ThrowItemDelayedAction::new);
 		abilityManager.registerActionCreator("throw_item_timer", ThrowItemTimerAction::new);
 		abilityManager.loadAbilities();
+		taskManager = new BukkitTaskManager(plugin);
 		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager);
 		worldManager.loadChunks(this, lobbySpawn, 9);
 		loadNext();
@@ -142,6 +145,10 @@ public class Game {
 	
 	public AbilityManager getAbilityManager() {
 		return abilityManager;
+	}
+	
+	public BukkitTaskManager getTaskManager() {
+		return taskManager;
 	}
 	
 	public Location getSpawn() {
@@ -230,12 +237,12 @@ public class Game {
 	private SpiritPlayer chooseWeightedRandomPlayer(List<SpiritPlayer> players) {
 		int total = 0;
 		for(SpiritPlayer player : players) {
-			total += MathHelp.floor(player.getDamageToGhost() * 100.0);
+			total += NumberConversions.floor(player.getDamageToGhost() * 100.0);
 		}
 		int rand = new Random().nextInt(total) + 1;
 		for(Iterator<SpiritPlayer> iterator = players.iterator(); iterator.hasNext();) {
 			SpiritPlayer player = iterator.next();
-			rand -= MathHelp.floor(player.getDamageToGhost() * 100.0);
+			rand -= NumberConversions.floor(player.getDamageToGhost() * 100.0);
 			if(rand <= 0) {
 				iterator.remove();
 				return player;

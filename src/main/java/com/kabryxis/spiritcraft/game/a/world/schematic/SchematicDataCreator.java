@@ -1,12 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.boydti.fawe.object.schematic.Schematic;
-import com.kabryxis.kabutils.data.MathHelp;
+import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
 
 import java.io.File;
@@ -115,9 +114,8 @@ public class SchematicDataCreator {
 	}
 	
 	private String serialize(Location loc, Vector offset) {
-		Region selection = player.getSelection();
-		return MathHelp.roundToHalf(loc.getX() - offset.getBlockX()) + "," + MathHelp.roundToHalf(loc.getY() - offset.getBlockY()) + "," +
-				MathHelp.roundToHalf(loc.getZ() - offset.getBlockZ()) + "," + loc.getYaw() + "," + loc.getPitch();
+		return String.format("%s,%s,%s,%s,%s", NumberConversions.roundToHalf(loc.getX() - offset.getBlockX()), NumberConversions.roundToHalf(loc.getY() - offset.getBlockY()),
+				NumberConversions.roundToHalf(loc.getZ() - offset.getBlockZ()), NumberConversions.roundToHalf(loc.getYaw()), NumberConversions.roundToHalf(loc.getPitch()));
 	}
 	
 }

@@ -23,9 +23,9 @@ public class Objective {
 	public Objective(ObjectiveManager objectiveManager, Block loc, ConfigSection section) {
 		this.objectiveManager = objectiveManager;
 		this.loc = loc;
-		ConfigSection triggersChild = section.get("triggers", ConfigSection.class);
+		ConfigSection triggersChild = section.get("triggers");
 		triggersChild.getChildren().forEach(triggerChild -> {
-			ObjectiveTrigger trigger = ObjectiveTrigger.valueOf(triggerChild.get("type", String.class).toUpperCase());
+			ObjectiveTrigger trigger = triggerChild.get("type");
 			List<String> prerequisiteStrings = triggerChild.getList("requires", String.class);
 			List<ObjectivePrerequisite> prerequisites = new ArrayList<>(prerequisiteStrings.size());
 			prerequisiteStrings.forEach(prerequisiteString -> prerequisites.add(objectiveManager.createPrerequisite(prerequisiteString)));

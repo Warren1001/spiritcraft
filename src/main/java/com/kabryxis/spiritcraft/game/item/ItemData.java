@@ -42,7 +42,7 @@ public class ItemData {
 	}
 	
 	public void reload() {
-		ConfigSection section = itemManager.getGlobalItemData().get(typeName, ConfigSection.class);
+		ConfigSection section = itemManager.getGlobalItemData().get(typeName);
 		section.getChildren().forEach(child -> typeDataMap.put(child.getName(), new TypeData(this, typeName, child)));
 		for(TypeData typeData : typeDataMap.values()) {
 			String type = typeData.getItemType();

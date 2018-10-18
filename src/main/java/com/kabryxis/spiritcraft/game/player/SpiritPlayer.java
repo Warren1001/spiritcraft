@@ -7,6 +7,7 @@ import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventories;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
+import com.kabryxis.spiritcraft.game.DeadBody;
 import com.kabryxis.spiritcraft.game.ParticleData;
 import com.kabryxis.spiritcraft.game.ParticleTask;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownManager;
@@ -41,6 +42,7 @@ public class SpiritPlayer extends GamePlayer {
 	private boolean wantsGhost = true;
 	private ParticleTask particleTask;
 	private double damageToGhost = 0.0;
+	private DeadBody deadBody;
 	
 	public SpiritPlayer(Game game, UUID uuid, Config data) {
 		super(uuid);
@@ -51,7 +53,7 @@ public class SpiritPlayer extends GamePlayer {
 		this.entityPlayer = WrappedEntityPlayer.newInstance();
 		this.schematicDataCreator = new SchematicDataCreator(this);
 		this.itemTracker = new ItemTracker(this);
-		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(itemTracker.track(item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
+		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(game, itemTracker.track(item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
 		data.load();
 	}
 	
@@ -136,7 +138,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public int getCurrency() {
-		return data.get("currency", Integer.class, 100, true);
+		return data.computeIntIfAbsent("currency", 100);
 	}
 	
 	public void setItemSpace(int space) {
@@ -145,7 +147,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public int getItemSpace() {
-		return data.get("space", Integer.class, 100, true);
+		return data.computeIntIfAbsent("space", 100);
 	}
 	
 	public void setParticleEffect(String particleName) {
@@ -154,7 +156,7 @@ public class SpiritPlayer extends GamePlayer {
 	}
 	
 	public String getParticleEffect() {
-		return data.get("particle-effect", String.class, "flame", true);
+		return data.computeIfAbsent("particle-effect", "flame");
 	}
 	
 	public ParticleData getParticleData() {
@@ -224,6 +226,14 @@ public class SpiritPlayer extends GamePlayer {
 	
 	public int getPing() {
 		return entityPlayer.getPing();
+	}
+	
+	public void setDeadBody(DeadBody deadBody) {
+		this.deadBody = deadBody;
+	}
+	
+	public DeadBody getDeadBody() {
+		return deadBody;
 	}
 	
 }

@@ -6,13 +6,13 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.kabryxis.kabutils.data.MathHelp;
+import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.spigot.version.custom.slime.hitbox.CustomHitbox;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.human.WrappedEntityHuman;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -46,6 +46,14 @@ public class DeadBody {
 		this.player = player;
 	}
 	
+	public World getDeathWorld() {
+		return deathLoc.getWorld();
+	}
+	
+	public boolean isSpawned() {
+		return deathLoc != null;
+	}
+	
 	public void died() {
 		deathLoc = player.getLocation();
 		bedLoc = deathLoc.clone();
@@ -77,13 +85,14 @@ public class DeadBody {
 	public void revive() {
 		headHitbox.getBukkitEntity().remove();
 		feetHitbox.getBukkitEntity().remove();
-		for(Player p : Bukkit.getOnlinePlayers()) {
+		for(Player p : getDeathWorld().getPlayers()) {
 			try {
 				protocolManager.sendServerPacket(p, entityDestroy);
 			} catch(InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			p.sendBlockChange(bedLoc, Material.AIR, (byte)0);
+			Block bedLocBlock = bedLoc.getBlock();
+			p.sendBlockChange(bedLoc, bedLocBlock.getType(), bedLocBlock.getData());
 		}
 		namedEntitySpawn = null;
 		bed = null;
@@ -99,11 +108,11 @@ public class DeadBody {
 	}
 	
 	public void showAll() {
-		Bukkit.getOnlinePlayers().forEach(this::show);
+		getDeathWorld().getPlayers().forEach(this::show);
 	}
 	
 	public void show(Player player) {
-		player.sendBlockChange(bedLoc, org.bukkit.Material.BED_BLOCK, direction);
+		player.sendBlockChange(bedLoc, Material.BED_BLOCK, direction);
 		try {
 			protocolManager.sendServerPacket(player, namedEntitySpawn);
 			protocolManager.sendServerPacket(player, entityTeleportZero);
@@ -163,7 +172,7 @@ public class DeadBody {
 	}
 	
 	private static int floor(double d) {
-		return MathHelp.floor(d * 32D);
+		return NumberConversions.floor(d * 32D);
 	}
 	
 }

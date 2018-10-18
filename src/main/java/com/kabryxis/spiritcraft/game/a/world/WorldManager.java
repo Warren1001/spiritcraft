@@ -2,15 +2,19 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
+import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
 import com.kabryxis.kabutils.spigot.world.ChunkLoader;
 import com.kabryxis.kabutils.spigot.world.EmptyGenerator;
 import com.kabryxis.kabutils.spigot.world.WorldLoader;
 import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
 import com.sk89q.worldedit.BlockVector2D;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
 
 import java.io.File;
@@ -36,20 +40,12 @@ public class WorldManager implements WorldLoader {
 		File pluginFolder = game.getPlugin().getDataFolder();
 		this.chunkLoader = new ChunkLoader(game.getPlugin());
 		this.metadataProvider = new MetadataProvider(game.getPlugin());
-		this.worldCreatorData = new Config(new File(pluginFolder, "worlds.yml"));
-		chunkGenerators.put("empty", new EmptyGenerator());
-		worldCreatorData.loadSync();
-		worldCreatorData.getChildren().forEach(child -> {
-			String worldName = child.getName();
-			WorldCreator worldCreator = new WorldCreator(worldName);
-			worldCreator.environment(child.get("environment", World.Environment.class));
-			worldCreator.type(child.get("type", WorldType.class));
-			String generatorString = child.get("generator", String.class);
-			if(generatorString != null) worldCreator.generator(chunkGenerators.get(generatorString));
-			setWorldCreator(worldName, worldCreator);
-		});
+		WorldCreatorSerializer.registerChunkGenerator("empty", new EmptyGenerator());
+		this.worldCreatorData = new Config(new File(pluginFolder, "worlds.yml"), true);
+		worldCreatorData.values().stream().map(WorldCreator.class::cast).forEach(this::setWorldCreator);
+		Config.registerSerializer(new LoadingLocationSerializer(this));
 		this.schematicManager = new SchematicManager(new File(pluginFolder, "schematics"));
-		Files.forEachFileWithEnding(schematicManager.getFolder(), ClipboardFormat.SCHEMATIC.getExtension(), file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(file)));
+		Files.forEachFileWithEnding(schematicManager.getFolder(), Config.EXTENSION, file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(new Config(file, true))));
 		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
 	}
 	
@@ -69,18 +65,14 @@ public class WorldManager implements WorldLoader {
 		return metadataProvider;
 	}
 	
-	public void setWorldCreator(String worldName, WorldCreator worldCreator) {
-		worldCreators.put(worldName, worldCreator);
+	public void setWorldCreator(WorldCreator worldCreator) {
+		worldCreators.put(worldCreator.name(), worldCreator);
 	}
 	
 	@Override
-	public World loadWorld(String name) {
-		return worldCreators.getOrDefault(name, new WorldCreator(name)).createWorld();
-	}
-	
 	public World getWorld(String name) {
-		World world = game.getPlugin().getServer().getWorld(name);
-		if(world == null) world = loadWorld(name);
+		World world = Bukkit.getWorld(name);
+		if(world == null) world = worldCreators.computeIfAbsent(name, WorldCreator::new).createWorld();
 		return world;
 	}
 	

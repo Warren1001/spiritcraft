@@ -31,14 +31,14 @@ public class ParticleData {
 	}
 	
 	public void load(ConfigSection section) {
-		effect = ParticleEffect.valueOf(section.get("effect", String.class).toUpperCase());
-		preview = new ItemBuilder(section.get("item", ConfigSection.class));
-		offsetX = section.get("offset.x", Double.class, 0.125);
-		offsetY = section.get("offset.y", Double.class, 0.5);
-		offsetZ = section.get("offset.z", Double.class, 0.125);
-		speed = section.get("speed", Double.class, 0.0);
-		particleCount = section.get("particle-count", Integer.class);
-		displayRadius = section.get("display-radius", Integer.class, 32);
+		effect = section.get("effect");
+		preview = new ItemBuilder((ConfigSection)section.get("item"));
+		offsetX = section.getDouble("offset.x", 0.125);
+		offsetY = section.getDouble("offset.y", 0.5);
+		offsetZ = section.getDouble("offset.z", 0.125);
+		speed = section.getDouble("speed");
+		particleCount = section.getInt("particle-count");
+		displayRadius = section.getInt("display-radius", 32);
 	}
 	
 	public void display(SpiritPlayer player) {

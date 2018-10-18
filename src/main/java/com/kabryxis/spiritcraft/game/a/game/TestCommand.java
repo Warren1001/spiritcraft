@@ -2,7 +2,6 @@ package com.kabryxis.spiritcraft.game.a.game;
 
 import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
-import com.kabryxis.kabutils.spigot.concurrent.BukkitThreads;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
@@ -44,7 +43,7 @@ public class TestCommand {
 	@Com
 	public void overloadsound(Player player) {
 		if(task != null) task.cancel();
-		task = BukkitThreads.syncTimer(new BukkitRunnable() {
+		task = plugin.getGame().getTaskManager().start(new BukkitRunnable() {
 			
 			private final int speedInterval = 100;
 			
@@ -79,7 +78,7 @@ public class TestCommand {
 		selection.forEach(bv -> {
 			Block block = player.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
 			if(block.getType() == Material.REDSTONE_LAMP_OFF || block.getType() == Material.REDSTONE_LAMP_ON) {
-				BukkitThreads.syncLater(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
+				plugin.getGame().getTaskManager().start(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
 			}
 		});
 	}
@@ -108,7 +107,7 @@ public class TestCommand {
 	public void tracker(SpiritPlayer player) {
 		if(task != null) task.cancel();
 		int abilityId = Items.getTagData(player.getInventory().getItemInHand(), "AbiId", int.class);
-		task = BukkitThreads.syncTimer(new ItemTrackerTest(player.getItemTracker().track(item -> item.hasItemMeta() && Items.getTagData(item, "AbiId", int.class) == abilityId)), 0L, 5L);
+		task = plugin.getGame().getTaskManager().start(new ItemTrackerTest(player.getItemTracker().track(item -> item.hasItemMeta() && Items.getTagData(item, "AbiId", int.class) == abilityId)), 0L, 5L);
 	}
 	
 	@Com(args = "0,1")
