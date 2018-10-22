@@ -3,16 +3,14 @@ package com.kabryxis.spiritcraft.game.a.game;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import com.kabryxis.kabutils.data.Maps;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.event.GlobalListener;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.spiritcraft.game.ParticleTask;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
-import com.kabryxis.spiritcraft.game.a.ability.TriggerType;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownEntry;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownHandler;
 import com.kabryxis.spiritcraft.game.a.event.PlayerChangedDimEvent;
-import com.kabryxis.spiritcraft.game.a.objective.Objective;
-import com.kabryxis.spiritcraft.game.a.objective.ObjectiveTrigger;
+import com.kabryxis.spiritcraft.game.object.TriggerType;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
@@ -82,24 +80,20 @@ public class GameListener implements GlobalListener {
 				if(lastInteractTimestamp.get(bukkitPlayer) == action) break;
 				if(action != Action.PHYSICAL) {
 					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
-					AbilityTrigger trigger = new AbilityTrigger();
-					trigger.cooldownHandler = new CooldownHandler(player.getCooldownManager());
-					trigger.triggerer = player;
-					trigger.type = action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK;
-					trigger.hand = pie.getItem();
-					trigger.block = pie.getClickedBlock();
-					trigger.abilityId = Items.getTagData(trigger.hand, "AbiId", int.class);
-					trigger.cooldownHandler.setCooldown(new CooldownEntry(Items.getTagData(trigger.hand, "cd", long.class), trigger));
-					game.getAbilityManager().handle(player, trigger);
-					if(trigger.cancel) pie.setCancelled(true);
-				}
-				if(pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
-					Objective objective = game.getCurrentArenaData().getObjective(pie.getClickedBlock());
-					if(objective != null) {
-						objective.trigger(player, ObjectiveTrigger.RIGHT_CLICK);
-						pie.setCancelled(true);
-					}
+					ConfigSection triggerData = new ConfigSection();
+					CooldownHandler cooldownHandler = new CooldownHandler(player.getCooldownManager());
+					triggerData.put("cooldownHandler", cooldownHandler);
+					triggerData.put("triggerer", player);
+					triggerData.put("target", player);
+					triggerData.put("type", action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK);
+					triggerData.put("hand", pie.getItem());
+					triggerData.put("block", pie.getClickedBlock());
+					triggerData.put("abilityId", Items.getTagData(pie.getItem(), "AbiId", int.class));
+					long cooldown = Items.getTagData(pie.getItem(), "cd", Long.class);
+					if(cooldown > 0L) cooldownHandler.setCooldown(new CooldownEntry(cooldown, triggerData));
+					game.getAbilityManager().perform(triggerData);
+					game.getObjectiveManager().perform(triggerData);
+					if(triggerData.getBoolean("cancel", false)) pie.setCancelled(true);
 				}
 				lastInteractTimestamp.put(bukkitPlayer, action);
 				break;

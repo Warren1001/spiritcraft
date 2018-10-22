@@ -1,10 +1,12 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.boydti.fawe.object.schematic.Schematic;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class SchematicWrapper {
 	
@@ -28,6 +30,10 @@ public class SchematicWrapper {
 	
 	public Schematic getSchematic() {
 		return schematic;
+	}
+	
+	public Clipboard getClipboard() {
+		return Objects.requireNonNull(schematic.getClipboard());
 	}
 	
 }

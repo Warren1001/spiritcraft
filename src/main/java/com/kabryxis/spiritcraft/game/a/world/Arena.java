@@ -5,12 +5,12 @@ import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.Location;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class Arena implements Weighted, ObjectPredicate {
@@ -38,6 +38,7 @@ public class Arena implements Weighted, ObjectPredicate {
 	private void reload0() {
 		dynamic = data.get("dynamic", false);
 		location = Locations.deserialize(data.get("location"), worldManager);
+		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
 		sizeY = data.getInt("size.y", location.getWorld().getMaxHeight());
 		sizeZ = data.getInt("size.z", Integer.MAX_VALUE);
@@ -75,7 +76,7 @@ public class Arena implements Weighted, ObjectPredicate {
 	public boolean test(Object o) {
 		if(o instanceof ArenaSchematic) {
 			ArenaSchematic schematic = (ArenaSchematic)o;
-			Vector dim = Objects.requireNonNull(schematic.getSchematic().getClipboard()).getDimensions();
+			Vector dim = schematic.getClipboard().getDimensions();
 			return dim.getBlockX() <= sizeX && dim.getBlockY() <= sizeY && dim.getBlockZ() <= sizeZ;
 		}
 		return true;

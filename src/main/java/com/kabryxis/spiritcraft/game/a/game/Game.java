@@ -6,14 +6,6 @@ import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
-import com.kabryxis.spiritcraft.game.a.ability.AbilityManager;
-import com.kabryxis.spiritcraft.game.a.ability.action.impl.*;
-import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.BlockPrerequisite;
-import com.kabryxis.spiritcraft.game.a.ability.prerequisite.impl.HandItemPrerequisite;
-import com.kabryxis.spiritcraft.game.a.objective.ObjectiveManager;
-import com.kabryxis.spiritcraft.game.a.objective.action.impl.ExplodeAction;
-import com.kabryxis.spiritcraft.game.a.objective.action.impl.RemoveHandAction;
-import com.kabryxis.spiritcraft.game.a.objective.prerequisite.impl.HandPrerequisite;
 import com.kabryxis.spiritcraft.game.a.parse.Parser;
 import com.kabryxis.spiritcraft.game.a.parse.SpiritParser;
 import com.kabryxis.spiritcraft.game.a.world.ArenaData;
@@ -22,6 +14,13 @@ import com.kabryxis.spiritcraft.game.a.world.sound.SoundManager;
 import com.kabryxis.spiritcraft.game.ability.CountdownTask;
 import com.kabryxis.spiritcraft.game.inventory.InventoryManager;
 import com.kabryxis.spiritcraft.game.item.ItemManager;
+import com.kabryxis.spiritcraft.game.object.action.impl.RemoveHandAction;
+import com.kabryxis.spiritcraft.game.object.prerequisite.impl.BlockPrerequisite;
+import com.kabryxis.spiritcraft.game.object.prerequisite.impl.HandPrerequisite;
+import com.kabryxis.spiritcraft.game.object.type.ability.AbilityManager;
+import com.kabryxis.spiritcraft.game.object.type.ability.action.*;
+import com.kabryxis.spiritcraft.game.object.type.objective.ObjectiveManager;
+import com.kabryxis.spiritcraft.game.object.type.objective.action.ExplodeAction;
 import com.kabryxis.spiritcraft.game.player.PlayerManager;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -81,11 +80,11 @@ public class Game {
 		objectiveManager.registerActionCreator("remove_hand", RemoveHandAction::new);
 		objectiveManager.registerPrerequisiteCreator("hand", HandPrerequisite::new);
 		abilityManager = new AbilityManager(this, new File(plugin.getDataFolder(), "abilities"));
-		abilityManager.registerPrerequisiteCreator("hand", HandItemPrerequisite::new);
+		abilityManager.registerPrerequisiteCreator("hand", HandPrerequisite::new);
 		abilityManager.registerPrerequisiteCreator("block", BlockPrerequisite::new);
 		abilityManager.registerActionCreator("charge", ChargeAction::new);
 		abilityManager.registerActionCreator("cloud", CloudAction::new);
-		abilityManager.registerActionCreator("explode", com.kabryxis.spiritcraft.game.a.ability.action.impl.ExplodeAction::new);
+		abilityManager.registerActionCreator("explode", com.kabryxis.spiritcraft.game.object.type.ability.action.ExplodeAction::new);
 		abilityManager.registerActionCreator("fire_breath", FireBreathAction::new);
 		abilityManager.registerActionCreator("infront", InFrontAction::new);
 		abilityManager.registerActionCreator("looking", LookingAction::new);
@@ -93,7 +92,7 @@ public class Game {
 		abilityManager.registerActionCreator("player", PlayerAction::new);
 		abilityManager.registerActionCreator("sound", PlaySoundAction::new);
 		abilityManager.registerActionCreator("potion", PotionEffectAction::new);
-		abilityManager.registerActionCreator("remove_hand", com.kabryxis.spiritcraft.game.a.ability.action.impl.RemoveHandAction::new);
+		abilityManager.registerActionCreator("remove_hand", RemoveHandAction::new);
 		abilityManager.registerActionCreator("throw_item_delayed", ThrowItemDelayedAction::new);
 		abilityManager.registerActionCreator("throw_item_timer", ThrowItemTimerAction::new);
 		abilityManager.loadAbilities();
@@ -253,10 +252,10 @@ public class Game {
 	
 	public void onEvent(Event event) {
 		gameListener.onEvent(event);
-		objectiveManager.callEvent(event);
 	}
 	
 	public void end(boolean loadNext) {
+		if(!isLoaded()) return;
 		if(countdownTask != null) {
 			countdownTask.cancel();
 			countdownTask = null;
@@ -275,8 +274,12 @@ public class Game {
 	}
 	
 	public void loadNext() {
-		currentArenaData = worldManager.constructArenaData();
-		currentArenaData.load();
+		try {
+			currentArenaData = worldManager.constructArenaData();
+			currentArenaData.load();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void forEachPlayer(Consumer<? super SpiritPlayer> action) {

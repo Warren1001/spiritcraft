@@ -31,8 +31,8 @@ public class ParticleData {
 	}
 	
 	public void load(ConfigSection section) {
-		effect = section.get("effect");
-		preview = new ItemBuilder((ConfigSection)section.get("item"));
+		effect = section.getEnum("effect", ParticleEffect.class);
+		preview = new ItemBuilder(section.get("item", ConfigSection.class));
 		offsetX = section.getDouble("offset.x", 0.125);
 		offsetY = section.getDouble("offset.y", 0.5);
 		offsetZ = section.getDouble("offset.z", 0.125);

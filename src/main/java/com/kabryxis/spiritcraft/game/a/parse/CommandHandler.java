@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.parse;
 
-import com.kabryxis.spiritcraft.game.a.game.object.GameObject;
+import com.kabryxis.spiritcraft.game.object.GameObject;
 
 import java.util.HashMap;
 import java.util.Map;

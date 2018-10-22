@@ -106,7 +106,7 @@ public class SchematicDataCreator {
 			player.sendMessage("You did not specify the name for a schematic, how are we suppose to know which schematic's data to modify??");
 			return;
 		}
-		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + "-data.yml"));
+		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + ".yml"));
 		if(ghostSpawns != null) data.put("spawns.ghost", ghostSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
 		if(hunterSpawns != null) data.put("spawns.hunter", hunterSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
 		data.put("weight", weight);

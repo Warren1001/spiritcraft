@@ -1,11 +1,11 @@
 package com.kabryxis.spiritcraft.game.a.cooldown;
 
-import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 
 public interface CooldownManager {
 	
 	void startCooldown(CooldownEntry entry);
 	
-	boolean isCooldownActive(AbilityTrigger trigger);
+	boolean isCooldownActive(ConfigSection triggerData);
 	
 }

@@ -8,9 +8,9 @@ import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.game.Game;
-import com.kabryxis.spiritcraft.game.a.objective.Objective;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
+import com.kabryxis.spiritcraft.game.object.type.GameObjectBase;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.EditSession;
@@ -45,17 +45,17 @@ public class ArenaData {
 		this.game = game;
 		this.arena = arena;
 		this.location = arena.getLocation().clone();
-		Clipboard clipboard = Objects.requireNonNull(schematic.getSchematic().getClipboard());
-		if(arena.isDynamic()) location.setY(clipboard.getOrigin().getY() + 1);
+		Clipboard clipboard = schematic.getClipboard();
+		if(arena.isDynamic()) location.setY(clipboard.getOrigin().getY() + 1); // TODO origin isnt origin, need to figure out schematic placement
 		this.vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		World world = location.getWorld();
 		this.occupiedChunks = arena.getOccupiedChunks();
 		this.schematic = schematic;
 		this.editSession = new EditSessionBuilder(world.getName()).fastmode(true).checkMemory(false)
 				.changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
-		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(world, string)).collect(() ->
+		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(world, string).add(location)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
-		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(world, string)).collect(() ->
+		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(world, string).add(location)).collect(() ->
 				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
 		ConfigSection objectivesChild = schematic.getData().get("objectives");
 		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
@@ -83,7 +83,7 @@ public class ArenaData {
 		return editSession;
 	}
 	
-	public Objective getObjective(Block location) {
+	public GameObjectBase getObjective(Block location) {
 		return game.getObjectiveManager().getObjective(location);
 	}
 	
@@ -113,7 +113,7 @@ public class ArenaData {
 	
 	public void load() {
 		game.getWorldManager().loadChunks(this, location.getWorld(), occupiedChunks);
-		paste0(schematic, false, true);
+		paste0(schematic, false);
 		game.getTaskManager().start(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.
 			editSession.getQueue().getRelighter().fixSkyLighting();
 			game.finishSetup();
@@ -123,10 +123,10 @@ public class ArenaData {
 	}
 	
 	public void pasteAnotherSchematic(SchematicWrapper schematic, boolean air) {
-		paste0(schematic, air, false);
+		paste0(schematic, air);
 	}
 	
-	private void paste0(SchematicWrapper schematicWrapper, boolean air, boolean callFinish) {
+	private void paste0(SchematicWrapper schematicWrapper, boolean air) {
 		Schematic schematic = schematicWrapper.getSchematic();
 		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getClipboard()));
 		Vector min = region.getMinimumPoint();

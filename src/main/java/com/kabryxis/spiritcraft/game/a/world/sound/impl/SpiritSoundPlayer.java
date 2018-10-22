@@ -17,7 +17,7 @@ public class SpiritSoundPlayer implements SoundPlayer {
 	
 	public SpiritSoundPlayer(ConfigSection section) {
 		this.name = section.getName();
-		this.sound = section.get("sound");
+		this.sound = section.getEnum("sound", Sound.class);
 		this.volume = section.getFloat("volume", 1F);
 		this.pitch = section.getFloat("pitch", 1F);
 		this.ghost = section.get("ghost", false);

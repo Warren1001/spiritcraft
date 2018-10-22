@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.cooldown;
 
-import com.kabryxis.spiritcraft.game.a.ability.AbilityTrigger;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import org.apache.commons.lang3.Validate;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class PlayerCooldownManager implements CooldownManager {
 	@Override
 	public void startCooldown(CooldownEntry entry) {
 		if(entry.cooldown <= 0L) return;
-		int abilityId = entry.trigger.abilityId;
+		int abilityId = entry.triggerData.get("abilityId");
 		Cooldown cooldown = cooldownMap.get(abilityId);
 		if(cooldown == null) {
 			if(abilityId == 0) return;
@@ -36,8 +36,8 @@ public class PlayerCooldownManager implements CooldownManager {
 	}
 	
 	@Override
-	public boolean isCooldownActive(AbilityTrigger trigger) {
-		Cooldown cooldown = cooldownMap.get(trigger.abilityId);
+	public boolean isCooldownActive(ConfigSection triggerData) {
+		Cooldown cooldown = cooldownMap.get(triggerData.get("abilityId"));
 		return cooldown != null && cooldown.isActive();
 	}
 	

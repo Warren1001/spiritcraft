@@ -19,6 +19,7 @@ import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,6 +36,7 @@ public class Spiritcraft extends JavaPlugin {
 		};
 		ConfigSection.addDeserializer(Vector.class, vectorFunction);
 		CommandHandler.registerDataConverter(Vector.class, vectorFunction);
+		CommandHandler.registerDataConverter(Material.class, string -> Material.getMaterial(string.toUpperCase().replace(' ', '_')));
 	}
 	
 	private CommandManager commandManager;
