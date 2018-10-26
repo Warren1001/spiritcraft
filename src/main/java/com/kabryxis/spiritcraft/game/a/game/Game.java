@@ -2,7 +2,6 @@ package com.kabryxis.spiritcraft.game.a.game;
 
 import com.kabryxis.kabutils.random.Randoms;
 import com.kabryxis.kabutils.spigot.concurrent.BukkitTaskManager;
-import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
@@ -97,7 +96,7 @@ public class Game {
 		abilityManager.registerActionCreator("throw_item_timer", ThrowItemTimerAction::new);
 		abilityManager.loadAbilities();
 		taskManager = new BukkitTaskManager(plugin);
-		lobbySpawn = Locations.deserialize(plugin.getConfig().getString("lobby-spawn"), worldManager);
+		lobbySpawn = plugin.getData().getLocation("lobby-spawn", worldManager);
 		worldManager.loadChunks(this, lobbySpawn, 9);
 		loadNext();
 	}

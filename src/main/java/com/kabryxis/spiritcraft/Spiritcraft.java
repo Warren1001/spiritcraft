@@ -3,6 +3,7 @@ package com.kabryxis.spiritcraft;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.kabryxis.kabutils.command.CommandManager;
+import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
@@ -24,6 +25,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.function.Function;
 
 public class Spiritcraft extends JavaPlugin {
@@ -39,6 +41,7 @@ public class Spiritcraft extends JavaPlugin {
 		CommandHandler.registerDataConverter(Material.class, string -> Material.getMaterial(string.toUpperCase().replace(' ', '_')));
 	}
 	
+	private Config data;
 	private CommandManager commandManager;
 	private Game game;
 	private LobbyListener listener;
@@ -46,6 +49,7 @@ public class Spiritcraft extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
+		data = new Config(new File(getDataFolder(), "config.yml"), true);
 		ItemBuilder.DEFAULT.flag(ItemFlag.HIDE_ATTRIBUTES);
 		ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new AttackHiddenPlayerAdapter(this)).syncStart();
 		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicPacketAdapter(this, true, PacketType.Play.Client.SPECTATE));
@@ -67,6 +71,10 @@ public class Spiritcraft extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		if(game.isLoaded()) game.end(false);
+	}
+	
+	public Config getData() {
+		return data;
 	}
 	
 	public Game getGame() {

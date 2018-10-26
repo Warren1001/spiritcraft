@@ -3,7 +3,6 @@ package com.kabryxis.spiritcraft.game.a.world;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
-import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
@@ -28,16 +27,12 @@ public class Arena implements Weighted, ObjectPredicate {
 	public Arena(WorldManager worldManager, Config data) {
 		this.worldManager = worldManager;
 		this.data = data;
-		reload0();
+		reloadData();
 	}
 	
 	public void reloadData() {
-		data.loadAsync(config -> reload0());
-	}
-	
-	private void reload0() {
-		dynamic = data.get("dynamic", false);
-		location = Locations.deserialize(data.get("location"), worldManager);
+		dynamic = data.getBoolean("dynamic", false);
+		location = data.getLocation("location", worldManager);
 		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
 		sizeY = data.getInt("size.y", location.getWorld().getMaxHeight());

@@ -1,6 +1,8 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.boydti.fawe.object.schematic.Schematic;
+import com.kabryxis.kabutils.data.file.Files;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 
@@ -13,12 +15,16 @@ public class SchematicWrapper {
 	private final String name;
 	private final File schematicFile;
 	private final Schematic schematic;
+	private final Vector origin;
 	
 	public SchematicWrapper(File schematicFile) {
-		this.name = schematicFile.getName().split("\\.", 2)[0];
+		this.name = Files.getSimpleName(schematicFile);
+		System.out.println(name);
 		this.schematicFile = schematicFile;
 		try {
 			this.schematic = ClipboardFormat.SCHEMATIC.load(schematicFile);
+			Clipboard clipboard = getClipboard();
+			this.origin = clipboard.getOrigin().subtract(clipboard.getMinimumPoint());
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -34,6 +40,10 @@ public class SchematicWrapper {
 	
 	public Clipboard getClipboard() {
 		return Objects.requireNonNull(schematic.getClipboard());
+	}
+	
+	public Vector getOrigin() {
+		return origin;
 	}
 	
 }

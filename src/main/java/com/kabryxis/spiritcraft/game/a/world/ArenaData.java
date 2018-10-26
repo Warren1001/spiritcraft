@@ -6,7 +6,6 @@ import com.boydti.fawe.object.schematic.Schematic;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.random.RandomArrayList;
-import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
@@ -46,17 +45,14 @@ public class ArenaData {
 		this.arena = arena;
 		this.location = arena.getLocation().clone();
 		Clipboard clipboard = schematic.getClipboard();
-		if(arena.isDynamic()) location.setY(clipboard.getOrigin().getY() + 1); // TODO origin isnt origin, need to figure out schematic placement
+		if(arena.isDynamic()) location.setY(Math.abs(schematic.getOrigin().getBlockY()) + 1); // TODO origin isnt origin, need to figure out schematic placement
 		this.vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		World world = location.getWorld();
 		this.occupiedChunks = arena.getOccupiedChunks();
 		this.schematic = schematic;
-		this.editSession = new EditSessionBuilder(world.getName()).fastmode(true).checkMemory(false)
-				.changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
-		this.ghostSpawns = schematic.getData().getList("spawns.ghost", String.class).stream().map(string -> Locations.deserialize(world, string).add(location)).collect(() ->
-				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
-		this.hunterSpawns = schematic.getData().getList("spawns.hunter", String.class).stream().map(string -> Locations.deserialize(world, string).add(location)).collect(() ->
-				new RandomArrayList<>(Integer.MAX_VALUE), RandomArrayList::add, RandomArrayList::addAll);
+		this.editSession = new EditSessionBuilder(world.getName()).fastmode(true).checkMemory(false).changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
+		this.ghostSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getLocationList("spawns.ghost", world));
+		this.hunterSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getLocationList("spawns.hunter", world));
 		ConfigSection objectivesChild = schematic.getData().get("objectives");
 		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
 		Region region = getModifyingRegion(clipboard);
