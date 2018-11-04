@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.object.type;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.object.GameObjectManager;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
@@ -14,19 +14,19 @@ public class GameObjectTypeManager {
 	
 	protected final Set<GameObjectBase> gameObjectBases = new HashSet<>();
 	
-	protected final Game game;
+	protected final SpiritGame game;
 	protected final GameObjectManager<GameObjectAction> actionManager;
 	protected final GameObjectManager<GameObjectPrerequisite> prerequisiteManager;
 	protected final Function<ConfigSection, GameObjectBase> baseCreator;
 	
-	public GameObjectTypeManager(Game game, Class<? extends GameObjectAction> actionClass, Class<? extends GameObjectPrerequisite> prerequisiteClass, Function<ConfigSection, GameObjectBase> baseCreator) {
+	public GameObjectTypeManager(SpiritGame game, Class<? extends GameObjectAction> actionClass, Class<? extends GameObjectPrerequisite> prerequisiteClass, Function<ConfigSection, GameObjectBase> baseCreator) {
 		this.game = game;
 		this.actionManager = new GameObjectManager<>(game, actionClass);
 		this.prerequisiteManager = new GameObjectManager<>(game, prerequisiteClass);
 		this.baseCreator = baseCreator;
 	}
 	
-	public GameObjectTypeManager(Game game, Class<? extends GameObjectAction> actionClass, Class<? extends GameObjectPrerequisite> prerequisiteClass) {
+	public GameObjectTypeManager(SpiritGame game, Class<? extends GameObjectAction> actionClass, Class<? extends GameObjectPrerequisite> prerequisiteClass) {
 		this(game, actionClass, prerequisiteClass, creatorData -> {
 			GameObjectBase objectBase = new GameObjectBase(creatorData);
 			objectBase.load(creatorData.get("baseData"), creatorData);
@@ -34,7 +34,7 @@ public class GameObjectTypeManager {
 		});
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	

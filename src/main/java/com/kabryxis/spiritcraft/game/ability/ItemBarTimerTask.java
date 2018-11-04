@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
 import com.kabryxis.kabutils.data.NumberConversions;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 	
 	protected int tick = 0;
 	
-	public ItemBarTimerTask(Game game, Collection<ItemStack> items, boolean ltr, double duration, long interval) {
+	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, boolean ltr, double duration, long interval) {
 		super(game);
 		this.items = items;
 		this.ltr = ltr;
@@ -23,7 +23,7 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 		this.maxTicks = NumberConversions.floor(20.0 / interval * duration);
 	}
 	
-	public ItemBarTimerTask(Game game, Collection<ItemStack> items, double duration, long interval) {
+	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, double duration, long interval) {
 		this(game, items, true, duration, interval);
 	}
 	

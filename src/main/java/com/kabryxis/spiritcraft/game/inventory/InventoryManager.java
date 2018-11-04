@@ -3,10 +3,10 @@ package com.kabryxis.spiritcraft.game.inventory;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.kabryxis.kabutils.spigot.event.Listeners;
-import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicPacketAdapter;
+import com.kabryxis.kabutils.spigot.listener.Listeners;
+import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicSendingPacketAdapter;
 import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.inventory.player.ErrorItem;
 import com.kabryxis.spiritcraft.game.inventory.player.InformationItem;
 import com.kabryxis.spiritcraft.game.inventory.player.PreviousInventoryItem;
@@ -30,19 +30,19 @@ public class InventoryManager implements Listener {
 	private final Map<Player, DynamicInventory> currentlyOpen = new HashMap<>();
 	private final Map<Player, DynamicInventory> previouslyOpen = new HashMap<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final PreviousInventoryItem previousInventoryItem;
 	private final InformationItem informationItem;
 	private final ErrorItem errorItem;
 	
-	public InventoryManager(Game game) {
+	public InventoryManager(SpiritGame game) {
 		this.game = game;
 		previousInventoryItem = new PreviousInventoryItem(this);
 		informationItem = new InformationItem(game);
 		errorItem = new ErrorItem(game);
 		Plugin plugin = game.getPlugin();
 		Listeners.registerListener(this, plugin);
-		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicPacketAdapter(plugin, false, event -> {
+		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicSendingPacketAdapter(plugin, event -> {
 			Player player = event.getPlayer();
 			DynamicInventory inventory = getCurrentlyOpen(player);
 			if(inventory != null) {

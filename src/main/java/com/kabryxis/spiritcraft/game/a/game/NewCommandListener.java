@@ -4,14 +4,14 @@ import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class NewCommandListener {
 	
 	@Com(args = "1,4")
-	public void tpw(Player player, int length, World world, double x, double y, double z) {
-		if(length == 1) player.teleport(world.getSpawnLocation());
-		else player.teleport(new Location(world, x, y, z));
+	public void tpw(SpiritPlayer player, int length, World world, double x, double y, double z) {
+		Location loc = length == 1 ? world.getSpawnLocation() : new Location(world, x, y, z);
+		player.teleport(loc);
+		player.sendMessage("Teleported to %s,%s,%s,%s.", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ());
 	}
 	
 	@Com(args = "1,2")
@@ -22,7 +22,7 @@ public class NewCommandListener {
 		}
 		else if(string.equalsIgnoreCase("stop") || string.equalsIgnoreCase("end")) {
 			player.sendMessage("Stopping!");
-			player.getGame().end(length != 2 || loadNext);
+			player.getGame().end(length == 1 || loadNext);
 		}
 	}
 	
@@ -31,27 +31,27 @@ public class NewCommandListener {
 		if(length == 1) {
 			if(string1.equalsIgnoreCase("create")) {
 				player.getDataCreator().create();
-				player.getPlayer().sendMessage("Created schematic.");
+				player.sendMessage("Created schematic data.");
 			}
 		}
 		else if(length == 2) {
 			if(string1.equalsIgnoreCase("name")) {
 				player.getDataCreator().name(string2);
-				player.getPlayer().sendMessage("Set name to '" + string2 + "'.");
+				player.sendMessage("Set name to '%s'.", string2);
 			}
 			else if(string1.equalsIgnoreCase("weight")) {
 				player.getDataCreator().weight(Integer.parseInt(string2));
-				player.getPlayer().sendMessage("Set weight to '" + string2 + "'.");
+				player.sendMessage("Set weight to '%s'.", string2);
 			}
 			else if(string1.equalsIgnoreCase("spawn")) {
 				Location loc = player.getPlayer().getLocation();
 				if(string2.equalsIgnoreCase("ghost")) {
 					player.getDataCreator().addGhostSpawn(loc);
-					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to ghost spawns.");
+					player.sendMessage("Added %s,%s,%s to ghost spawns.", loc.getX(), loc.getY(), loc.getZ());
 				}
 				else if(string2.equalsIgnoreCase("hunter")) {
 					player.getDataCreator().addHunterSpawn(loc);
-					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to hunter spawns.");
+					player.sendMessage("Added %s,%s,%s to hunter spawns.", loc.getX(), loc.getY(), loc.getZ());
 				}
 			}
 		}

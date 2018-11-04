@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.player;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -14,16 +14,16 @@ public class PlayerManager {
 	
 	private final Map<UUID, SpiritPlayer> playersMap = new HashMap<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final File folder;
 	
-	public PlayerManager(Game game, File folder) {
+	public PlayerManager(SpiritGame game, File folder) {
 		this.game = game;
 		this.folder = folder;
 		folder.mkdirs();
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	
@@ -32,7 +32,7 @@ public class PlayerManager {
 	}
 	
 	public SpiritPlayer getPlayer(Player player) {
-		return playersMap.computeIfAbsent(player.getUniqueId(), u -> new SpiritPlayer(game, u, new Config(new File(folder, u.toString() + ".yml"))));
+		return playersMap.computeIfAbsent(player.getUniqueId(), u -> new SpiritPlayer(game, u, new Config(new File(folder, u.toString() + ".yml"), true)));
 	}
 	
 	public List<SpiritPlayer> getPlayers(Predicate<? super SpiritPlayer> predicate) {

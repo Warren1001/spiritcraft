@@ -3,7 +3,6 @@ package com.kabryxis.spiritcraft.game.a.world.sound.impl;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.world.sound.SoundCause;
 import com.kabryxis.spiritcraft.game.a.world.sound.SoundPlayer;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 
 public class SpiritSoundPlayer implements SoundPlayer {
@@ -20,8 +19,8 @@ public class SpiritSoundPlayer implements SoundPlayer {
 		this.sound = section.getEnum("sound", Sound.class);
 		this.volume = section.getFloat("volume", 1F);
 		this.pitch = section.getFloat("pitch", 1F);
-		this.ghost = section.get("ghost", false);
-		this.quiet = section.get("quiet", true);
+		this.ghost = section.getBoolean("ghost", false);
+		this.quiet = section.getBoolean("quiet", true);
 	}
 	
 	public SpiritSoundPlayer(String name, Sound sound, float volume, float pitch, boolean ghost, boolean quiet) {
@@ -40,12 +39,7 @@ public class SpiritSoundPlayer implements SoundPlayer {
 	
 	@Override
 	public void playSound(SoundCause cause) {
-		playSound(cause.getLocation(), sound, false && ghost && quiet ? volume / 2 : volume, pitch);
+		cause.playSound(sound, cause.hasOwner() && /*cause.getOwner().isQuietGhost*/false && ghost && quiet ? volume / 2 : volume, pitch);
 	} // TODO quiet ghost
-	
-	public void playSound(Location location, Sound sound, float volume, float pitch) {
-		//System.out.println("sound:" + sound.name() + ",volume:" + volume + ",pitch:" + pitch);
-		location.getWorld().playSound(location, sound, volume, pitch);
-	}
 	
 }

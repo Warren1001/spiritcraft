@@ -2,7 +2,7 @@ package com.kabryxis.spiritcraft.game.inventory;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,10 +14,10 @@ public class PlayerConfigureInventory extends SpiritInventory {
 	private static final InteractableItem CANCEL_ITEM = (player, right, shift) -> true;
 	private static final int FILL_START = (Version.VERSION.isVersionAtLeast(Version.v1_9_R1) ? 5 : 4);
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final boolean ghost;
 	
-	public PlayerConfigureInventory(Game game, String name, boolean ghost) {
+	public PlayerConfigureInventory(SpiritGame game, String name, boolean ghost) {
 		super(game.getInventoryManager(), name, 6);
 		InventoryManager inventoryManager = game.getInventoryManager();
 		this.game = game;

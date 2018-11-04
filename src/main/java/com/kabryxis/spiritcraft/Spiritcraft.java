@@ -7,14 +7,14 @@ import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
-import com.kabryxis.kabutils.spigot.event.Listeners;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicPacketAdapter;
+import com.kabryxis.kabutils.spigot.listener.Listeners;
+import com.kabryxis.kabutils.spigot.plugin.protocollibrary.BasicReceivingPacketAdapter;
 import com.kabryxis.kabutils.spigot.serialization.SpigotSerialization;
 import com.kabryxis.spiritcraft.game.AttackHiddenPlayerAdapter;
-import com.kabryxis.spiritcraft.game.a.game.Game;
 import com.kabryxis.spiritcraft.game.a.game.LobbyListener;
 import com.kabryxis.spiritcraft.game.a.game.NewCommandListener;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.game.TestCommand;
 import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -37,13 +37,14 @@ public class Spiritcraft extends JavaPlugin {
 			return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 		};
 		ConfigSection.addDeserializer(Vector.class, vectorFunction);
+		ConfigSection.addDeserializer(Material.class, Material::matchMaterial);
 		CommandHandler.registerDataConverter(Vector.class, vectorFunction);
-		CommandHandler.registerDataConverter(Material.class, string -> Material.getMaterial(string.toUpperCase().replace(' ', '_')));
+		CommandHandler.registerDataConverter(Material.class, Material::matchMaterial);
 	}
 	
 	private Config data;
 	private CommandManager commandManager;
-	private Game game;
+	private SpiritGame game;
 	private LobbyListener listener;
 	
 	@Override
@@ -52,8 +53,8 @@ public class Spiritcraft extends JavaPlugin {
 		data = new Config(new File(getDataFolder(), "config.yml"), true);
 		ItemBuilder.DEFAULT.flag(ItemFlag.HIDE_ATTRIBUTES);
 		ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new AttackHiddenPlayerAdapter(this)).syncStart();
-		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicPacketAdapter(this, true, PacketType.Play.Client.SPECTATE));
-		game = new Game(this);
+		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicReceivingPacketAdapter(this, PacketType.Play.Client.SPECTATE));
+		game = new SpiritGame(this);
 		commandManager = new BukkitCommandManager();
 		commandManager.registerArgumentConverter(SpiritPlayer.class, arg -> game.getPlayerManager().getPlayer(Bukkit.getPlayer(arg)));
 		commandManager.registerArgumentConverter(World.class, arg -> game.getWorldManager().getWorld(arg));
@@ -70,14 +71,14 @@ public class Spiritcraft extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		if(game.isLoaded()) game.end(false);
+		game.end(false);
 	}
 	
 	public Config getData() {
 		return data;
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	

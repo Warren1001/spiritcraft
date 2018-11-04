@@ -1,6 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.serialization;
 
 import com.kabryxis.kabutils.spigot.serialization.LocationSerializer;
+import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.kabutils.spigot.world.WorldLoader;
 import org.bukkit.Location;
 
@@ -13,10 +14,8 @@ public class LoadingLocationSerializer extends LocationSerializer {
 	}
 	
 	@Override
-	public Object deserialize(String string) {
-		String[] args = string.split(",");
-		return args.length == 4 ? new Location(worldLoader.getWorld(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3])) :
-				new Location(worldLoader.getWorld(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
+	public Location deserialize(Object obj) {
+		return Locations.deserialize((String)obj, worldLoader);
 	}
 	
 }

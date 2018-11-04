@@ -2,7 +2,7 @@ package com.kabryxis.spiritcraft.game.a.tracker;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.custom.player.ItemStackForwarder;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -18,7 +18,7 @@ public class ItemTracker implements ItemStackForwarder {
 	private final Map<Predicate<ItemStack>, ItemTrackerSet> itemTrackerSets = new HashMap<>();
 	
 	private final SpiritPlayer player;
-	private final Game game;
+	private final SpiritGame game;
 	
 	public ItemTracker(SpiritPlayer player) {
 		this.player = player;

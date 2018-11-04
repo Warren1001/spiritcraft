@@ -7,6 +7,7 @@ import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.a.tracker.ItemTrackerTest;
+import com.kabryxis.spiritcraft.game.a.world.sound.SoundCause;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.ChatColor;
@@ -18,7 +19,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -41,35 +41,8 @@ public class TestCommand {
 	}
 	
 	@Com
-	public void overloadsound(Player player) {
-		if(task != null) task.cancel();
-		task = plugin.getGame().getTaskManager().start(new BukkitRunnable() {
-			
-			private final int speedInterval = 100;
-			
-			private int soundInterval = 30;
-			private int lastTicked = 0;
-			private int tick = -1;
-			
-			@Override
-			public void run() {
-				tick++;
-				//System.out.println("tick:" + tick + ",lastTicked:" + lastTicked + ",-:" + (tick - lastTicked));
-				if(tick != 0 && tick % speedInterval == 0) {
-					soundInterval -= soundInterval <= 5 ? 1 : 5;
-					//System.out.println("soundInterval: " + soundInterval);
-					if(soundInterval == 2) {
-						cancel();
-						return;
-					}
-				}
-				if(tick == 0 || tick - lastTicked >= soundInterval) {
-					player.getWorld().playSound(player.getLocation(), Sound.PORTAL, 10F, 10F);
-					lastTicked = tick;
-				}
-			}
-			
-		}, 0L, 1L);
+	public void overloadsound(SpiritPlayer player) {
+		player.getGame().getSoundManager().playSound("overload", new SoundCause(player.getLocation()));
 	}
 	
 	@Com
@@ -121,13 +94,13 @@ public class TestCommand {
 	}
 	
 	@Com
-	public void setamount(SpiritPlayer player, int amount) {
-		player.getInventory().getItemInHand().setAmount(amount);
-	}
-	
-	@Com
 	public void inventory(SpiritPlayer player) {
 		player.getGame().getItemManager().openInventory(player);
+	}
+	
+	@Com(args = "0,1")
+	public void configure(SpiritPlayer player, int length, boolean ghost) {
+		player.getGame().getItemManager().openSelectedInventory(player, length == 0 || ghost);
 	}
 	
 	@Com

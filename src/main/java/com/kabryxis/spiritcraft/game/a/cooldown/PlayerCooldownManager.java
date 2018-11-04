@@ -24,10 +24,10 @@ public class PlayerCooldownManager implements CooldownManager {
 	@Override
 	public void startCooldown(CooldownEntry entry) {
 		if(entry.cooldown <= 0L) return;
-		int abilityId = entry.triggerData.get("abilityId");
+		int abilityId = entry.triggerData.getInt("abilityId");
+		if(abilityId <= 0) return;
 		Cooldown cooldown = cooldownMap.get(abilityId);
 		if(cooldown == null) {
-			if(abilityId == 0) return;
 			Validate.notNull(defaultSupplier, "Could not find cooldown registered to ability id %s and a default supplier was not supplied", abilityId);
 			cooldownMap.put(abilityId, (cooldown = defaultSupplier.apply(abilityId)));
 		}

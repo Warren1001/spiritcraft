@@ -1,15 +1,15 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.scheduler.BukkitTask;
 
 public abstract class AbilityTimerRunnable implements Runnable {
 	
-	private final Game game;
+	private final SpiritGame game;
 	
 	private BukkitTask currentTask;
 	
-	public AbilityTimerRunnable(Game game) {
+	public AbilityTimerRunnable(SpiritGame game) {
 		this.game = game;
 	}
 	

@@ -32,7 +32,7 @@ public class Arena implements Weighted, ObjectPredicate {
 	
 	public void reloadData() {
 		dynamic = data.getBoolean("dynamic", false);
-		location = data.getLocation("location", worldManager);
+		location = data.getCustom("location", Location.class);
 		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
 		sizeY = data.getInt("size.y", location.getWorld().getMaxHeight());

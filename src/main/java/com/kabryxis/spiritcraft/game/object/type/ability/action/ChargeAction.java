@@ -42,8 +42,8 @@ public class ChargeAction extends SpiritGameObjectAction {
 		SpiritPlayer triggerer = triggerData.get("triggerer");
 		ItemBarTimerTask itemBarTimerTask = chargeTasks.get(triggerer);
 		if(itemBarTimerTask == null || !itemBarTimerTask.isRunning()) {
-			long uuid = Items.getTagData(triggerData.get("hand"), "uuidsc", long.class);
-			itemBarTimerTask = new ItemBarTimerTask(game, triggerer.getItemTracker().track(item -> Items.getTagData(item, "uuidsc", long.class) == uuid), ltr, duration, interval) {
+			long uuid = Items.getTagData(triggerData.get("hand"), "uuidsc", long.class, 0L);
+			itemBarTimerTask = new ItemBarTimerTask(game, triggerer.getItemTracker().track(item -> Items.getTagData(item, "uuidsc", long.class, 0L) == uuid), ltr, duration, interval) {
 				
 				@Override
 				public void onStart() {
@@ -67,7 +67,7 @@ public class ChargeAction extends SpiritGameObjectAction {
 	
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
-		return super.canPerform(triggerData) && Items.getTagData(triggerData.get("hand"), "uuidsc", long.class) != 0L;
+		return super.canPerform(triggerData) && Items.getTagData(triggerData.get("hand"), "uuidsc", Long.class) != null;
 	}
 	
 }

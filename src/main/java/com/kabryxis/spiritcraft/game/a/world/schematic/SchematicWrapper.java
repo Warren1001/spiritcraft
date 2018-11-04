@@ -19,7 +19,6 @@ public class SchematicWrapper {
 	
 	public SchematicWrapper(File schematicFile) {
 		this.name = Files.getSimpleName(schematicFile);
-		System.out.println(name);
 		this.schematicFile = schematicFile;
 		try {
 			this.schematic = ClipboardFormat.SCHEMATIC.load(schematicFile);

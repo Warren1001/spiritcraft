@@ -2,6 +2,7 @@ package com.kabryxis.spiritcraft.game.player;
 
 import com.boydti.fawe.object.FawePlayer;
 import com.kabryxis.kabutils.data.file.yaml.Config;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
 import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
@@ -13,7 +14,7 @@ import com.kabryxis.spiritcraft.game.ParticleTask;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownManager;
 import com.kabryxis.spiritcraft.game.a.cooldown.ItemBarCooldown;
 import com.kabryxis.spiritcraft.game.a.cooldown.PlayerCooldownManager;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.tracker.ItemTracker;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
@@ -26,15 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SpiritPlayer extends GamePlayer {
+public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Config data;
 	private final PlayerItemInfo ghostItemInfo, hunterItemInfo;
 	private final WrappedEntityPlayer entityPlayer;
 	private final SchematicDataCreator schematicDataCreator;
 	private final ItemTracker itemTracker;
 	private final CooldownManager cooldownManager;
+	private final DeadBody deadBody;
+	private final ConfigSection customData;
 	
 	private List<String> errorMessages = new ArrayList<>();
 	
@@ -42,9 +45,9 @@ public class SpiritPlayer extends GamePlayer {
 	private boolean wantsGhost = true;
 	private ParticleTask particleTask;
 	private double damageToGhost = 0.0;
-	private DeadBody deadBody;
+	private boolean breakBlocks = false;
 	
-	public SpiritPlayer(Game game, UUID uuid, Config data) {
+	public SpiritPlayer(SpiritGame game, UUID uuid, Config data) {
 		super(uuid);
 		this.game = game;
 		this.data = data;
@@ -54,10 +57,11 @@ public class SpiritPlayer extends GamePlayer {
 		this.schematicDataCreator = new SchematicDataCreator(this);
 		this.itemTracker = new ItemTracker(this);
 		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(game, itemTracker.track(item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
-		data.load();
+		this.deadBody = game.getDeadBodyManager().getDeadBody(this);
+		this.customData = new ConfigSection();
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	
@@ -103,6 +107,14 @@ public class SpiritPlayer extends GamePlayer {
 	
 	public CooldownManager getCooldownManager() {
 		return cooldownManager;
+	}
+	
+	public DeadBody getDeadBody() {
+		return deadBody;
+	}
+	
+	public ConfigSection getCustomData() {
+		return customData;
 	}
 	
 	public boolean hasErrorMessages() {
@@ -228,12 +240,12 @@ public class SpiritPlayer extends GamePlayer {
 		return entityPlayer.getPing();
 	}
 	
-	public void setDeadBody(DeadBody deadBody) {
-		this.deadBody = deadBody;
+	public boolean canBreakBlocks() {
+		return breakBlocks;
 	}
 	
-	public DeadBody getDeadBody() {
-		return deadBody;
+	public void toggleBreakBlocks() {
+		breakBlocks = !breakBlocks;
 	}
 	
 }

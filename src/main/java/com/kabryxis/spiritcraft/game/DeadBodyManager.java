@@ -1,6 +1,7 @@
 package com.kabryxis.spiritcraft.game;
 
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.kabutils.spigot.listener.Listeners;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -10,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,18 +19,19 @@ public class DeadBodyManager implements Listener {
 	
 	private final Map<SpiritPlayer, DeadBody> deadBodies = new HashMap<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	
-	public DeadBodyManager(Game game) {
+	public DeadBodyManager(SpiritGame game) {
 		this.game = game;
-		Plugin plugin = game.getPlugin();
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		Listeners.registerListener(this, game.getPlugin());
+	}
+	
+	public DeadBody getDeadBody(SpiritPlayer player) {
+		return deadBodies.computeIfAbsent(player, DeadBody::new);
 	}
 	
 	public void died(SpiritPlayer player) {
-		DeadBody deadBody = deadBodies.computeIfAbsent(player, DeadBody::new);
-		player.setDeadBody(deadBody);
-		deadBody.died();
+		deadBodies.get(player).died();
 	}
 	
 	public void revive(SpiritPlayer player) {

@@ -1,11 +1,12 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.kabryxis.kabutils.spigot.event.GlobalListener;
+import com.kabryxis.kabutils.spigot.listener.GlobalListener;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -20,11 +22,11 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class LobbyListener implements GlobalListener {
 	
-	private final Game game;
+	private final SpiritGame game;
 	
 	private int allowNextItemsSpawn = 0;
 	
-	public LobbyListener(Game game) {
+	public LobbyListener(SpiritGame game) {
 		this.game = game;
 	}
 	
@@ -38,8 +40,7 @@ public class LobbyListener implements GlobalListener {
 			case "PlayerJoinEvent":
 				PlayerJoinEvent pje = (PlayerJoinEvent)event;
 				pje.setJoinMessage(null);
-				Player pjeBukkitPlayer = pje.getPlayer();
-				game.getPlayerManager().getPlayer(pjeBukkitPlayer).updatePlayer(pjeBukkitPlayer);
+				game.getPlayerManager().getPlayer(pje.getPlayer()).updatePlayer(pje.getPlayer());
 				break;
 			case "PlayerSpawnLocationEvent":
 				PlayerSpawnLocationEvent psle = (PlayerSpawnLocationEvent)event;
@@ -48,8 +49,7 @@ public class LobbyListener implements GlobalListener {
 			case "PlayerQuitEvent":
 				PlayerQuitEvent pqe = (PlayerQuitEvent)event;
 				pqe.setQuitMessage(null);
-				Player pqeBukkitPlayer = pqe.getPlayer();
-				SpiritPlayer pqePlayer = game.getPlayerManager().getPlayer(pqeBukkitPlayer);
+				SpiritPlayer pqePlayer = game.getPlayerManager().getPlayer(pqe.getPlayer());
 				if(pqePlayer.getPlayerType() == PlayerType.WAITING) {
 					// TODO handle all the other playerTypes too
 				}
@@ -79,12 +79,11 @@ public class LobbyListener implements GlobalListener {
 				break;
 			case "PlayerDeathEvent":
 				PlayerDeathEvent pde = (PlayerDeathEvent)event;
-				pde.setDeathMessage("");
+				pde.setDeathMessage(null);
 				pde.getDrops().clear();
 				break;
 			case "WeatherChangeEvent":
 				WeatherChangeEvent wce = (WeatherChangeEvent)event;
-				wce.getWorld().setWeatherDuration(0);
 				if(wce.toWeatherState()) wce.setCancelled(true);
 				break;
 			case "PlayerToggleSneakEvent":
@@ -112,21 +111,28 @@ public class LobbyListener implements GlobalListener {
 				((Player)flce.getEntity()).setSaturation(Float.MAX_VALUE);
 				break;
 			case "PlayerDropItemEvent":
-				//PlayerDropItemEvent pdie = (PlayerDropItemEvent)event;
 				game.getPlugin().allowNextItemSpawn();
 				break;
-			case "InventoryClickEvent":
-				//new RuntimeException().printStackTrace();
-				break;
-			case "EntityDamageEvent":
 			case "EntityDamageByEntityEvent":
+			case "EntityDamageEvent":
+				EntityDamageEvent ede = (EntityDamageEvent)event;
+				Entity edeEntity = ede.getEntity();
+				if(!(edeEntity instanceof Player) || game.getPlayerManager().getPlayer((Player)edeEntity).getPlayerType() == PlayerType.WAITING) ede.setCancelled(true);
+				break;
+			case "BlockPhysicsEvent":
+				BlockPhysicsEvent bpe = (BlockPhysicsEvent)event;
+				if(bpe.getBlock().getType() == Material.REDSTONE_LAMP_ON && bpe.getChangedType() == Material.REDSTONE_LAMP_OFF) {
+					System.out.println("found and cancelled a blockphysicsevent for redstone lamp");
+					bpe.setCancelled(true);
+				}
+				break;
 			case "ItemMergeEvent":
 			case "ThunderChangeEvent":
 				((Cancellable)event).setCancelled(true);
 				break;
 			case "ChunkUnloadEvent":
 			case "PlayerMoveEvent":
-			case "BlockPhysicsEvent":
+			//case "BlockPhysicsEvent":
 			case "PlayerAnimationEvent":
 			case "ChunkLoadEvent":
 			case "PlayerStatisticIncrementEvent":
@@ -140,7 +146,6 @@ public class LobbyListener implements GlobalListener {
 			case "BlockDamageEvent":
 				break;
 			default:
-				//System.out.println(event.getEventName());
 				break;
 		}
 		if(game.isInProgress()) game.onEvent(event);

@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.inventory.player;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.inventory.InteractablePlayerItem;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.ChatColor;
@@ -15,9 +15,9 @@ public class InformationItem implements InteractablePlayerItem {
 	
 	private final ItemBuilder itemBase = new ItemBuilder(Material.SIGN).name(ChatColor.AQUA + "Information");
 	
-	private final Game game;
+	private final SpiritGame game;
 	
-	public InformationItem(Game game) {
+	public InformationItem(SpiritGame game) {
 		this.game = game;
 	}
 	

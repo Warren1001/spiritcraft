@@ -2,11 +2,13 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
 import com.kabryxis.kabutils.spigot.world.ChunkLoader;
 import com.kabryxis.kabutils.spigot.world.EmptyGenerator;
+import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.kabutils.spigot.world.WorldLoader;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
@@ -28,14 +30,14 @@ public class WorldManager implements WorldLoader {
 	private final Map<String, WorldCreator> worldCreators = new HashMap<>();
 	private final Map<String, ChunkGenerator> chunkGenerators = new HashMap<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final SchematicManager schematicManager;
 	private final ArenaManager arenaManager;
 	private final ChunkLoader chunkLoader;
 	private final MetadataProvider metadataProvider;
 	private final Config worldCreatorData;
 	
-	public WorldManager(Game game) {
+	public WorldManager(SpiritGame game) {
 		this.game = game;
 		File pluginFolder = game.getPlugin().getDataFolder();
 		this.chunkLoader = new ChunkLoader(game.getPlugin());
@@ -44,6 +46,7 @@ public class WorldManager implements WorldLoader {
 		this.worldCreatorData = new Config(new File(pluginFolder, "worlds.yml"), true);
 		worldCreatorData.values().stream().map(WorldCreator.class::cast).forEach(this::setWorldCreator);
 		Config.registerSerializer(new LoadingLocationSerializer(this));
+		ConfigSection.addDeserializer(Location.class, string -> Locations.deserialize(string, this));
 		this.schematicManager = new SchematicManager(new File(pluginFolder, "schematics"));
 		Files.forEachFileWithEnding(schematicManager.getFolder(), Config.EXTENSION, file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(new Config(file, true))));
 		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));

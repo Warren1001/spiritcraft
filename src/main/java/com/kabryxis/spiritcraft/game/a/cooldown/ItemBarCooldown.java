@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.cooldown;
 
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.ability.ItemBarTimerTask;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,10 +8,10 @@ import java.util.Collection;
 
 public class ItemBarCooldown implements Cooldown {
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Collection<ItemStack> items;
 	
-	public ItemBarCooldown(Game game, Collection<ItemStack> items) {
+	public ItemBarCooldown(SpiritGame game, Collection<ItemStack> items) {
 		this.game = game;
 		this.items = items;
 	}

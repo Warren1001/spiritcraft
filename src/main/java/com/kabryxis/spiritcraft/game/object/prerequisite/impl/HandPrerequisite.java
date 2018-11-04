@@ -2,11 +2,9 @@ package com.kabryxis.spiritcraft.game.object.prerequisite.impl;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.kabutils.string.Strings;
 import com.kabryxis.spiritcraft.game.object.SpiritGameObject;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.HashSet;
@@ -28,8 +26,8 @@ public class HandPrerequisite extends SpiritGameObject implements GameObjectPrer
 			flags.add(ItemBuilder.ItemCompareFlag.DATA);
 		});
 		handleSubCommand("name", false, true, data -> {
-			builder.name(ChatColor.translateAlternateColorCodes('&', data));
-			flags.add(Strings.contains(builder.name(), ChatColor.COLOR_CHAR) ? ItemBuilder.ItemCompareFlag.NAME : ItemBuilder.ItemCompareFlag.COLORLESS_NAME);
+			builder.name(data);
+			flags.add(ItemBuilder.ItemCompareFlag.NAME);
 		});
 	}
 	

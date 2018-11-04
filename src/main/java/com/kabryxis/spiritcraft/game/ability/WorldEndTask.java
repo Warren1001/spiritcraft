@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
 import com.kabryxis.kabutils.data.Arrays;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -21,7 +21,7 @@ public class WorldEndTask extends BukkitRunnable {
 	private final FloatingBlockSet[] floatingBlocks = new FloatingBlockSet[360];
 	private final Set<TickingBlock> tickingBlocks = new HashSet<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Location center;
 	
 	/**
@@ -29,7 +29,7 @@ public class WorldEndTask extends BukkitRunnable {
 	 */
 	private int tick = 0;
 	
-	public WorldEndTask(Game game, Location center) {
+	public WorldEndTask(SpiritGame game, Location center) {
 		this.game = game;
 		this.center = center;
 		start();

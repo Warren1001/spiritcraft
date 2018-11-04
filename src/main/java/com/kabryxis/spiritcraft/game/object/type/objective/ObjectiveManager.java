@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.object.type.objective;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectBase;
@@ -16,7 +16,7 @@ public class ObjectiveManager extends GameObjectTypeManager {
 	
 	private final Map<Block, GameObjectBase> objectivesByBlock = new HashMap<>();
 	
-	public ObjectiveManager(Game game) {
+	public ObjectiveManager(SpiritGame game) {
 		super(game, GameObjectAction.class, GameObjectPrerequisite.class);
 	}
 	

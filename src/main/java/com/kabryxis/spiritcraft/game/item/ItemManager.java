@@ -2,7 +2,7 @@ package com.kabryxis.spiritcraft.game.item;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.inventory.*;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.ChatColor;
@@ -12,13 +12,13 @@ import java.io.File;
 
 public class ItemManager {
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Config globalItemData;
 	private final ItemData ghostData;
 	private final ItemData hunterData;
 	private final DynamicInventory start;
 	
-	public ItemManager(Game game) {
+	public ItemManager(SpiritGame game) {
 		this.game = game;
 		globalItemData = new Config(new File(game.getPlugin().getDataFolder(), "items.yml"), true);
 		ghostData = new ItemData(this, true);
@@ -38,7 +38,7 @@ public class ItemManager {
 		start.setInteractableServerItem(6, new OpenNextInventoryAction(hunterInv), new ItemBuilder(Material.CHAINMAIL_CHESTPLATE).name(ChatColor.DARK_RED + "Hunter").build());
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	

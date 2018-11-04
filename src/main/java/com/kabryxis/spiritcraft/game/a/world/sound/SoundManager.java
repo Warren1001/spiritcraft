@@ -1,8 +1,8 @@
 package com.kabryxis.spiritcraft.game.a.world.sound;
 
-import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.a.world.sound.impl.SpiritSoundPlayer;
+import org.apache.commons.lang3.Validate;
 
 import java.io.File;
 import java.util.HashMap;
@@ -12,19 +12,18 @@ public class SoundManager {
 	
 	private final Map<String, SoundPlayer> soundEffectPlayers = new HashMap<>();
 	
-	private final File folder;
+	private final Config data;
 	
 	public SoundManager(File folder) {
-		this.folder = folder;
-		reloadAll();
-	}
-	
-	public void reloadAll() {
-		Files.forEachFileWithEnding(folder, ".yml", file -> registerSoundPlayer(new SpiritSoundPlayer(new Config(file, true))));
+		data = new Config(new File(folder, "sounds.yml"));
+		data.load();
+		//data.values().forEach(value -> System.out.println(value.getClass().getName()));
+		data.getChildren().forEach(child -> registerSoundPlayer(new SpiritSoundPlayer(child)));
 	}
 	
 	public void registerSoundPlayer(SoundPlayer soundPlayer) {
 		soundEffectPlayers.put(soundPlayer.getName(), soundPlayer);
+		//System.out.println(String.format("Registered '%s' SoundPlayer", soundPlayer.getName()));
 	}
 	
 	public SoundPlayer getSoundPlayer(String name) {
@@ -32,12 +31,7 @@ public class SoundManager {
 	}
 	
 	public void playSound(String name, SoundCause cause) {
-		SoundPlayer soundPlayer = soundEffectPlayers.get(name);
-		if(soundPlayer == null) {
-			System.out.println("Could not find the sound named '" + name + "'.");
-			return;
-		}
-		soundPlayer.playSound(cause);
+		Validate.notNull(soundEffectPlayers.get(name), "Could not find the sound named '%s'", name).playSound(cause);
 	}
 	
 }

@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.ability;
 
 import com.kabryxis.kabutils.data.NumberConversions;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,7 +20,7 @@ public class CloudTask extends BukkitRunnable {
 	private static final int INTERVAL = 1;
 	private static final int ITERATIONS = NumberConversions.ceil(DURATION * (20.0 / INTERVAL));
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Location loc;
 	private final List<Set<Block>> blocksList = new ArrayList<>(MAX_BLOCK_ITERATIONS);
 	private final BlockFace[] faces = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST };
@@ -29,7 +29,7 @@ public class CloudTask extends BukkitRunnable {
 	private int currentIteration;
 	private int currentBlockIteration;
 	
-	public CloudTask(Game game, Location loc) {
+	public CloudTask(SpiritGame game, Location loc) {
 		this.game = game;
 		this.loc = loc;
 		for(int i = 0; i < MAX_BLOCK_ITERATIONS; i++) {

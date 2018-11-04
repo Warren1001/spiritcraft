@@ -21,7 +21,7 @@ public class CooldownHandler implements Cloneable {
 	
 	public CooldownEntry getCooldownEntry() {
 		CooldownEntry cooldown = null;
-		for(int i = 0; i < cooldownEntries.length && cooldown == null; i++) {
+		for(int i = 0; i < cooldownEntries.length && (cooldown == null || cooldown.triggerData.getInt("abilityId") <= 0); i++) {
 			cooldown = cooldownEntries[i];
 		}
 		return cooldown;

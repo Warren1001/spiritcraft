@@ -38,7 +38,7 @@ public abstract class SpiritGameObjectAction extends SpiritGameObject implements
 	
 	@Override
 	public boolean hasTriggerType(TriggerType type) {
-		return Arrays.containsInstance(triggerTypes, type);
+		return Arrays.contains(triggerTypes, type);
 	}
 	
 	@Override

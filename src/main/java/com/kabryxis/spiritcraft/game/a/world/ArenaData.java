@@ -1,12 +1,16 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
+import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.example.NMSRelighter;
+import com.boydti.fawe.object.FaweQueue;
 import com.boydti.fawe.object.schematic.Schematic;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.random.RandomArrayList;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
+import com.kabryxis.kabutils.spigot.world.Locations;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectBase;
@@ -19,28 +23,34 @@ import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
-import java.util.Objects;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ArenaData {
 	
-	private static final BaseBlock AIR = FaweCache.getBlock(0, 0);
+	public static final BaseBlock AIR = FaweCache.getBlock(0, 0);
 	
-	private final Game game;
-	private final Arena arena;
-	private final Location location;
-	private final Vector vectorLocation;
-	private final Set<BlockVector2D> occupiedChunks;
-	private final ArenaSchematic schematic;
-	private final EditSession editSession;
-	private final RandomArrayList<Location> ghostSpawns, hunterSpawns;
+	protected final SpiritGame game;
+	protected final Arena arena;
+	protected final Location location;
+	protected final Vector vectorLocation;
+	protected final Set<BlockVector2D> occupiedChunks;
+	protected final ArenaSchematic schematic;
+	protected final EditSession editSession;
+	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
+	protected final Set<Material> protectedBlocks = EnumSet.noneOf(Material.class);
+	protected final Set<Entity> spawnedEntities = new HashSet<>();
 	
-	private Region totalRegion;
+	protected Region totalRegion;
 	
-	public ArenaData(Game game, Arena arena, ArenaSchematic schematic) {
+	public ArenaData(SpiritGame game, Arena arena, ArenaSchematic schematic) {
 		this.game = game;
 		this.arena = arena;
 		this.location = arena.getLocation().clone();
@@ -51,10 +61,10 @@ public class ArenaData {
 		this.occupiedChunks = arena.getOccupiedChunks();
 		this.schematic = schematic;
 		this.editSession = new EditSessionBuilder(world.getName()).fastmode(true).checkMemory(false).changeSetNull().limitUnlimited().allowedRegionsEverywhere().build();
-		this.ghostSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getLocationList("spawns.ghost", world));
-		this.hunterSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getLocationList("spawns.hunter", world));
-		ConfigSection objectivesChild = schematic.getData().get("objectives");
-		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
+		this.ghostSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getList("spawns.ghost", String.class).stream().map(string ->
+				getArenaLocation(Locations.deserialize(string, world))).collect(Collectors.toList()));
+		this.hunterSpawns = new RandomArrayList<>(Integer.MAX_VALUE, schematic.getData().getList("spawns.hunter", String.class).stream().map(string ->
+				getArenaLocation(Locations.deserialize(string, world))).collect(Collectors.toList()));
 		Region region = getModifyingRegion(clipboard);
 		for(int cx = (region.getMinimumPoint().getBlockX() >> 4) - 1; cx <= (region.getMaximumPoint().getBlockX()) + 1; cx++) {
 			for(int cz = (region.getMinimumPoint().getBlockZ() >> 4) - 1; cz <= (region.getMaximumPoint().getBlockZ()) + 1; cz++) {
@@ -63,7 +73,7 @@ public class ArenaData {
 		}
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	
@@ -99,6 +109,10 @@ public class ArenaData {
 		return vectorLocation;
 	}
 	
+	public Location getArenaLocation(Location loc) {
+		return loc.add(location);
+	}
+	
 	public Location toLocation(Vector offset) {
 		return location.clone().add(offset.getX(), offset.getY(), offset.getZ());
 	}
@@ -107,7 +121,13 @@ public class ArenaData {
 		return new Vector(loc.getX() - location.getX(), loc.getY() - location.getY(), loc.getZ() - location.getZ());
 	}
 	
+	public Region getRegion() {
+		return totalRegion;
+	}
+	
 	public void load() {
+		ConfigSection objectivesChild = schematic.getData().get("objectives");
+		if(objectivesChild != null) game.getObjectiveManager().loadObjectives(objectivesChild);
 		game.getWorldManager().loadChunks(this, location.getWorld(), occupiedChunks);
 		paste0(schematic, false);
 		game.getTaskManager().start(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.
@@ -123,8 +143,9 @@ public class ArenaData {
 	}
 	
 	private void paste0(SchematicWrapper schematicWrapper, boolean air) {
+		if(schematicWrapper instanceof ArenaSchematic) protectedBlocks.addAll(((ArenaSchematic)schematicWrapper).getProtectedBlocks());
 		Schematic schematic = schematicWrapper.getSchematic();
-		Region region = getModifyingRegion(Objects.requireNonNull(schematic.getClipboard()));
+		Region region = getModifyingRegion(schematicWrapper.getClipboard());
 		Vector min = region.getMinimumPoint();
 		Vector max = region.getMaximumPoint();
 		if(totalRegion == null) totalRegion = region;
@@ -133,12 +154,12 @@ public class ArenaData {
 			if(!totalRegion.contains(min)) {
 				createNewRegion = true;
 				Vector curr = totalRegion.getMinimumPoint();
-				min = new Vector(Math.min(curr.getBlockX(), min.getBlockX()), Math.min(curr.getBlockY(), min.getBlockY()), Math.min(curr.getBlockZ(), min.getBlockZ()));
+				min = new BlockVector(Math.min(curr.getBlockX(), min.getBlockX()), Math.min(curr.getBlockY(), min.getBlockY()), Math.min(curr.getBlockZ(), min.getBlockZ()));
 			}
 			if(!totalRegion.contains(max)) {
 				createNewRegion = true;
 				Vector curr = totalRegion.getMaximumPoint();
-				max = new Vector(Math.max(curr.getBlockX(), max.getBlockX()), Math.max(curr.getBlockY(), max.getBlockY()), Math.max(curr.getBlockZ(), max.getBlockZ()));
+				max = new BlockVector(Math.max(curr.getBlockX(), max.getBlockX()), Math.max(curr.getBlockY(), max.getBlockY()), Math.max(curr.getBlockZ(), max.getBlockZ()));
 			}
 			if(createNewRegion) totalRegion = new CuboidRegion(min, max);
 		}
@@ -160,20 +181,32 @@ public class ArenaData {
 	}
 	
 	public void unload() {
+		CustomEntityRegistry.removeAll(spawnedEntities); // removes non custom entities as well
+		spawnedEntities.clear();
 		editSession.setBlocks(totalRegion, AIR);
 		editSession.flushQueue();
+		FaweAPI.fixLighting(editSession.getWorld(), totalRegion, editSession.getQueue(), FaweQueue.RelightMode.NONE);
 		game.getWorldManager().unloadChunks(this);
 		game.getObjectiveManager().clear();
 	}
 	
 	private Region getModifyingRegion(Clipboard clipboard) {
-		Vector origin = clipboard.getOrigin();
+		Vector origin = clipboard.getOrigin(); // TODO origin may not need subtraction
 		return new CuboidRegion(vectorLocation.add(clipboard.getMinimumPoint()).subtract(origin).toBlockVector(),
 				vectorLocation.add(clipboard.getMaximumPoint()).subtract(origin).toBlockVector());
 	}
 	
 	public void relight() {
 		game.getTaskManager().start(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
+	}
+	
+	public boolean isProtected(Material type) {
+		return protectedBlocks.contains(type);
+	}
+	
+	public <T extends Entity> T spawnedEntity(T entity) {
+		spawnedEntities.add(entity);
+		return entity;
 	}
 	
 }

@@ -3,7 +3,7 @@ package com.kabryxis.spiritcraft.game.object.type;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownEntry;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownHandler;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.object.TriggerType;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 
@@ -28,7 +28,7 @@ public class GameObjectBase implements GameObjectAction {
 	}
 	
 	@Override
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return objectTypeManager.getGame();
 	}
 	

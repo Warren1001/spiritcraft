@@ -4,7 +4,7 @@ import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownHandler;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectTypeManager;
@@ -19,13 +19,19 @@ public class AbilityManager extends GameObjectTypeManager {
 	//private final Set<Worker> abilityRequests = new HashSet<>();
 	
 	private final File folder;
+	private final Config globals;
 	
 	//private boolean finishedConstructing = false;
 	
-	public AbilityManager(Game game, File folder) {
+	public AbilityManager(SpiritGame game, File folder) {
 		super(game, GameObjectAction.class, GameObjectPrerequisite.class);
 		this.folder = folder;
+		this.globals = new Config(new File(folder, "globals.yml"), true);
 		folder.mkdirs();
+	}
+	
+	public Config getGlobals() {
+		return globals;
 	}
 	
 	public void loadAbilities() {
@@ -33,7 +39,9 @@ public class AbilityManager extends GameObjectTypeManager {
 		gameObjectBases.clear();
 		actionManager.clear();
 		prerequisiteManager.clear();
-		Files.forEachFileWithEnding(folder, Config.EXTENSION, file -> createBase(new Config(file, true)));
+		Files.forEachFileWithEnding(folder, Config.EXTENSION, file -> {
+			if(!Files.getSimpleName(file).toLowerCase().equals("globals")) createBase(new Config(file, true));
+		});
 		//finishedConstructing = true;
 		//abilityRequests.forEach(Worker::work);
 	}

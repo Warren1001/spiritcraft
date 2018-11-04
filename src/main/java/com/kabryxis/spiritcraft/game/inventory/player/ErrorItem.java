@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.inventory.player;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.inventory.InteractablePlayerItem;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.ChatColor;
@@ -14,9 +14,9 @@ public class ErrorItem implements InteractablePlayerItem {
 	private final ItemBuilder itemBase = new ItemBuilder(Material.OBSIDIAN).name(ChatColor.GRAY + "Error Log");
 	private final int messagesToDisplay = 4;
 	
-	private final Game game;
+	private final SpiritGame game;
 	
-	public ErrorItem(Game game) {
+	public ErrorItem(SpiritGame game) {
 		this.game = game;
 	}
 	

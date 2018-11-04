@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.object;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 
 import java.util.function.Consumer;
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public abstract class SpiritGameObject implements GameObject {
 	
 	protected final GameObjectManager<? extends GameObject> objectManager;
-	protected final Game game;
+	protected final SpiritGame game;
 	protected final CommandHandler commandHandler;
 	protected final String name;
 	
@@ -26,7 +26,7 @@ public abstract class SpiritGameObject implements GameObject {
 	}
 	
 	@Override
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	

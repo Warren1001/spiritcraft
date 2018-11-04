@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.object;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.spiritcraft.game.a.game.Game;
+import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 import com.kabryxis.spiritcraft.game.a.parse.Parser;
 
@@ -15,17 +15,17 @@ public class GameObjectManager<T extends GameObject> {
 	private final Map<GameObject, CommandHandler> commandHandlerMap = new HashMap<>();
 	private final Map<String, T> cacheMap = new HashMap<>();
 	
-	private final Game game;
+	private final SpiritGame game;
 	private final Parser parser;
 	private final Class<? extends T> clazz;
 	
-	public GameObjectManager(Game game, Class<? extends T> clazz) {
+	public GameObjectManager(SpiritGame game, Class<? extends T> clazz) {
 		this.game = game;
 		this.parser = game.getParser();
 		this.clazz = clazz;
 	}
 	
-	public Game getGame() {
+	public SpiritGame getGame() {
 		return game;
 	}
 	

@@ -32,7 +32,8 @@ public class DeadBody {
 		nextFaceOrder.put(BlockFace.WEST, new BlockFace[] { BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST });
 	}
 	
-	private final ProtocolManager protocolManager;
+	private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+	
 	private final SpiritPlayer player;
 	
 	private PacketContainer namedEntitySpawn, bed, entityTeleport, entityTeleportZero, entityDestroy;
@@ -42,7 +43,6 @@ public class DeadBody {
 	private byte direction;
 	
 	public DeadBody(SpiritPlayer player) {
-		this.protocolManager = ProtocolLibrary.getProtocolManager();
 		this.player = player;
 	}
 	
@@ -77,8 +77,8 @@ public class DeadBody {
 		direction = getDirection(player);
 		BlockFace face = getBlockFace(direction);
 		Location headHitboxLoc = deathLoc.clone().add(face.getModX() / 2.375, -0.35, face.getModZ() / 2.375);
-		headHitbox = new CustomHitbox(headHitboxLoc);
-		feetHitbox = new CustomHitbox(headHitboxLoc.clone().add(face.getModX(), 0, face.getModZ()));
+		headHitbox = CustomHitbox.spawn(headHitboxLoc, player.getName());
+		feetHitbox = CustomHitbox.spawn(headHitboxLoc.clone().add(face.getModX(), 0, face.getModZ()), player.getName());
 		showAll();
 	}
 	
