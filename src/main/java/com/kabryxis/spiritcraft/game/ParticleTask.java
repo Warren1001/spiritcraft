@@ -1,16 +1,19 @@
 package com.kabryxis.spiritcraft.game;
 
+import com.kabryxis.kabutils.spigot.concurrent.TickingBukkitRunnable;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class ParticleTask extends BukkitRunnable {
+public class ParticleTask extends TickingBukkitRunnable {
 	
+	private final int maxSkipTicks = 400;
+	private final int nonSkipTicks = (int)(maxSkipTicks - (maxSkipTicks / 10.0));
 	private final SpiritPlayer player;
 	
 	private long defaultDelay = 1500L;
+	private long baseDelay = defaultDelay;
 	private long delay = defaultDelay;
 	private int skippedTicks = 0;
 	private long lastTick = 0L;
@@ -20,21 +23,21 @@ public class ParticleTask extends BukkitRunnable {
 		this.player = player;
 	}
 	
-	public void setDelay(long delay) {
-		this.delay = delay;
+	public long getDefaultDelay() {
+		return defaultDelay;
 	}
 	
-	public void setDefaultDelay() {
-		this.delay = defaultDelay;
+	public void setDelay(long delay) {
+		this.baseDelay = delay;
 	}
 	
 	public long getDelay() {
-		return delay;
+		return baseDelay;
 	}
 	
-	public void setSkipTick(boolean skipTick) {
-		if(!skipTick && skippedTicks > 0) delay /= 2;
-		this.skipTick = skipTick;
+	public boolean setSkipTick(boolean skipTick) {
+		this.skipTick = skipTick && skippedTicks >= nonSkipTicks;
+		return this.skipTick;
 	}
 	
 	public boolean isSkipTick() {
@@ -42,26 +45,30 @@ public class ParticleTask extends BukkitRunnable {
 	}
 	
 	@Override
-	public void run() {
-		long current = System.currentTimeMillis();
-		if(current - lastTick >= delay) {
-			lastTick = current;
-			if(skipTick) {
-				skippedTicks++;
-				if(skippedTicks >= 20) setSkipTick(false);
-				return;
-			}
+	public void tick(int tick) {
+		if(skipTick) {
+			skippedTicks += 2;
+			if(skippedTicks >= maxSkipTicks) setSkipTick(false);
+		}
+		else {
+			boolean setBase = false;
 			if(skippedTicks > 0) {
+				delay = (long)(baseDelay * (Math.max(0.2, (maxSkipTicks - skippedTicks) / (double)maxSkipTicks)));
 				skippedTicks--;
-				if(skippedTicks == 0) delay *= 2;
+				if(skippedTicks == 0) setBase = true;
 			}
-			player.getParticleData().display(player);
+			long current = System.currentTimeMillis();
+			if(current - lastTick >= delay) {
+				lastTick = current;
+				player.getParticleData().display(player);
+			}
+			if(setBase) delay = baseDelay;
 		}
 	}
 	
 	public BukkitTask start() {
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20000000, 0, false, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20000000, 0, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20000000, 0, false, false)); // TODO move elsewhere
+		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20000000, 0, false, false)); // TODO move elsewhere
 		return runTaskTimer(player.getGame().getPlugin(), 0L, 1L);
 	}
 	

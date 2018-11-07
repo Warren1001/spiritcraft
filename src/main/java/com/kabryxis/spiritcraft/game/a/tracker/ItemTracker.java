@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.tracker;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
-import com.kabryxis.kabutils.spigot.version.custom.player.ItemStackForwarder;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
@@ -11,11 +10,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class ItemTracker implements ItemStackForwarder {
+public class ItemTracker implements Consumer<Collection<ItemStack>> {
 	
-	private final Map<Predicate<ItemStack>, ItemTrackerSet> itemTrackerSets = new HashMap<>();
+	private final Map<String, ItemTrackerSet> itemTrackerSets = new HashMap<>();
 	
 	private final SpiritPlayer player;
 	private final SpiritGame game;
@@ -35,16 +35,16 @@ public class ItemTracker implements ItemStackForwarder {
 	}
 	
 	@Override
-	public void forward(Collection<ItemStack> items) {
+	public void accept(Collection<ItemStack> items) {
 		itemTrackerSets.values().forEach(set -> {
 			set.clear();
 			set.addAll(items);
 		});
 	}
 	
-	public Collection<ItemStack> track(Predicate<ItemStack> itemTester) {
-		return itemTrackerSets.computeIfAbsent(itemTester, predicate -> {
-			ItemTrackerSet set = new ItemTrackerSet(predicate);
+	public Collection<ItemStack> track(String name, Predicate<ItemStack> itemTester) {
+		return itemTrackerSets.computeIfAbsent(name, ignore -> {
+			ItemTrackerSet set = new ItemTrackerSet(itemTester);
 			PlayerInventory inventory = player.getInventory();
 			for(int i = 0; i < inventory.getSize() + 4; i++) {
 				ItemStack item = inventory.getItem(i); // #getItem may be required for craftmirror instance

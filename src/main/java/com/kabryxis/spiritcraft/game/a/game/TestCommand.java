@@ -80,7 +80,8 @@ public class TestCommand {
 	public void tracker(SpiritPlayer player) {
 		if(task != null) task.cancel();
 		int abilityId = Items.getTagData(player.getInventory().getItemInHand(), "AbiId", int.class);
-		task = plugin.getGame().getTaskManager().start(new ItemTrackerTest(player.getItemTracker().track(item -> item.hasItemMeta() && Items.getTagData(item, "AbiId", int.class) == abilityId)), 0L, 5L);
+		task = plugin.getGame().getTaskManager().start(new ItemTrackerTest(player.getItemTracker().track("AbiId" + abilityId,
+				item -> Items.getTagData(item, "AbiId", int.class) == abilityId)), 0L, 5L);
 	}
 	
 	@Com(args = "0,1")

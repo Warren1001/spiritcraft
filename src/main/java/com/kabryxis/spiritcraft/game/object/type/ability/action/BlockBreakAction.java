@@ -11,15 +11,19 @@ import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.*;
 
@@ -57,10 +61,10 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 		else {
 			Block block = triggerData.get("block_break_block", Block.class);
 			Vector velocity = triggerer.getLocation().getDirection();
-			velocity.setY(velocity.getY() / 2);
-			if(block.getRelative(BlockFace.DOWN).getType() != Material.AIR) {
-				//velocity.setY(Math.abs(velocity.getY()));
-			}
+			velocity.setY(velocity.getY() * 0.75);
+			double velY = velocity.getY();
+			if(velY < 0 && block.getRelative(BlockFace.DOWN).getType() != Material.AIR
+					|| velY > 0 && block.getRelative(BlockFace.UP).getType() != Material.AIR) velocity.setY(velY * -1);
 			brokenBlocks.computeIfAbsent(triggerer, ignore -> new AutoRemovingQueue<>(amount)).offer(throwingBlocksTask.spawnThrowingBlock(block, velocity));
 		}
 	}
@@ -68,7 +72,7 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
 		return super.canPerform(triggerData) && (toggle || (triggerData.get("triggerer", SpiritPlayer.class).canBreakBlocks()
-				&& findBlock(triggerData) && !game.getCurrentArenaData().isProtected(triggerData.get("block_break_block", Block.class).getType())));
+				&& findBlock(triggerData) && !game.getCurrentArenaData().isProtected(triggerData.get("block_break_block", Block.class))));
 	}
 	
 	private boolean findBlock(ConfigSection triggerData) {
@@ -84,21 +88,20 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 	public static class WrappedThrowingBlock implements AutoRemovable {
 		
 		protected final Block origin;
-		protected final Material type;
-		protected final byte data;
-		protected final long spawned;
+		protected final BlockState originState;
+		protected final ItemStack effectData;
 		
 		protected ThrowingBlock throwingBlock;
 		protected Block block;
 		
 		public WrappedThrowingBlock(Block origin, Vector velocity) {
 			this.origin = origin;
-			type = origin.getType();
-			data = origin.getData();
+			this.originState = origin.getState();
+			this.effectData = new ItemStack(originState.getType(), originState.getRawData());
 			origin.setType(Material.AIR, false);
-			throwingBlock = ThrowingBlock.spawn(origin.getLocation().add(0.5, 0.5, 0.5), type, data, 400);
+			playEffect(origin);
+			throwingBlock = ThrowingBlock.spawn(origin.getLocation().add(0.5, 0.5, 0.5), originState.getType(), originState.getRawData(), 400);
 			throwingBlock.getBukkitEntity().setVelocity(velocity);
-			spawned = System.currentTimeMillis();
 		}
 		
 		public ThrowingBlock getThrowingBlock() {
@@ -108,21 +111,27 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 		public void changed(Block block) {
 			throwingBlock = null;
 			this.block = block;
+			playEffect(block);
 		}
 		
-		public Block getOrigin() {
-			return origin;
-		}
-		
-		public long getSpawnTimestamp() {
-			return spawned;
+		public boolean sameXZ(Block block) {
+			return origin.getWorld().equals(block.getWorld()) && origin.getX() == block.getX() && origin.getZ() == block.getZ();
 		}
 		
 		@Override
 		public void remove() {
 			if(throwingBlock != null) throwingBlock.forceRemove();
-			if(block != null) block.setType(Material.AIR, false); // TODO may need to record origin type/data of block isntead of setting to air
-			origin.setTypeIdAndData(type.getId(), data, false);
+			if(block != null) {
+				block.setType(Material.AIR, false); // TODO may need to record origin type/data of block isntead of setting to air
+				playEffect(block);
+			}
+			origin.setTypeIdAndData(originState.getTypeId(), originState.getRawData(), false);
+			playEffect(origin);
+		}
+		
+		private void playEffect(Block block) {
+			ParticleEffect.BLOCK_DUST.sendData(block.getWorld().getPlayers(), block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5, 0.5, 0.5, 0.5, 0, 70, effectData);
+			block.getWorld().playSound(block.getLocation(), Sound.STEP_STONE, 2F, 1F);
 		}
 		
 	}
@@ -132,7 +141,6 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 		private final Map<Long, WrappedThrowingBlock> throwingBlockMap = new HashMap<>();
 		private final Set<Entity> fallingBlocks = new HashSet<>();
 		private final double damageRadius = 0.45;
-		private final long entityDuration = 5000;
 		
 		private final SpiritGame game;
 		
@@ -176,14 +184,14 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 					return;
 				}
 				throwingBlockMap.remove(throwingBlock.getUniqueId());
+				fallingBlocks.remove(throwingBlock.getBukkitEntity());
 				Block block = event.getBlock();
-				if(wrappedThrowingBlock.getOrigin().equals(block)) {
+				if(wrappedThrowingBlock.sameXZ(block)) {
 					throwingBlock.forceRemove();
 					event.setCancelled(true);
 					return;
 				}
 				game.getTaskManager().start(() -> wrappedThrowingBlock.changed(block));
-				fallingBlocks.remove(throwingBlock.getBukkitEntity());
 			}
 		}
 		

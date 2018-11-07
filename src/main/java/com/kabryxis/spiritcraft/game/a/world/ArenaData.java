@@ -26,7 +26,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.material.Door;
 
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -200,8 +202,10 @@ public class ArenaData {
 		game.getTaskManager().start(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
 	}
 	
-	public boolean isProtected(Material type) {
-		return protectedBlocks.contains(type);
+	public boolean isProtected(Block block) {
+		if(protectedBlocks.contains(block.getType()) || game.getObjectiveManager().getObjective(block) != null) return true;
+		Block up = block.getRelative(BlockFace.UP);
+		return up.getState().getData() instanceof Door && protectedBlocks.contains(up.getType());
 	}
 	
 	public <T extends Entity> T spawnedEntity(T entity) {

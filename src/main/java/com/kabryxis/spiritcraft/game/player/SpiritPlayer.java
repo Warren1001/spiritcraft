@@ -6,7 +6,7 @@ import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
 import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
-import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventories;
+import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
 import com.kabryxis.spiritcraft.game.DeadBody;
 import com.kabryxis.spiritcraft.game.ParticleData;
@@ -56,7 +56,8 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 		this.entityPlayer = WrappedEntityPlayer.newInstance();
 		this.schematicDataCreator = new SchematicDataCreator(this);
 		this.itemTracker = new ItemTracker(this);
-		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(game, itemTracker.track(item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
+		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(game, itemTracker.track("AbiId" + abilityId,
+				item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
 		this.deadBody = game.getDeadBodyManager().getDeadBody(this);
 		this.customData = new ConfigSection();
 	}
@@ -73,7 +74,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	public void updatePlayer(Player player) {
 		this.player = player;
 		entityPlayer.setHandle(player);
-		WrappedInventories.wrapPlayerInventory(player, itemTracker);
+		WrappedInventory.wrap(player, itemTracker);
 		itemTracker.updateReferences();
 	}
 	
