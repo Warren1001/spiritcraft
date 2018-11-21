@@ -1,19 +1,18 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
+import com.boydti.fawe.FaweAPI;
+import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
-import com.kabryxis.kabutils.spigot.world.ChunkLoader;
-import com.kabryxis.kabutils.spigot.world.EmptyGenerator;
-import com.kabryxis.kabutils.spigot.world.Locations;
-import com.kabryxis.kabutils.spigot.world.WorldLoader;
+import com.kabryxis.kabutils.spigot.world.*;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
-import com.sk89q.worldedit.BlockVector2D;
-import org.bukkit.Bukkit;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.Vector2D;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -26,9 +25,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WorldManager implements WorldLoader {
-	
+
 	private final Map<String, WorldCreator> worldCreators = new HashMap<>();
 	private final Map<String, ChunkGenerator> chunkGenerators = new HashMap<>();
+	private final Map<World, BlockStateManager> blockStateManagers = new HashMap<>();
+	private final Map<World, EditSession> slowEditSessions = new HashMap<>();
+	private final Map<World, EditSession> fastEditSessions = new HashMap<>();
 	
 	private final SpiritGame game;
 	private final SchematicManager schematicManager;
@@ -36,6 +38,7 @@ public class WorldManager implements WorldLoader {
 	private final ChunkLoader chunkLoader;
 	private final MetadataProvider metadataProvider;
 	private final Config worldCreatorData;
+	private final EditSessionBuilder defaultBuilder;
 	
 	public WorldManager(SpiritGame game) {
 		this.game = game;
@@ -50,6 +53,8 @@ public class WorldManager implements WorldLoader {
 		this.schematicManager = new SchematicManager(new File(pluginFolder, "schematics"));
 		Files.forEachFileWithEnding(schematicManager.getFolder(), Config.EXTENSION, file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(new Config(file, true))));
 		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
+		this.defaultBuilder = new EditSessionBuilder("null").fastmode(true).checkMemory(false).changeSetNull()
+				.limitUnlimited().allowedRegionsEverywhere();
 	}
 	
 	public SchematicManager getSchematicManager() {
@@ -67,6 +72,20 @@ public class WorldManager implements WorldLoader {
 	public MetadataProvider getMetadataProvider() {
 		return metadataProvider;
 	}
+
+	public BlockStateManager getBlockStateManager(World world) {
+		return blockStateManagers.computeIfAbsent(world, w -> new EditSessionBlockStateManager(game, w));
+	}
+
+	public EditSession getEditSession(World world, boolean fast) {
+		EditSessionBuilder builder = defaultBuilder.world(FaweAPI.getWorld(world.getName()));
+		return fast ? fastEditSessions.computeIfAbsent(world, ignore -> builder.fastmode(true).build()) :
+				slowEditSessions.computeIfAbsent(world, ignore -> builder.fastmode(false).build());
+	}
+
+	public EditSession getEditSession(World world) {
+		return getEditSession(world, true);
+	}
 	
 	public void setWorldCreator(WorldCreator worldCreator) {
 		worldCreators.put(worldCreator.name(), worldCreator);
@@ -74,7 +93,7 @@ public class WorldManager implements WorldLoader {
 	
 	@Override
 	public World getWorld(String name) {
-		World world = Bukkit.getWorld(name);
+		World world = game.getPlugin().getServer().getWorld(name);
 		if(world == null) world = worldCreators.computeIfAbsent(name, WorldCreator::new).createWorld();
 		return world;
 	}
@@ -85,7 +104,7 @@ public class WorldManager implements WorldLoader {
 		return new ArenaData(game, arena, schematic);
 	}
 	
-	public void loadChunks(Object key, World world, Set<BlockVector2D> chunkVectors) {
+	public void loadChunks(Object key, World world, Set<Vector2D> chunkVectors) {
 		chunkLoader.keepInMemory(key, chunkVectors.stream().map(vector -> world.getChunkAt(vector.getBlockX(), vector.getBlockZ())).collect(Collectors.toSet()));
 	}
 	

@@ -2,7 +2,7 @@ package com.kabryxis.spiritcraft.game.a.cooldown;
 
 public interface Cooldown {
 	
-	void start(long duration);
+	void start(int tickDuration);
 	
 	boolean isActive();
 	

@@ -14,6 +14,7 @@ import com.kabryxis.spiritcraft.game.a.world.sound.impl.OverloadSoundSequence;
 import com.kabryxis.spiritcraft.game.ability.CountdownTask;
 import com.kabryxis.spiritcraft.game.inventory.InventoryManager;
 import com.kabryxis.spiritcraft.game.item.ItemManager;
+import com.kabryxis.spiritcraft.game.object.action.impl.ModifyHandAction;
 import com.kabryxis.spiritcraft.game.object.action.impl.RemoveHandAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.impl.BlockPrerequisite;
 import com.kabryxis.spiritcraft.game.object.prerequisite.impl.HandPrerequisite;
@@ -32,14 +33,13 @@ import org.bukkit.event.Event;
 import org.bukkit.util.NumberConversions;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SpiritGame {
+	
+	private final Set<Runnable> roundEndTasks = new HashSet<>();
 	
 	private final Spiritcraft plugin;
 	private final Parser parser;
@@ -87,6 +87,8 @@ public class SpiritGame {
 		abilityManager = new AbilityManager(this, new File(plugin.getDataFolder(), "abilities"));
 		abilityManager.registerPrerequisiteCreator("hand", HandPrerequisite::new);
 		abilityManager.registerPrerequisiteCreator("block", BlockPrerequisite::new);
+		abilityManager.registerActionCreator("trailing_arrow", TrailingArrowAction::new);
+		abilityManager.registerActionCreator("modify_hand", ModifyHandAction::new);
 		abilityManager.registerActionCreator("block_break", BlockBreakAction::new);
 		abilityManager.registerActionCreator("charge", ChargeAction::new);
 		abilityManager.registerActionCreator("cloud", CloudAction::new);
@@ -162,6 +164,10 @@ public class SpiritGame {
 	
 	public ArenaData getCurrentArenaData() {
 		return currentArenaData;
+	}
+	
+	public void addRoundEndTask(Runnable runnable) {
+		roundEndTasks.add(runnable);
 	}
 	
 	public boolean isInProgress() {
@@ -265,6 +271,7 @@ public class SpiritGame {
 		inProgress = false;
 		finishedSetup = false;
 		startWhenFinished = false;
+		roundEndTasks.forEach(Runnable::run);
 		if(countdownTask != null) {
 			countdownTask.cancel();
 			countdownTask = null;

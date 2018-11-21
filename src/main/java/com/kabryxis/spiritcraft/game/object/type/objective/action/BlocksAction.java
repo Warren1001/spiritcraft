@@ -4,7 +4,6 @@ import com.boydti.fawe.FaweCache;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.string.Strings;
 import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
-import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.blocks.BaseBlock;
@@ -38,7 +37,6 @@ public class BlocksAction extends SpiritGameObjectAction {
 	@Override
 	public void perform(ConfigSection triggerData) {
 		super.perform(triggerData);
-		triggerData.get("triggerer", SpiritPlayer.class).sendMessage("success"); // TODO
 		EditSession editSession = game.getCurrentArenaData().getEditSession();
 		game.getCurrentArenaData().getRegion().forEach(bv -> {
 			BaseBlock forBlock = editSession.getBlock(bv);

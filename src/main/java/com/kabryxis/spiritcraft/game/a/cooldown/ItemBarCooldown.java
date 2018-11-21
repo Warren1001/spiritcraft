@@ -17,16 +17,26 @@ public class ItemBarCooldown implements Cooldown {
 	}
 	
 	private ItemBarTimerTask cooldownTask;
+	private boolean useSystemTime = false;
+	private long endTime;
 	
 	@Override
-	public void start(long duration) {
-		cooldownTask = new ItemBarTimerTask(game, items, false, duration / 1000.0, 1L);
-		cooldownTask.start();
+	public void start(int tickDuration) {
+		if(tickDuration > 2) {
+			useSystemTime = false;
+			cooldownTask = new ItemBarTimerTask(game, items, false, tickDuration, 1);
+			cooldownTask.start();
+		}
+		else {
+			cooldownTask = null;
+			useSystemTime = true;
+			endTime = System.currentTimeMillis() + tickDuration * 50;
+		}
 	}
 	
 	@Override
 	public boolean isActive() {
-		return cooldownTask != null && cooldownTask.isRunning();
+		return useSystemTime ? System.currentTimeMillis() <= endTime : cooldownTask != null && cooldownTask.isRunning();
 	}
 	
 }

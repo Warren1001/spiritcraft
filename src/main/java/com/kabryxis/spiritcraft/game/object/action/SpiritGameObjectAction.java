@@ -16,12 +16,12 @@ public abstract class SpiritGameObjectAction extends SpiritGameObject implements
 	
 	protected final TriggerType[] triggerTypes;
 	
-	private long cooldown = 0L;
+	protected int cooldown = -1;
 	
 	public SpiritGameObjectAction(ConfigSection creatorData, String name, TriggerType... triggerTypes) {
 		super(creatorData, name);
 		this.triggerTypes = triggerTypes == null || triggerTypes.length == 0 ? TriggerType.values() : triggerTypes;
-		handleSubCommand("cooldown", false, long.class, l -> cooldown = l);
+		handleSubCommand("cooldown", false, int.class, l -> cooldown = l);
 	}
 	
 	public void addRequiredObject(String key, Class<?> typeClass) {
@@ -30,7 +30,7 @@ public abstract class SpiritGameObjectAction extends SpiritGameObject implements
 	
 	@Override
 	public void perform(ConfigSection triggerData) {
-		if(cooldown > 0L) {
+		if(cooldown > 0) {
 			CooldownHandler cooldownHandler = triggerData.get("cooldownHandler");
 			if(cooldownHandler != null) cooldownHandler.setCooldown(new CooldownEntry(cooldown, triggerData));
 		}

@@ -35,7 +35,7 @@ public class LobbyListener implements GlobalListener {
 	}
 	
 	@Override
-	public void onEvent(Event event) {
+	public void onEvent(Event event) { // TODO hop off of switch statement, gonna get laggy eventually. Listeners#callEvent(Listener, Event)
 		switch(event.getEventName()) {
 			case "PlayerJoinEvent":
 				PlayerJoinEvent pje = (PlayerJoinEvent)event;

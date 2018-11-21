@@ -67,12 +67,12 @@ public class PlayerItemInfo {
 			data.save();
 		}
 		else {
-			for(int i = 35; i >= 0; i--) { // 36 - 40 are designated for armor / offhand
-				ConfigSection slotSection = selectedSection.get(String.valueOf(i));
+			for(int i = 9; i < 45; i++) { // TODO armor / offhand ?
+				int slot = i >= 36 ? i - 36 : i;
+				ConfigSection slotSection = selectedSection.get(String.valueOf(slot));
 				if(slotSection == null) {
-					slotSection = selectedSection.computeIfAbsent(String.valueOf(i), ignore -> new ConfigSection());
+					slotSection = selectedSection.computeSectionIfAbsent(String.valueOf(slot));
 					slotSection.put("name", item);
-					slotSection.put("amount", 1);
 					data.save();
 					return;
 				}
@@ -120,10 +120,10 @@ public class PlayerItemInfo {
 				default:
 					slot = Integer.parseInt(slotName);
 					if(slot >= 0 && slot < 9) slot += 36;
-					else slot += 9;
+					//else slot += 9;
 					break;
 			}
-			itemStacks[slot] = itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1));
+			itemStacks[slot] = itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1));
 		});
 	}
 	
@@ -146,7 +146,7 @@ public class PlayerItemInfo {
 			}
 			else if(slot == 4) slotKey = "o"; // offhand
 			else if(slot >= 36) slotKey = String.valueOf(slot - 36); // hotbar
-			else slotKey = String.valueOf(slot - 9); // inside inventory
+			else slotKey = String.valueOf(slot/* - 9*/); // inside inventory
 			ConfigSection section = selectedSection.computeSectionIfAbsent(slotKey);
 			section.put("name", itemInfo.getName());
 			int amount = itemStack.getAmount();
@@ -163,22 +163,22 @@ public class PlayerItemInfo {
 			String slotName = section.getName();
 			switch(slotName) {
 				case "h":
-					inv.setHelmet(itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1)));
+					inv.setHelmet(itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1)));
 					break;
 				case "c":
-					inv.setChestplate(itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1)));
+					inv.setChestplate(itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1)));
 					break;
 				case "l":
-					inv.setLeggings(itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1)));
+					inv.setLeggings(itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1)));
 					break;
 				case "b":
-					inv.setBoots(itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1)));
+					inv.setBoots(itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1)));
 					break;
 				case "o":
 					// TODO
 					break;
 				default:
-					inv.setItem(Integer.parseInt(slotName), itemData.getItemInfo((String)section.get("name")).getItem(player, section.getInt("amount", 1)));
+					inv.setItem(Integer.parseInt(slotName), itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1)));
 					break;
 			}
 		});

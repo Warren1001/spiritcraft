@@ -7,5 +7,7 @@ public interface CooldownManager {
 	void startCooldown(CooldownEntry entry);
 	
 	boolean isCooldownActive(ConfigSection triggerData);
+
+	boolean isCooldownActive(int abilityId);
 	
 }

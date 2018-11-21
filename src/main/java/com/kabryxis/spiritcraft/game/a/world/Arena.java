@@ -7,6 +7,7 @@ import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.Vector2D;
 import org.bukkit.Location;
 
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 public class Arena implements Weighted, ObjectPredicate {
 	
-	private final Set<BlockVector2D> occupiedChunks = new HashSet<>();
+	private final Set<Vector2D> occupiedChunks = new HashSet<>();
 	
 	private final WorldManager worldManager;
 	private final Config data;
@@ -58,7 +59,7 @@ public class Arena implements Weighted, ObjectPredicate {
 		return location;
 	}
 	
-	public Set<BlockVector2D> getOccupiedChunks() {
+	public Set<Vector2D> getOccupiedChunks() {
 		return new HashSet<>(occupiedChunks);
 	}
 	

@@ -30,15 +30,16 @@ import java.util.function.Function;
 
 public class Spiritcraft extends JavaPlugin {
 	
+	public static final Function<String, Vector> DESERIALIZE_VECTOR = string -> {
+		String[] args = string.split(",");
+		return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+	};
+	
 	static {
 		SpigotSerialization.registerSerializers();
-		Function<String, Vector> vectorFunction = string -> {
-			String[] args = string.split(",");
-			return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
-		};
-		ConfigSection.addDeserializer(Vector.class, vectorFunction);
+		ConfigSection.addDeserializer(Vector.class, DESERIALIZE_VECTOR);
 		ConfigSection.addDeserializer(Material.class, Material::matchMaterial);
-		CommandHandler.registerDataConverter(Vector.class, vectorFunction);
+		CommandHandler.registerDataConverter(Vector.class, DESERIALIZE_VECTOR);
 		CommandHandler.registerDataConverter(Material.class, Material::matchMaterial);
 	}
 	

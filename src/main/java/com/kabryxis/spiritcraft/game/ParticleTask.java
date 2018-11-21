@@ -36,7 +36,7 @@ public class ParticleTask extends TickingBukkitRunnable {
 	}
 	
 	public boolean setSkipTick(boolean skipTick) {
-		this.skipTick = skipTick && skippedTicks >= nonSkipTicks;
+		this.skipTick = skipTick && skippedTicks < nonSkipTicks;
 		return this.skipTick;
 	}
 	
@@ -64,12 +64,13 @@ public class ParticleTask extends TickingBukkitRunnable {
 			}
 			if(setBase) delay = baseDelay;
 		}
+		player.setExp((float)(skippedTicks / (double)maxSkipTicks));
 	}
 	
 	public BukkitTask start() {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20000000, 0, false, false)); // TODO move elsewhere
 		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20000000, 0, false, false)); // TODO move elsewhere
-		return runTaskTimer(player.getGame().getPlugin(), 0L, 1L);
+		return player.getGame().getTaskManager().start(this, 0L, 1L);
 	}
 	
 }

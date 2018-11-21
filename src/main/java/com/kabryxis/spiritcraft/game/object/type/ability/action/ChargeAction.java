@@ -18,8 +18,8 @@ public class ChargeAction extends SpiritGameObjectAction {
 	
 	private final Map<SpiritPlayer, ItemBarTimerTask> chargeTasks = new HashMap<>();
 	
-	private double duration = 3.5;
-	private long interval = 5L;
+	private int duration = 70;
+	private int interval = 5;
 	private boolean ltr = true;
 	private List<GameObjectAction> start = new ArrayList<>();
 	private List<GameObjectAction> finish = new ArrayList<>();
@@ -28,8 +28,8 @@ public class ChargeAction extends SpiritGameObjectAction {
 		super(creatorData, "charge");
 		addRequiredObject("triggerer", SpiritPlayer.class);
 		addRequiredObject("hand", ItemStack.class);
-		handleSubCommand("duration", false, double.class, d -> duration = d);
-		handleSubCommand("interval", false, long.class, l -> interval = l);
+		handleSubCommand("duration", false, int.class, i -> duration = i);
+		handleSubCommand("interval", false, int.class, i -> interval = i);
 		handleSubCommand("ltr", false, boolean.class, b -> ltr = b);
 		handleSubCommand("start", false, true, data -> game.getAbilityManager().createAction(data, start::add));
 		handleSubCommand("finish", true, true, data -> game.getAbilityManager().createAction(data, finish::add));
@@ -42,8 +42,9 @@ public class ChargeAction extends SpiritGameObjectAction {
 		SpiritPlayer triggerer = triggerData.get("triggerer");
 		ItemBarTimerTask itemBarTimerTask = chargeTasks.get(triggerer);
 		if(itemBarTimerTask == null || !itemBarTimerTask.isRunning()) {
-			long uuid = Items.getTagData(triggerData.get("hand"), "uuidsc", long.class, 0L);
-			itemBarTimerTask = new ItemBarTimerTask(game, triggerer.getItemTracker().track("uuidsc" + uuid, item -> Items.getTagData(item, "uuidsc", long.class, 0L) == uuid), ltr, duration, interval) {
+			long uid = Items.getLong(triggerData.get("hand"), "uidsc");
+			itemBarTimerTask = new ItemBarTimerTask(game, triggerer.getItemTracker().track("uidsc" + uid, item -> Items.getLong(item, "uidsc") == uid), ltr,
+					duration / interval, interval) {
 				
 				@Override
 				public void onStart() {
@@ -67,7 +68,7 @@ public class ChargeAction extends SpiritGameObjectAction {
 	
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
-		return super.canPerform(triggerData) && Items.getTagData(triggerData.get("hand"), "uuidsc", Long.class) != null;
+		return super.canPerform(triggerData) && Items.getLong(triggerData.get("hand"), "uidsc") != 0L;
 	}
 	
 }

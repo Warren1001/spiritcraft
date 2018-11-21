@@ -16,17 +16,18 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.InventoryHolder;
@@ -50,7 +51,7 @@ public class GameListener implements GlobalListener {
 	}
 	
 	@Override
-	public void onEvent(Event event) {
+	public void onEvent(Event event) { // TODO hop off of switch statement, gonna get laggy eventually. Listeners#callEvent(Listener, Event)
 		switch(event.getEventName()) {
 			case "EntityDamageByEntityEvent":
 				EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent)event;
@@ -59,14 +60,16 @@ public class GameListener implements GlobalListener {
 					break;
 				}
 				SpiritPlayer defender = game.getPlayerManager().getPlayer((Player)edbee.getEntity());
-				SpiritPlayer attacker = null;
+				SpiritPlayer attacker;
 				Entity damager = edbee.getDamager();
 				if(damager instanceof Player) attacker = game.getPlayerManager().getPlayer((Player)edbee.getDamager());
 				else if(damager instanceof Projectile) attacker = game.getPlayerManager().getPlayer((Player)((Projectile)damager).getShooter());
 				else break;
+				if(!edbee.isCancelled()) attacker.addDamageToGhost(edbee.getDamage()); // TODO seperate event with monitor priority
 				if(defender.getPlayerType() != PlayerType.GHOST) break;
 				Location loc = defender.getLocation().add(0, 0.75, 0);
-				ParticleEffect.BLOCK_DUST.sendData(defender.getPlayer().getWorld().getPlayers(), loc.getX(), loc.getY(), loc.getZ(), 0.2, 0.66, 0.2, 0, 50, new ItemStack(Material.REDSTONE_BLOCK));
+				ParticleEffect.BLOCK_DUST.sendData(defender.getPlayer().getWorld().getPlayers(), loc.getX(), loc.getY(), loc.getZ(),
+						0.2, 0.66, 0.2, 0, 50, new ItemStack(Material.REDSTONE_BLOCK));
 				defender.getPlayer().getWorld().playSound(loc, Sound.ZOMBIE_HURT, 1F, 0.1F); // TODO call by soundmanager
 				break;
 			case "EntityDamageEvent":
@@ -84,47 +87,35 @@ public class GameListener implements GlobalListener {
 				break;
 			case "PlayerInteractEvent":
 				PlayerInteractEvent pie = (PlayerInteractEvent)event;
-				Player bukkitPlayer = pie.getPlayer();
+				SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
 				Action action = pie.getAction();
+				ItemStack item = pie.getItem();
+				if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR && Items.exists(item))  {
+					// right clicking with an item in hand causes the item instance to change for whatever reason
+					player.getItemTracker().untrack(item);
+					int slot = player.getInventory().getHeldItemSlot();
+					game.getTaskManager().start(() -> player.getItemTracker().track(player.getInventory().getItem(slot)));
+				}
 				if(action != Action.PHYSICAL) {
-					if(lastInteractTimestamp.contains(bukkitPlayer)) break;
-					lastInteractTimestamp.add(bukkitPlayer);
+					if(!lastInteractTimestamp.add(player.getPlayer())) break;
 					Block block = pie.getClickedBlock();
-					if(action == Action.RIGHT_CLICK_BLOCK && (block.getState() instanceof InventoryHolder || block.getState().getData() instanceof Openable)) break; // TODO
-					SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
+					if(action == Action.RIGHT_CLICK_BLOCK && (block.getState() instanceof InventoryHolder ||
+							block.getState().getData() instanceof Openable)) break; // TODO
 					ConfigSection triggerData = new ConfigSection();
 					CooldownHandler cooldownHandler = new CooldownHandler(player.getCooldownManager());
 					triggerData.put("cooldownHandler", cooldownHandler);
 					triggerData.put("triggerer", player);
 					triggerData.put("target", player);
-					triggerData.put("type", action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK);
-					triggerData.put("hand", pie.getItem());
+					triggerData.put("type", action == Action.LEFT_CLICK_BLOCK ||
+							action == Action.LEFT_CLICK_AIR ? TriggerType.LEFT_CLICK : TriggerType.RIGHT_CLICK);
+					triggerData.put("hand", item);
 					triggerData.put("block", block);
-					triggerData.put("abilityId", Items.getTagData(pie.getItem(), "AbiId", Integer.class, 0));
-					Long cooldown = Items.getTagData(pie.getItem(), "cd", Long.class);
-					if(cooldown != null && cooldown > 0L) cooldownHandler.setCooldown(new CooldownEntry(cooldown, triggerData));
+					triggerData.put("abilityId", Items.getInt(item, "AbiId"));
+					int cooldown = Items.getInt(item, "cooldown");
+					if(cooldown > 0) cooldownHandler.setCooldown(new CooldownEntry(cooldown, triggerData));
 					game.getAbilityManager().perform(triggerData);
 					game.getObjectiveManager().perform(triggerData);
 					if(triggerData.getBoolean("cancel", true)) pie.setCancelled(true);
-				}
-				break;
-			case "PlayerInteractEntityEvent":
-				PlayerInteractEntityEvent piee = (PlayerInteractEntityEvent)event;
-				Entity pieeEntity = piee.getRightClicked();
-				if(pieeEntity instanceof ItemFrame && Items.isType(((ItemFrame)pieeEntity).getItem(), Material.DAYLIGHT_DETECTOR)) {
-					Player pieePlayer = piee.getPlayer();
-				}
-				break;
-			case "HangingBreakByEntityEvent":
-				HangingBreakByEntityEvent hbbee = (HangingBreakByEntityEvent)event;
-				hbbee.setCancelled(true);
-				Hanging hanging = hbbee.getEntity();
-				//hanging.getWorld().h
-				if(hanging instanceof ItemFrame && Items.isType(((ItemFrame)hanging).getItem(), Material.DAYLIGHT_DETECTOR)) {
-					Entity hbbeeEntity = hbbee.getRemover();
-					if(hbbeeEntity instanceof Player) {
-						Player hbbeePlayer = (Player)hbbeeEntity;
-					}
 				}
 				break;
 			/*case "PlayerChangedDimEvent":
@@ -164,6 +155,12 @@ public class GameListener implements GlobalListener {
 					}
 				}
 				if(!shouldFade) bfe.setCancelled(true);
+				break;
+			case "BlockCanBuildEvent":
+				BlockCanBuildEvent bcbe = (BlockCanBuildEvent)event;
+				Material type = bcbe.getBlock().getType();
+				if(type == Material.CARPET || type == Material.WALL_SIGN || type == Material.SIGN_POST || type == Material.FLOWER_POT ||
+						type == Material.FLOWER_POT_ITEM) bcbe.setBuildable(true);
 				break;
 			case "HangingBreakEvent":
 			case "BlockBurnEvent":

@@ -44,7 +44,7 @@ public class BasicItemInfo {
 		this.previewSlot = section.getInt("slot");
 		this.weight = section.getInt("weight");
 		this.value = section.getInt("value");
-		this.prebuilt = new ItemBuilder((ConfigSection)section.get("item"));
+		this.prebuilt = new ItemBuilder(section.get("item", ConfigSection.class));
 		this.noOwnLore = Arrays.asList(ChatColor.RESET.toString(), ChatColor.GREEN + "Click to buy for " + value + " coins!");
 	}
 	
@@ -99,7 +99,7 @@ public class BasicItemInfo {
 	
 	public ItemStack getItem(SpiritPlayer player, int amount) {
 		PlayerItemInfo playerItemInfo = player.getPlayerItemInfo(ghostItem);
-		if(!playerItemInfo.owns(name)) return prebuilt.clone().prefix(ChatColor.DARK_GRAY.toString()).lore(noOwnLore, true).build();
+		if(!playerItemInfo.owns(name)) return prebuilt.clone().prefix(ChatColor.DARK_GRAY.toString()).lore(true, noOwnLore).build();
 		ChatColor color;
 		if(amount > 0) {
 			prebuilt.amount(amount);
@@ -110,7 +110,7 @@ public class BasicItemInfo {
 	}
 	
 	public boolean isOf(ItemStack itemStack) {
-		return prebuilt.isOf(itemStack, ItemBuilder.ItemCompareFlag.TYPE, ItemBuilder.ItemCompareFlag.COLORLESS_NAME);
+		return prebuilt.isOf(itemStack, ItemBuilder.ItemCompareFlag.TYPE, ItemBuilder.ItemCompareFlag.NAME);
 	}
 	
 }

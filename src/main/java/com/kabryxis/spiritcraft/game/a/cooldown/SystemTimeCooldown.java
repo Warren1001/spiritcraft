@@ -6,8 +6,8 @@ public class SystemTimeCooldown implements Cooldown {
 	private long stopTime;
 	
 	@Override
-	public void start(long duration) {
-		this.duration = duration;
+	public void start(int tickDuration) {
+		this.duration = tickDuration * 50;
 		stopTime = System.currentTimeMillis();
 	}
 	

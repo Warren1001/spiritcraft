@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ParticleManager {
 
-	private final Map<String, ParticleData> particleDataMap = new HashMap<>();
+	private final Map<String, GhostParticleInfo> particleDataMap = new HashMap<>();
 	
 	private final File folder;
 	
@@ -20,14 +20,14 @@ public class ParticleManager {
 	}
 	
 	public void loadAll() {
-		Files.forEachFileWithEnding(folder, ".yml", file -> registerParticleData(new ParticleData(new Config(file, true))));
+		Files.forEachFileWithEnding(folder, ".yml", file -> registerParticleData(new GhostParticleInfo(new Config(file, true))));
 	}
 	
-	public void registerParticleData(ParticleData particleData) {
-		particleDataMap.put(particleData.getName(), particleData);
+	public void registerParticleData(GhostParticleInfo ghostParticleInfo) {
+		particleDataMap.put(ghostParticleInfo.getName(), ghostParticleInfo);
 	}
 	
-	public ParticleData getParticleData(String name) {
+	public GhostParticleInfo getParticleData(String name) {
 		return particleDataMap.get(name);
 	}
 

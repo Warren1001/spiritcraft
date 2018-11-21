@@ -3,6 +3,7 @@ package com.kabryxis.spiritcraft.game.ability;
 import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collection;
 
@@ -10,40 +11,37 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 	
 	protected final Collection<ItemStack> items;
 	protected final boolean ltr;
-	protected final long interval;
+	protected final int interval;
 	protected final int maxTicks;
 	
-	protected int tick = 0;
-	
-	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, boolean ltr, double duration, long interval) {
+	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, boolean ltr, int tickDuration, int interval) {
 		super(game);
 		this.items = items;
 		this.ltr = ltr;
 		this.interval = interval;
-		this.maxTicks = NumberConversions.floor(20.0 / interval * duration);
+		this.maxTicks = tickDuration;
 	}
 	
-	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, double duration, long interval) {
-		this(game, items, true, duration, interval);
+	public ItemBarTimerTask(SpiritGame game, Collection<ItemStack> items, int tickDuration, int interval) {
+		this(game, items, true, tickDuration, interval);
 	}
 	
-	public void start() {
-		start(0L, interval);
+	public BukkitTask start() {
+		return start(0, interval, maxTicks);
 	}
 	
 	@Override
-	public void tick() {
-		if(tick == maxTicks) {
-			items.forEach(item -> item.setDurability((short)0));
-			stop();
-			return;
-		}
+	public void tick(int tick) {
 		if(ltr) items.forEach(item -> {
 			short maxDura = item.getType().getMaxDurability();
 			item.setDurability((short)Math.min(maxDura - 1, maxDura - NumberConversions.floor(maxDura * ((double)tick / (double)maxTicks))));
 		});
 		else items.forEach(item -> item.setDurability((short)NumberConversions.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
-		tick++;
 	}
-	
+
+	@Override
+	public void onStop() {
+		items.forEach(item -> item.setDurability((short)0));
+	}
+
 }

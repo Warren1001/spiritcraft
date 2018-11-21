@@ -8,6 +8,7 @@ import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.object.TriggerType;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
+import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
@@ -25,11 +26,12 @@ public class GameObjectGroup implements GameObjectAction {
 	private List<TriggerType> triggerTypes;
 	private List<GameObjectPrerequisite> prerequisites;
 	private List<GameObjectAction> actions;
-	private long cooldown;
+	private int cooldown;
+	private int abilityId;
 	
 	public GameObjectGroup(ConfigSection creatorData) {
-		this.gameObjectTypeManager = creatorData.get("objectTypeManager");
-		this.base = creatorData.get("objectBase");
+		gameObjectTypeManager = creatorData.get("objectTypeManager");
+		base = creatorData.get("objectBase");
 	}
 	
 	@Override
@@ -43,12 +45,13 @@ public class GameObjectGroup implements GameObjectAction {
 	}
 	
 	public void load(ConfigSection data, ConfigSection creatorData) {
-		this.name = data.getName();
+		name = data.getName();
 		creatorData.put("objectGroup", this);
-		this.prerequisites = constructPrerequisites(data.getList("requires", String.class), creatorData);
-		this.actions = constructActions(data.getList("actions", String.class), creatorData);
-		this.triggerTypes = constructTriggerTypes(data.get("type"));
-		this.cooldown = data.getLong("cooldown", 0L);
+		prerequisites = constructPrerequisites(data.getList("requires", String.class), creatorData);
+		actions = constructActions(data.getList("actions", String.class), creatorData);
+		triggerTypes = constructTriggerTypes(data.get("type"));
+		cooldown = data.getInt("cooldown", -1);
+		abilityId = data.getInt("abilityId");
 	}
 	
 	private List<GameObjectPrerequisite> constructPrerequisites(List<String> strings, ConfigSection creatorData) {
@@ -68,12 +71,7 @@ public class GameObjectGroup implements GameObjectAction {
 	private List<TriggerType> constructTriggerTypes(Object obj) {
 		List<TriggerType> triggerTypes;
 		if(obj instanceof String) triggerTypes = Collections.singletonList(TriggerType.valueOf(obj.toString().toUpperCase()));
-		else if(obj instanceof List) {
-			triggerTypes = Lists.convert((List<?>)obj, o -> TriggerType.valueOf(o.toString().toUpperCase()));
-			/*List<?> list = (List<?>)obj;
-			triggerTypes = new ArrayList<>(list.size());
-			list.forEach(o -> triggerTypes.add(TriggerType.valueOf(o.toString().toUpperCase())));*/
-		}
+		else if(obj instanceof List) triggerTypes = Lists.convert((List<?>)obj, o -> TriggerType.valueOf(o.toString().toUpperCase()));
 		else throw new IllegalArgumentException(String.format("Ability '%s''s trigger '%s''s 'type' must be a String or List", base.getName(), name)); // TODO
 		for(Iterator<TriggerType> iterator = triggerTypes.iterator(); iterator.hasNext();) {
 			TriggerType triggerType = iterator.next();
@@ -98,11 +96,15 @@ public class GameObjectGroup implements GameObjectAction {
 	
 	@Override
 	public void perform(ConfigSection triggerData) {
-		if(cooldown > 0L) {
+		if(cooldown > 0) {
 			CooldownHandler cooldownHandler = triggerData.get("cooldownHandler");
 			if(cooldownHandler != null) cooldownHandler.setCooldown(new CooldownEntry(cooldown, triggerData));
 		}
-		actions.forEach(action -> action.perform(triggerData));
+		if(triggerData.getInt("abilityId") == 0 && abilityId != 0) {
+			ConfigSection triggerDataClone = new ConfigSection(triggerData).builderPut("abilityId", abilityId);
+			actions.forEach(action -> action.perform(triggerDataClone));
+		}
+		else actions.forEach(action -> action.perform(triggerData));
 	}
 	
 	@Override
@@ -112,9 +114,18 @@ public class GameObjectGroup implements GameObjectAction {
 	
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
-		TriggerType type = triggerData.get("type");
-		return hasTriggerType(type) && actions.stream().allMatch(action -> action.canPerform(triggerData)) &&
-				(prerequisites == null || prerequisites.stream().allMatch(prerequisite -> prerequisite.canPerform(triggerData) && prerequisite.perform(triggerData)));
+		boolean onCooldown = false;
+		if(cooldown != 0) {
+			int abilityId = triggerData.getInt("abilityId");
+			if(abilityId == 0) abilityId = this.abilityId;
+			if(abilityId != 0) {
+				SpiritPlayer player = triggerData.get("triggerer");
+				onCooldown = player != null && player.getCooldownManager().isCooldownActive(abilityId);
+			}
+		}
+		return hasTriggerType(triggerData.get("type", TriggerType.class)) && !onCooldown &&
+				actions.stream().allMatch(action -> action.canPerform(triggerData)) && (prerequisites == null ||
+				prerequisites.stream().allMatch(prerequisite -> prerequisite.canPerform(triggerData) && prerequisite.perform(triggerData)));
 	}
 	
 }

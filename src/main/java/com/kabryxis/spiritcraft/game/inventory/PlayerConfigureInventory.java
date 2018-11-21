@@ -12,7 +12,7 @@ public class PlayerConfigureInventory extends SpiritInventory {
 	
 	private static final ItemStack FILL = new ItemBuilder(Material.BARRIER).name(ChatColor.BLACK.toString()).build();
 	private static final InteractableItem CANCEL_ITEM = (player, right, shift) -> true;
-	private static final int FILL_START = (Version.VERSION.isVersionAtLeast(Version.v1_9_R1) ? 5 : 4);
+	private static final int FILL_START = Version.VERSION.isVersionAtLeast(Version.v1_9_R1) ? 5 : 4;
 	
 	private final SpiritGame game;
 	private final boolean ghost;

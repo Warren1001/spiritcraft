@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.object.type.ability.action;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.spiritcraft.game.object.Triggers;
 import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -28,7 +27,7 @@ public class InFrontAction extends SpiritGameObjectAction {
 	public void perform(ConfigSection triggerData) {
 		super.perform(triggerData);
 		SpiritPlayer triggerer = triggerData.get("triggerer");
-		Location loc = Triggers.getOptimalLocation(triggerData);
+		Location loc = triggerer.getEyeLocation();
 		ConfigSection clone = new ConfigSection(triggerData);
 		clone.put("customLoc", loc.clone().add(loc.getDirection().clone().multiply(lookmod)).add(triggerer.getVelocity().multiply(velmod)));
 		abilities.forEach(ability -> ability.perform(clone));

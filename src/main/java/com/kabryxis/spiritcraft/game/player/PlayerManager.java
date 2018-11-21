@@ -32,7 +32,8 @@ public class PlayerManager {
 	}
 	
 	public SpiritPlayer getPlayer(Player player) {
-		return playersMap.computeIfAbsent(player.getUniqueId(), u -> new SpiritPlayer(game, u, new Config(new File(folder, u.toString() + ".yml"), true)));
+		return player instanceof SpiritPlayer ? (SpiritPlayer)player : playersMap.computeIfAbsent(player.getUniqueId(),
+				u -> new SpiritPlayer(game, u, new Config(new File(folder, u + ".yml"), true)));
 	}
 	
 	public List<SpiritPlayer> getPlayers(Predicate<? super SpiritPlayer> predicate) {

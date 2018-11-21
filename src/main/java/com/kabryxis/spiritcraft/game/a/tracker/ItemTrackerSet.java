@@ -17,4 +17,5 @@ public class ItemTrackerSet extends HashSet<ItemStack> {
 	public boolean add(ItemStack item) {
 		return predicate.test(item) && super.add(item);
 	}
+	
 }

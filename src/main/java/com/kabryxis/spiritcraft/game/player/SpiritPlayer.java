@@ -9,7 +9,7 @@ import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
 import com.kabryxis.spiritcraft.game.DeadBody;
-import com.kabryxis.spiritcraft.game.ParticleData;
+import com.kabryxis.spiritcraft.game.GhostParticleInfo;
 import com.kabryxis.spiritcraft.game.ParticleTask;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownManager;
 import com.kabryxis.spiritcraft.game.a.cooldown.ItemBarCooldown;
@@ -57,7 +57,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 		this.schematicDataCreator = new SchematicDataCreator(this);
 		this.itemTracker = new ItemTracker(this);
 		this.cooldownManager = new PlayerCooldownManager(abilityId -> new ItemBarCooldown(game, itemTracker.track("AbiId" + abilityId,
-				item -> abilityId.equals(Items.getTagData(item, "AbiId", Integer.class)))));
+				item -> abilityId.equals(Items.getInt(item, "AbiId")))));
 		this.deadBody = game.getDeadBodyManager().getDeadBody(this);
 		this.customData = new ConfigSection();
 	}
@@ -72,7 +72,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	
 	@Override
 	public void updatePlayer(Player player) {
-		this.player = player;
+		super.updatePlayer(player);
 		entityPlayer.setHandle(player);
 		WrappedInventory.wrap(player, itemTracker);
 		itemTracker.updateReferences();
@@ -172,7 +172,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 		return data.computeIfAbsent("particle-effect", "flame");
 	}
 	
-	public ParticleData getParticleData() {
+	public GhostParticleInfo getParticleData() {
 		return game.getParticleManager().getParticleData(getParticleEffect());
 	}
 	
@@ -225,6 +225,8 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 			particleTask = null;
 		}
 		super.reset(flags);
+		itemTracker.untrackAll();
+		// TODO more that needs to be reset
 		playerType = PlayerType.WAITING;
 	}
 	
