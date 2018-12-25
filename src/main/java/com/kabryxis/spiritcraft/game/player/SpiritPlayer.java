@@ -1,6 +1,7 @@
 package com.kabryxis.spiritcraft.game.player;
 
 import com.boydti.fawe.object.FawePlayer;
+import com.kabryxis.kabutils.IndexingQueue;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
@@ -8,6 +9,7 @@ import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
+import com.kabryxis.kabutils.spigot.world.BlockStateManager;
 import com.kabryxis.spiritcraft.game.DeadBody;
 import com.kabryxis.spiritcraft.game.GhostParticleInfo;
 import com.kabryxis.spiritcraft.game.ParticleTask;
@@ -20,7 +22,10 @@ import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
 import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
 import com.sk89q.worldedit.regions.Region;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -30,7 +35,6 @@ import java.util.UUID;
 public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	
 	private final SpiritGame game;
-	private final Config data;
 	private final PlayerItemInfo ghostItemInfo, hunterItemInfo;
 	private final WrappedEntityPlayer entityPlayer;
 	private final SchematicDataCreator schematicDataCreator;
@@ -38,6 +42,9 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	private final CooldownManager cooldownManager;
 	private final DeadBody deadBody;
 	private final ConfigSection customData;
+	
+	private Config data;
+	private IndexingQueue<Block> fireWalkBlocks;
 	
 	private List<String> errorMessages = new ArrayList<>();
 	
@@ -60,6 +67,17 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 				item -> abilityId.equals(Items.getInt(item, "AbiId")))));
 		this.deadBody = game.getDeadBodyManager().getDeadBody(this);
 		this.customData = new ConfigSection();
+		this.fireWalkBlocks = new IndexingQueue<>(12, block -> {
+			BlockStateManager blockStateManager = game.getWorldManager().getBlockStateManager(block.getWorld());
+			BlockState state = blockStateManager.getState(block);
+			blockStateManager.setBlock(block, state.getType(), state.getRawData());
+			game.getWorldManager().getMetadataProvider().removeMetadata(block, "nospread");
+		});
+		this.fireWalkBlocks.setIndexAction(5, block -> {
+			game.getWorldManager().getBlockStateManager(block.getWorld()).createState(block);
+			game.getWorldManager().getMetadataProvider().addEmptyMetadata(block, "nospread");
+			block.setType(Material.FIRE);
+		});
 	}
 	
 	public SpiritGame getGame() {
@@ -116,6 +134,10 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	
 	public ConfigSection getCustomData() {
 		return customData;
+	}
+	
+	public IndexingQueue<Block> getFireWalkBlocks() {
+		return fireWalkBlocks;
 	}
 	
 	public boolean hasErrorMessages() {

@@ -9,6 +9,7 @@ import com.kabryxis.spiritcraft.game.a.parse.Parser;
 import com.kabryxis.spiritcraft.game.a.parse.SpiritParser;
 import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
+import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldData;
 import com.kabryxis.spiritcraft.game.a.world.sound.SoundManager;
 import com.kabryxis.spiritcraft.game.a.world.sound.impl.OverloadSoundSequence;
 import com.kabryxis.spiritcraft.game.ability.CountdownTask;
@@ -29,7 +30,6 @@ import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.bukkit.util.NumberConversions;
 
 import java.io.File;
@@ -53,7 +53,6 @@ public class SpiritGame {
 	private final DeadBodyManager deadBodyManager;
 	private final ObjectiveManager objectiveManager;
 	private final AbilityManager abilityManager;
-	private final GameListener gameListener;
 	private final Location lobbySpawn;
 	
 	private ArenaData currentArenaData;
@@ -104,7 +103,6 @@ public class SpiritGame {
 		abilityManager.registerActionCreator("throw_item_delayed", ThrowItemDelayedAction::new);
 		abilityManager.registerActionCreator("throw_item_timer", ThrowItemTimerAction::new);
 		abilityManager.loadAbilities();
-		gameListener = new GameListener(this);
 		lobbySpawn = plugin.getData().getCustom("lobby-spawn", Location.class);
 		worldManager.loadChunks(this, lobbySpawn, 9);
 		loadNext();
@@ -262,10 +260,6 @@ public class SpiritGame {
 		return Randoms.getRandom(players);
 	}
 	
-	public void onEvent(Event event) {
-		gameListener.onEvent(event);
-	}
-	
 	public void end(boolean loadNext) {
 		if(!isLoaded()) return;
 		inProgress = false;
@@ -289,6 +283,8 @@ public class SpiritGame {
 	public void loadNext() {
 		currentArenaData = worldManager.constructArenaData();
 		currentArenaData.load();
+		RoundWorldData worldData = worldManager.getWorldDataManager().create();
+		worldData.load();
 	}
 	
 	public void forEachPlayer(Consumer<? super SpiritPlayer> action) {

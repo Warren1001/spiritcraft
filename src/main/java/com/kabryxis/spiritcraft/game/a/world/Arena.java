@@ -2,18 +2,13 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
-import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
-import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.BlockVector2D;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.Vector2D;
+import com.sk89q.worldedit.*;
 import org.bukkit.Location;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class Arena implements Weighted, ObjectPredicate {
+public class Arena implements Weighted {
 	
 	private final Set<Vector2D> occupiedChunks = new HashSet<>();
 	
@@ -23,6 +18,7 @@ public class Arena implements Weighted, ObjectPredicate {
 	private boolean dynamic = false;
 	private Location location;
 	private Vector vectorLocation;
+	private EditSession editSession;
 	private int sizeX, sizeY, sizeZ;
 	
 	public Arena(WorldManager worldManager, Config data) {
@@ -35,6 +31,7 @@ public class Arena implements Weighted, ObjectPredicate {
 		dynamic = data.getBoolean("dynamic", false);
 		location = data.getCustom("location", Location.class);
 		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		editSession = worldManager.getEditSession(location.getWorld());
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
 		sizeY = data.getInt("size.y", location.getWorld().getMaxHeight());
 		sizeZ = data.getInt("size.z", Integer.MAX_VALUE);
@@ -51,6 +48,10 @@ public class Arena implements Weighted, ObjectPredicate {
 		}
 	}
 	
+	public String getName() {
+		return data.getName();
+	}
+	
 	public boolean isDynamic() {
 		return dynamic;
 	}
@@ -59,23 +60,25 @@ public class Arena implements Weighted, ObjectPredicate {
 		return location;
 	}
 	
+	public Vector getVectorLocation() {
+		return vectorLocation;
+	}
+	
+	public EditSession getEditSession() {
+		return editSession;
+	}
+	
 	public Set<Vector2D> getOccupiedChunks() {
 		return new HashSet<>(occupiedChunks);
+	}
+	
+	public boolean fits(Vector dimensions) {
+		return dimensions.getBlockX() <= sizeX && dimensions.getBlockY() <= sizeY && dimensions.getBlockZ() <= sizeZ;
 	}
 	
 	@Override
 	public int getWeight() {
 		return data.getInt("weight", 1000);
-	}
-	
-	@Override
-	public boolean test(Object o) {
-		if(o instanceof ArenaSchematic) {
-			ArenaSchematic schematic = (ArenaSchematic)o;
-			Vector dim = schematic.getClipboard().getDimensions();
-			return dim.getBlockX() <= sizeX && dim.getBlockY() <= sizeY && dim.getBlockZ() <= sizeZ;
-		}
-		return true;
 	}
 	
 }

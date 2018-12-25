@@ -10,6 +10,7 @@ import com.kabryxis.kabutils.spigot.world.*;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
+import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldDataManager;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.Vector2D;
@@ -39,6 +40,7 @@ public class WorldManager implements WorldLoader {
 	private final MetadataProvider metadataProvider;
 	private final Config worldCreatorData;
 	private final EditSessionBuilder defaultBuilder;
+	private final RoundWorldDataManager worldDataManager;
 	
 	public WorldManager(SpiritGame game) {
 		this.game = game;
@@ -55,6 +57,7 @@ public class WorldManager implements WorldLoader {
 		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
 		this.defaultBuilder = new EditSessionBuilder("null").fastmode(true).checkMemory(false).changeSetNull()
 				.limitUnlimited().allowedRegionsEverywhere();
+		worldDataManager = new RoundWorldDataManager();
 	}
 	
 	public SchematicManager getSchematicManager() {
@@ -87,6 +90,10 @@ public class WorldManager implements WorldLoader {
 		return getEditSession(world, true);
 	}
 	
+	public RoundWorldDataManager getWorldDataManager() {
+		return worldDataManager;
+	}
+	
 	public void setWorldCreator(WorldCreator worldCreator) {
 		worldCreators.put(worldCreator.name(), worldCreator);
 	}
@@ -99,8 +106,8 @@ public class WorldManager implements WorldLoader {
 	}
 	
 	public ArenaData constructArenaData() {
-		Arena arena = arenaManager.random();
-		ArenaSchematic schematic = schematicManager.random(arena);
+		ArenaSchematic schematic = schematicManager.random();
+		Arena arena = arenaManager.random(schematic);
 		return new ArenaData(game, arena, schematic);
 	}
 	

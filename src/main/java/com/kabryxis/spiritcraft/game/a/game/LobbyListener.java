@@ -1,154 +1,134 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
-import com.kabryxis.kabutils.spigot.listener.GlobalListener;
+import com.kabryxis.kabutils.spigot.listener.Listeners;
+import com.kabryxis.spiritcraft.GridRenderer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import com.sk89q.worldedit.Vector;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.MapInitializeEvent;
+import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.map.MapView;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
-public class LobbyListener implements GlobalListener {
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
+public class LobbyListener implements Listener {
 	
 	private final SpiritGame game;
 	
-	private int allowNextItemsSpawn = 0;
-	
 	public LobbyListener(SpiritGame game) {
 		this.game = game;
+		Listeners.cancelEvents(game.getPlugin(), ItemMergeEvent.class, ThunderChangeEvent.class);
 	}
 	
-	public void allowNextItemSpawn() {
-		allowNextItemsSpawn++;
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		event.setJoinMessage(null);
+		Player player = event.getPlayer();
+		game.getPlayerManager().getPlayer(player).updatePlayer(player);
+		// TODO load from combat logger
 	}
 	
-	@Override
-	public void onEvent(Event event) { // TODO hop off of switch statement, gonna get laggy eventually. Listeners#callEvent(Listener, Event)
-		switch(event.getEventName()) {
-			case "PlayerJoinEvent":
-				PlayerJoinEvent pje = (PlayerJoinEvent)event;
-				pje.setJoinMessage(null);
-				game.getPlayerManager().getPlayer(pje.getPlayer()).updatePlayer(pje.getPlayer());
-				break;
-			case "PlayerSpawnLocationEvent":
-				PlayerSpawnLocationEvent psle = (PlayerSpawnLocationEvent)event;
-				psle.setSpawnLocation(game.getSpawn());
-				break;
-			case "PlayerQuitEvent":
-				PlayerQuitEvent pqe = (PlayerQuitEvent)event;
-				pqe.setQuitMessage(null);
-				SpiritPlayer pqePlayer = game.getPlayerManager().getPlayer(pqe.getPlayer());
-				if(pqePlayer.getPlayerType() == PlayerType.WAITING) {
-					// TODO handle all the other playerTypes too
-				}
-				break;
-			case "CreatureSpawnEvent":
-				CreatureSpawnEvent cse = (CreatureSpawnEvent)event;
-				if(cse.getSpawnReason() != CreatureSpawnEvent.SpawnReason.CUSTOM) cse.setCancelled(true);
-				break;
-			case "EntityDamageByBlockEvent":
-				EntityDamageByBlockEvent edbbe = (EntityDamageByBlockEvent)event;
-				Entity edbbeEntity = edbbe.getEntity();
-				if(edbbe.getCause() == EntityDamageEvent.DamageCause.VOID) {
-					if(edbbeEntity instanceof Player && game.getPlayerManager().getPlayer((Player)edbbeEntity).isInGame()) break;
-					edbbeEntity.teleport(game.getSpawn());
-				}
-				edbbe.setCancelled(true);
-				break;
-			case "ItemSpawnEvent":
-			case "EntitySpawnEvent":
-				EntitySpawnEvent ese = (EntitySpawnEvent)event;
-				Entity entity = ese.getEntity();
-				if(entity instanceof Item && allowNextItemsSpawn > 0) {
-					allowNextItemsSpawn--;
-					break;
-				}
-				if(!(entity instanceof Player) && !(entity instanceof Projectile)) ese.setCancelled(true);
-				break;
-			case "PlayerDeathEvent":
-				PlayerDeathEvent pde = (PlayerDeathEvent)event;
-				pde.setDeathMessage(null);
-				pde.getDrops().clear();
-				break;
-			case "WeatherChangeEvent":
-				WeatherChangeEvent wce = (WeatherChangeEvent)event;
-				if(wce.toWeatherState()) wce.setCancelled(true);
-				break;
-			case "PlayerToggleSneakEvent":
-				PlayerToggleSneakEvent ptse = (PlayerToggleSneakEvent)event;
-				if(ptse.getPlayer().getGameMode() == GameMode.SPECTATOR) ptse.setCancelled(true);
-				break;
-			case "PlayerPickupItemEvent":
-				PlayerPickupItemEvent ppie = (PlayerPickupItemEvent)event;
-				if(ppie.getItem().hasMetadata("nopickup")) ppie.setCancelled(true);
-				break;
-			case "PlayerInteractEvent":
-				PlayerInteractEvent pie = (PlayerInteractEvent)event;
-				if(pie.getAction() == Action.LEFT_CLICK_BLOCK || pie.getAction() == Action.RIGHT_CLICK_BLOCK) {
-					SpiritPlayer player = game.getPlayerManager().getPlayer(pie.getPlayer());
-					SchematicDataCreator dataCreator = player.getDataCreator();
-					if(dataCreator.printOffsetLocation()) {
-						Vector offset = dataCreator.getOffsetLocation(pie.getClickedBlock().getLocation());
-						player.sendMessage(offset.getX() + "," + offset.getY() + "," + offset.getZ());
-					}
-				}
-				break;
-			case "FoodLevelChangeEvent":
-				FoodLevelChangeEvent flce = (FoodLevelChangeEvent)event;
-				flce.setFoodLevel(20);
-				((Player)flce.getEntity()).setSaturation(Float.MAX_VALUE);
-				break;
-			case "PlayerDropItemEvent":
-				game.getPlugin().allowNextItemSpawn();
-				break;
-			case "EntityDamageByEntityEvent":
-			case "EntityDamageEvent":
-				EntityDamageEvent ede = (EntityDamageEvent)event;
-				Entity edeEntity = ede.getEntity();
-				if(!(edeEntity instanceof Player) || game.getPlayerManager().getPlayer((Player)edeEntity).getPlayerType() == PlayerType.WAITING) ede.setCancelled(true);
-				break;
-			case "BlockPhysicsEvent":
-				BlockPhysicsEvent bpe = (BlockPhysicsEvent)event;
-				if(bpe.getBlock().getType() == Material.REDSTONE_LAMP_ON && bpe.getChangedType() == Material.REDSTONE_LAMP_OFF) {
-					System.out.println("found and cancelled a blockphysicsevent for redstone lamp");
-					bpe.setCancelled(true);
-				}
-				break;
-			case "ItemMergeEvent":
-			case "ThunderChangeEvent":
-				((Cancellable)event).setCancelled(true);
-				break;
-			case "ChunkUnloadEvent":
-			case "PlayerMoveEvent":
-			//case "BlockPhysicsEvent":
-			case "PlayerAnimationEvent":
-			case "ChunkLoadEvent":
-			case "PlayerStatisticIncrementEvent":
-			case "PlayerToggleSprintEvent":
-			case "WorldSaveEvent":
-			case "PlayerItemHeldEvent":
-			case "EntityPortalEnterEvent":
-			case "PlayerChangedDimEvent":
-			case "PlayerChangedWorldEvent":
-			case "PlayerVelocityEvent":
-			case "BlockDamageEvent":
-				break;
-			default:
-				break;
+	@EventHandler
+	public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
+		event.setSpawnLocation(game.getSpawn());
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		event.setQuitMessage(null);
+		SpiritPlayer pqePlayer = game.getPlayerManager().getPlayer(event.getPlayer());
+		if(pqePlayer.getPlayerType() == PlayerType.WAITING) {
+			// TODO handle all the other playerTypes too
 		}
-		if(game.isInProgress()) game.onEvent(event);
+	}
+	
+	@EventHandler
+	public void onCreatureSpawn(CreatureSpawnEvent event) {
+		if(event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.CUSTOM) event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onEntityDamage(EntityDamageEvent event) {
+		Entity entity = event.getEntity();
+		if(entity instanceof Player && !game.isInProgress()) {
+			event.setCancelled(true);
+			if(event.getCause() == EntityDamageEvent.DamageCause.VOID) entity.teleport(game.getSpawn());
+		}
+	}
+	
+	@EventHandler
+	public void onEntitySpawn(EntitySpawnEvent event) {
+		Entity entity = event.getEntity();
+		if(!(entity instanceof Player) && !(entity instanceof Projectile)) event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		event.setDeathMessage(null);
+		event.getDrops().clear();
+	}
+	
+	@EventHandler
+	public void onWeatherChange(WeatherChangeEvent event) {
+		if(event.toWeatherState()) event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) { // prevents players from freemoding in spectator mode
+		if(event.getPlayer().getGameMode() == GameMode.SPECTATOR) event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		if(event.getItem().hasMetadata("nopickup")) event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Action action = event.getAction();
+		if(action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
+			SpiritPlayer player = game.getPlayerManager().getPlayer(event.getPlayer());
+			SchematicDataCreator dataCreator = player.getDataCreator();
+			if(dataCreator.printOffsetLocation()) {
+				Vector offset = dataCreator.getOffsetLocation(event.getClickedBlock().getLocation());
+				player.sendMessage("%s,%s,%s", offset.getX(), offset.getY(), offset.getZ());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onFoodLevelChange(FoodLevelChangeEvent event) {
+		event.setFoodLevel(20);
+		((Player)event.getEntity()).setSaturation(Float.MAX_VALUE);
+	}
+	
+	@EventHandler
+	public void onMapInitialize(MapInitializeEvent event) {
+		MapView view = event.getMap();
+		view.setScale(MapView.Scale.FARTHEST);
+		view.getRenderers().forEach(view::removeRenderer);
+		GridRenderer renderer = new GridRenderer(game.getPlugin());
+		try {
+			renderer.setGridImage(0, 0, ImageIO.read(new File(game.getPlugin().getDataFolder(), "images" + File.separator + "redstone_dust.png")));
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		view.addRenderer(renderer);
 	}
 	
 }

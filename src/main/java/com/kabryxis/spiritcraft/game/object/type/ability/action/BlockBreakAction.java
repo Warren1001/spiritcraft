@@ -52,7 +52,7 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 			if(velY < 0 && block.getRelative(BlockFace.DOWN).getType() != Material.AIR
 					|| velY > 0 && block.getRelative(BlockFace.UP).getType() != Material.AIR) velocity.setY(velY * -1);
 			brokenBlocks.computeIfAbsent(triggerer, ignore -> new AutoRemovingQueue<>(amount)).offer(ThrowingBlock.spawn(game.getCurrentArenaData()
-							.getBlockStateManager(), block, velocity, 400L, game.getCurrentArenaData()::isProtected));
+							.getBlockStateManager(block.getWorld()), block, velocity, 400L, game.getCurrentArenaData()::isProtected));
 		}
 	}
 	

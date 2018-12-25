@@ -17,6 +17,7 @@ import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicWrapper;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectBase;
 import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -29,9 +30,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.material.Door;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ArenaData {
 	
@@ -41,7 +40,6 @@ public class ArenaData {
 	protected final Arena arena;
 	protected final Location location;
 	protected final Vector vectorLocation;
-	protected final BlockStateManager blockStateManager;
 	protected final ArenaSchematic schematic;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
@@ -60,7 +58,6 @@ public class ArenaData {
 		if(arena.isDynamic()) location.setY(Math.abs(schematic.getOrigin().getBlockY()) + 1);
 		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		World world = location.getWorld();
-		blockStateManager = game.getWorldManager().getBlockStateManager(world);
 		occupiedChunks = arena.getOccupiedChunks();
 		this.schematic = schematic;
 		editSession = game.getWorldManager().getEditSession(world);
@@ -110,8 +107,8 @@ public class ArenaData {
 		return vectorLocation;
 	}
 
-	public BlockStateManager getBlockStateManager() {
-		return blockStateManager;
+	public BlockStateManager getBlockStateManager(World world) {
+		return game.getWorldManager().getBlockStateManager(world);
 	}
 
 	public Location getArenaLocation(Location loc) {
