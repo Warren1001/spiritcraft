@@ -3,10 +3,7 @@ package com.kabryxis.spiritcraft.game.a.world.schematic;
 import com.boydti.fawe.object.schematic.Schematic;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-
-import java.io.File;
-import java.io.IOException;
+import org.bukkit.World;
 
 public class SimpleSchematicDataContainer implements SchematicDataContainer {
 	
@@ -18,9 +15,10 @@ public class SimpleSchematicDataContainer implements SchematicDataContainer {
 		this.worldManager = worldManager;
 		this.schematic = schematic;
 		data = null;
+		World world;
 	}
 	
-	public SimpleSchematicDataContainer(WorldManager worldManager, File folder, String name) {
+	/*public SimpleSchematicDataContainer(WorldManager worldManager, File folder, String name) {
 		this.worldManager = worldManager;
 		name = name.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 		File file = new File(folder, name + ".yml");
@@ -38,6 +36,16 @@ public class SimpleSchematicDataContainer implements SchematicDataContainer {
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
+	}*/
+	
+	public SimpleSchematicDataContainer(WorldManager worldManager, Config data, String name) {
+		this.worldManager = worldManager;
+		this.data = data;
+		schematic = worldManager.getSchematicManager().getSchematic(name.endsWith(".schematic") ? name : name + ".schematic");
+	}
+	
+	public SimpleSchematicDataContainer(WorldManager worldManager, Config data) {
+		this(worldManager, data, data.get("schematic", data.getName()));
 	}
 	
 	public Schematic getSchematic() {

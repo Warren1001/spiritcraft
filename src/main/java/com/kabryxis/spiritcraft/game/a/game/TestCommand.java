@@ -57,4 +57,9 @@ public class TestCommand {
 		if(!b) player.getFireWalkBlocks().clear();
 	}
 	
+	@Com
+	public void rain(Player player, float f) {
+		plugin.packet.getFloat().write(0, f);
+	}
+	
 }

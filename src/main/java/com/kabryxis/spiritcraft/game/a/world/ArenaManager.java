@@ -38,7 +38,7 @@ public class ArenaManager {
 		return arenaRegistry.random(obj);
 	}
 	
-	public Arena random(String[] names) {
+	public Arena random(String... names) {
 		Stream<String> stream = Stream.of(names);
 		return random(obj -> stream.anyMatch(s -> s.equals(((Arena)obj).getName())));
 	}

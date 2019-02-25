@@ -2,14 +2,12 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.util.EditSessionBuilder;
-import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
 import com.kabryxis.kabutils.spigot.world.*;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
-import com.kabryxis.spiritcraft.game.a.world.schematic.ArenaSchematic;
 import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldDataManager;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
 import com.sk89q.worldedit.EditSession;
@@ -44,20 +42,24 @@ public class WorldManager implements WorldLoader {
 	
 	public WorldManager(SpiritGame game) {
 		this.game = game;
+		defaultBuilder = new EditSessionBuilder("null").fastmode(true).checkMemory(false).changeSetNull()
+				.limitUnlimited().allowedRegionsEverywhere();
 		File pluginFolder = game.getPlugin().getDataFolder();
-		this.chunkLoader = new ChunkLoader(game.getPlugin());
-		this.metadataProvider = new MetadataProvider(game.getPlugin());
+		chunkLoader = new ChunkLoader(game.getPlugin());
+		metadataProvider = new MetadataProvider(game.getPlugin());
 		WorldCreatorSerializer.registerChunkGenerator("empty", new EmptyGenerator());
-		this.worldCreatorData = new Config(new File(pluginFolder, "worlds.yml"), true);
+		worldCreatorData = new Config(new File(pluginFolder, "worlds.yml"), true);
 		worldCreatorData.values().stream().map(WorldCreator.class::cast).forEach(this::setWorldCreator);
 		Config.registerSerializer(new LoadingLocationSerializer(this));
 		ConfigSection.addDeserializer(Location.class, string -> Locations.deserialize(string, this));
-		this.schematicManager = new SchematicManager(new File(pluginFolder, "schematics"));
-		Files.forEachFileWithEnding(schematicManager.getFolder(), Config.EXTENSION, file -> schematicManager.registerAndAddToRotation(new ArenaSchematic(new Config(file, true))));
-		this.arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
-		this.defaultBuilder = new EditSessionBuilder("null").fastmode(true).checkMemory(false).changeSetNull()
-				.limitUnlimited().allowedRegionsEverywhere();
-		worldDataManager = new RoundWorldDataManager();
+		schematicManager = new SchematicManager(new File(pluginFolder, "schematics" + File.separator + "schematics"));
+		//Config.forEachConfig(schematicManager.getFolder(), config -> schematicManager.registerAndAddToRotation(new ArenaSchematic(config)));
+		arenaManager = new ArenaManager(this, new File(pluginFolder, "arenas"));
+		worldDataManager = new RoundWorldDataManager(this, new File(pluginFolder, "schematics"));
+	}
+	
+	public SpiritGame getGame() {
+		return game;
 	}
 	
 	public SchematicManager getSchematicManager() {
@@ -105,11 +107,11 @@ public class WorldManager implements WorldLoader {
 		return world;
 	}
 	
-	public ArenaData constructArenaData() {
+	/*public ArenaData constructArenaData() {
 		ArenaSchematic schematic = schematicManager.random();
-		Arena arena = arenaManager.random(schematic);
+		Arena arena = arenaManager.random(); // arenaManager.random(schematic);
 		return new ArenaData(game, arena, schematic);
-	}
+	}*/
 	
 	public void loadChunks(Object key, World world, Set<Vector2D> chunkVectors) {
 		chunkLoader.keepInMemory(key, chunkVectors.stream().map(vector -> world.getChunkAt(vector.getBlockX(), vector.getBlockZ())).collect(Collectors.toSet()));

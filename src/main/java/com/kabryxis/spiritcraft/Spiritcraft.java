@@ -2,11 +2,13 @@ package com.kabryxis.spiritcraft;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.kabryxis.kabutils.command.CommandManager;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandManager;
+import com.kabryxis.kabutils.spigot.concurrent.BukkitTaskManager;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.listener.Listeners;
@@ -24,6 +26,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 public class Spiritcraft extends JavaPlugin {
@@ -45,6 +48,8 @@ public class Spiritcraft extends JavaPlugin {
 	private CommandManager commandManager;
 	private SpiritGame game;
 	
+	public PacketContainer packet;
+	
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
@@ -54,6 +59,20 @@ public class Spiritcraft extends JavaPlugin {
 		Items.setCanDropItems(true);
 		ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new AttackHiddenPlayerAdapter(this)).syncStart();
 		ProtocolLibrary.getProtocolManager().addPacketListener(new BasicReceivingPacketAdapter(this, PacketType.Play.Client.SPECTATE));
+		/*ProtocolLibrary.getProtocolManager().addPacketListener(new BasicSendingPacketAdapter(this, event -> {
+			System.out.println(event.getPacket().getIntegers().read(0));
+			System.out.println(event.getPacket().getFloat().read(0));
+		}, PacketType.Play.Server.GAME_STATE_CHANGE));*/
+		packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.GAME_STATE_CHANGE);
+		packet.getIntegers().write(0, 7);
+		packet.getFloat().write(0, 0.5F);
+		BukkitTaskManager.start(this, () -> getServer().getOnlinePlayers().forEach(player -> {
+			try {
+				ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+			} catch(InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}), 1L, 1L);
 		game = new SpiritGame(this);
 		commandManager = new BukkitCommandManager();
 		commandManager.registerArgumentConverter(SpiritPlayer.class, arg -> game.getPlayerManager().getPlayer(Bukkit.getPlayer(arg)));

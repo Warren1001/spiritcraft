@@ -366,28 +366,28 @@ public class CommandListener implements Listener {
 		if(args.length == 2) {
 			if(args[0].equalsIgnoreCase("name")) {
 				player.getDataCreator().name(args[1].toLowerCase());
-				player.getPlayer().sendMessage("Set name to '" + args[1].toLowerCase() + "'.");
+				player.sendMessage("Set name to '%s'.", args[1].toLowerCase());
 			}
 			else if(args[0].equalsIgnoreCase("weight")) {
 				player.getDataCreator().weight(Integer.parseInt(args[1]));
-				player.getPlayer().sendMessage("Set weight to '" + args[1] + "'.");
+				player.sendMessage("Set weight to '%s'.", args[1]);
 			}
 			else if(args[0].equalsIgnoreCase("spawn")) {
-				Location loc = player.getPlayer().getLocation();
+				Location loc = player.getLocation();
 				if(args[1].equalsIgnoreCase("ghost")) {
 					player.getDataCreator().addGhostSpawn(loc);
-					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to ghost spawns.");
+					player.sendMessage("Added %s,%s,%s to ghost spawns.", loc.getX(), loc.getY(), loc.getZ());
 				}
 				else if(args[1].equalsIgnoreCase("hunter")) {
 					player.getDataCreator().addHunterSpawn(loc);
-					player.getPlayer().sendMessage("Added " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " to hunter spawns.");
+					player.sendMessage("Added %s,%s,%s to hunter spawns.", loc.getX(), loc.getY(), loc.getZ());
 				}
 			}
 		}
 		else if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("create")) {
 				player.getDataCreator().create();
-				player.getPlayer().sendMessage("Created schematic.");
+				player.sendMessage("Created schematic.");
 			}
 		}
 		return true;

@@ -1,5 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
+import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
@@ -19,21 +20,15 @@ public class RoundWorldDataContainer implements Weighted {
 		this.worldManager = worldManager;
 		this.data = data;
 		this.folder = folder;
+		load();
 	}
 	
 	public void load() {
 		Object schObj = data.get("schematic");
-		if(schObj == null) {
-			schDataContainer = new SimpleSchematicDataContainer(worldManager, folder, data.getName());
-			return;
-		}
-		if(schObj instanceof String) {
-			String string = (String)schObj;
-		}
-		else if(schObj instanceof List) {
-		
-		}
-		else throw new IllegalArgumentException(""); // TODO
+		if(schObj == null) schDataContainer = new SimpleSchematicDataContainer(worldManager, data, data.getName());
+		else if(schObj instanceof String) schDataContainer = new SimpleSchematicDataContainer(worldManager, data);
+		else if(schObj instanceof List) schDataContainer = new ComplexSchematicDataContainer(worldManager, Lists.convert((List)schObj, Object::toString));
+		else throw new IllegalArgumentException("cannot load " + schObj + " from schematic master file."); // TODO
 	}
 	
 	public RoundWorldData create() {

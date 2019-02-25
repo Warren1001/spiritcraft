@@ -7,7 +7,6 @@ import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
 import com.kabryxis.spiritcraft.game.a.parse.Parser;
 import com.kabryxis.spiritcraft.game.a.parse.SpiritParser;
-import com.kabryxis.spiritcraft.game.a.world.ArenaData;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldData;
 import com.kabryxis.spiritcraft.game.a.world.sound.SoundManager;
@@ -55,7 +54,8 @@ public class SpiritGame {
 	private final AbilityManager abilityManager;
 	private final Location lobbySpawn;
 	
-	private ArenaData currentArenaData;
+	//private ArenaData currentArenaData;
+	private RoundWorldData currentWorldData;
 	private List<SpiritPlayer> allPlayers;
 	private List<SpiritPlayer> ghostPlayers;
 	private List<SpiritPlayer> hunterPlayers;
@@ -160,8 +160,12 @@ public class SpiritGame {
 		return lobbySpawn;
 	}
 	
-	public ArenaData getCurrentArenaData() {
+	/*public ArenaData getCurrentArenaData() {
 		return currentArenaData;
+	}*/
+	
+	public RoundWorldData getCurrentWorldData() {
+		return currentWorldData;
 	}
 	
 	public void addRoundEndTask(Runnable runnable) {
@@ -173,7 +177,8 @@ public class SpiritGame {
 	}
 	
 	public boolean isLoaded() {
-		return currentArenaData != null;
+		//return currentArenaData != null;
+		return currentWorldData != null;
 	}
 	
 	public void finishSetup() {
@@ -195,7 +200,8 @@ public class SpiritGame {
 		hunterPlayers = new ArrayList<>(playingPlayers.size() - numOfGhosts);
 		chooseRoles(playingPlayers, numOfGhosts, ghostPlayers, hunterPlayers);
 		for(SpiritPlayer ghostPlayer : ghostPlayers) {
-			ghostPlayer.teleport(currentArenaData.getRandomGhostSpawn());
+			//ghostPlayer.teleport(currentArenaData.getRandomGhostSpawn());
+			ghostPlayer.teleport(currentWorldData.getRandomGhostSpawn());
 			ghostPlayer.setPlayerType(PlayerType.GHOST);
 			ghostPlayer.setGameMode(GameMode.SURVIVAL);
 			ghostPlayer.hide();
@@ -203,12 +209,14 @@ public class SpiritGame {
 			ghostPlayer.startParticleTimer();
 		}
 		for(SpiritPlayer hunterPlayer : hunterPlayers) {
-			hunterPlayer.teleport(currentArenaData.getRandomHunterSpawn());
+			//hunterPlayer.teleport(currentArenaData.getRandomHunterSpawn());
+			hunterPlayer.teleport(currentWorldData.getRandomHunterSpawn());
 			hunterPlayer.setPlayerType(PlayerType.HUNTER);
 			hunterPlayer.setGameMode(GameMode.SURVIVAL);
 			itemManager.giveHunterKit(hunterPlayer);
 		}
-		currentArenaData.relight();
+		//currentArenaData.relight();
+		currentWorldData.relight();
 		countdownTask = new CountdownTask(this, 300);
 		countdownTask.start();
 	}
@@ -244,11 +252,7 @@ public class SpiritGame {
 	}
 	
 	protected SpiritPlayer chooseWeightedRandomPlayer(List<SpiritPlayer> players) {
-		int total = 0;
-		for(SpiritPlayer player : players) {
-			total += NumberConversions.floor(player.getDamageToGhost() * 100.0);
-		}
-		int rand = new Random().nextInt(total) + 1;
+		int rand = new Random().nextInt(players.stream().mapToInt(player -> NumberConversions.floor(player.getDamageToGhost() * 100.0)).sum()) + 1;
 		for(Iterator<SpiritPlayer> iterator = players.iterator(); iterator.hasNext();) {
 			SpiritPlayer player = iterator.next();
 			rand -= NumberConversions.floor(player.getDamageToGhost() * 100.0);
@@ -275,16 +279,18 @@ public class SpiritGame {
 		spectators = null;
 		if(allPlayers != null) forEachPlayer(player -> player.resetAll(lobbySpawn));
 		allPlayers = null;
-		currentArenaData.unload();
-		currentArenaData = null;
+		//currentArenaData.unload();
+		//currentArenaData = null;
+		currentWorldData.unload();
+		currentWorldData = null;
 		if(loadNext) loadNext();
 	}
 	
 	public void loadNext() {
-		currentArenaData = worldManager.constructArenaData();
-		currentArenaData.load();
-		RoundWorldData worldData = worldManager.getWorldDataManager().create();
-		worldData.load();
+		//currentArenaData = worldManager.constructArenaData();
+		//currentArenaData.load();
+		currentWorldData = worldManager.getWorldDataManager().create();
+		currentWorldData.load();
 	}
 	
 	public void forEachPlayer(Consumer<? super SpiritPlayer> action) {

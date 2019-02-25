@@ -1,21 +1,16 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
 import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import org.bukkit.Location;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SchematicDataCreator {
+public class SchematicDataCreator { // TODO need to add multischematic support and maybe objectives support?
 	
 	private final SpiritPlayer player;
 	
@@ -31,31 +26,9 @@ public class SchematicDataCreator {
 	}
 	
 	private String name;
-	private Vector offset;
 	
 	public SchematicDataCreator name(String name) {
 		this.name = name;
-		SchematicWrapper schematicWrapper = player.getGame().getWorldManager().getSchematicManager().getSchematic(name);
-		Schematic schematic = null;
-		if(schematicWrapper == null) {
-			try {
-				schematic = ClipboardFormat.SCHEMATIC.load(new File("plugins" + File.separator + "WorldEdit" +
-						File.separator + "schematics" + File.separator + player.getUniqueId(), name + ".schematic"));
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-		else schematic = schematicWrapper.getSchematic();
-		if(schematic == null) {
-			player.sendMessage("Could not find a schematic named '" + name + "'.");
-			return this;
-		}
-		offset = Objects.requireNonNull(schematic.getClipboard()).getOrigin();
-		return this;
-	}
-	
-	public SchematicDataCreator offset(Location location) {
-		this.offset = new Vector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		return this;
 	}
 	
@@ -93,29 +66,21 @@ public class SchematicDataCreator {
 		return printOffsetLocation;
 	}
 	
-	public Vector getOffsetLocation(Location location) {
-		if(offset == null) {
-			player.sendMessage("You must specify a name to get the corresponding schematic or manually specify an offset before you can get offseted locations.");
-			return null;
-		}
-		return new Vector(location.getX() - offset.getX(), location.getY() - offset.getY(), location.getZ() - offset.getZ());
-	}
-	
 	public void create() {
 		if(name == null) {
 			player.sendMessage("You did not specify the name for a schematic, how are we suppose to know which schematic's data to modify??");
 			return;
 		}
-		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + ".yml"));
-		if(ghostSpawns != null) data.put("spawns.ghost", ghostSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
-		if(hunterSpawns != null) data.put("spawns.hunter", hunterSpawns.stream().map(loc -> serialize(loc, offset)).collect(Collectors.toList()));
+		Config data = new Config(new File(player.getGame().getWorldManager().getSchematicManager().getFolder(), name + ".yml"), true);
+		if(ghostSpawns != null) data.put("spawns.ghost", ghostSpawns.stream().map(this::serialize).collect(Collectors.toList()));
+		if(hunterSpawns != null) data.put("spawns.hunter", hunterSpawns.stream().map(this::serialize).collect(Collectors.toList()));
 		data.put("weight", weight);
 		data.save();
 	}
 	
-	private String serialize(Location loc, Vector offset) {
-		return String.format("%s,%s,%s,%s,%s", NumberConversions.roundToHalf(loc.getX() - offset.getBlockX()), NumberConversions.roundToHalf(loc.getY() - offset.getBlockY()),
-				NumberConversions.roundToHalf(loc.getZ() - offset.getBlockZ()), NumberConversions.roundToHalf(loc.getYaw()), NumberConversions.roundToHalf(loc.getPitch()));
+	private String serialize(Location loc) {
+		return String.format("%s,%s,%s,%s,%s", NumberConversions.roundToHalf(loc.getX()), NumberConversions.roundToHalf(loc.getY()),
+				NumberConversions.roundToHalf(loc.getZ()), NumberConversions.roundToHalf(loc.getYaw()), NumberConversions.roundToHalf(loc.getPitch()));
 	}
 	
 }

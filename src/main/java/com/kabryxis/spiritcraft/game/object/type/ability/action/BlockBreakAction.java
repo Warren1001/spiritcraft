@@ -51,15 +51,15 @@ public class BlockBreakAction extends SpiritGameObjectAction {
 			double velY = velocity.getY();
 			if(velY < 0 && block.getRelative(BlockFace.DOWN).getType() != Material.AIR
 					|| velY > 0 && block.getRelative(BlockFace.UP).getType() != Material.AIR) velocity.setY(velY * -1);
-			brokenBlocks.computeIfAbsent(triggerer, ignore -> new AutoRemovingQueue<>(amount)).offer(ThrowingBlock.spawn(game.getCurrentArenaData()
-							.getBlockStateManager(block.getWorld()), block, velocity, 400L, game.getCurrentArenaData()::isProtected));
+			brokenBlocks.computeIfAbsent(triggerer, ignore -> new AutoRemovingQueue<>(amount)).offer(ThrowingBlock.spawn(game.getWorldManager()
+					.getBlockStateManager(block.getWorld()), block, velocity, 400L, o -> false));
 		}
 	}
 	
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
-		return super.canPerform(triggerData) && (toggle || (triggerData.get("triggerer", SpiritPlayer.class).canBreakBlocks() && findBlock(triggerData) &&
-				!game.getCurrentArenaData().isProtected(triggerData.get("block_break_block", Block.class))));
+		return super.canPerform(triggerData) && (toggle || (triggerData.get("triggerer", SpiritPlayer.class).canBreakBlocks() && findBlock(triggerData)/* &&
+				!game.getCurrentArenaData().isProtected(triggerData.get("block_break_block", Block.class))*/));
 	}
 	
 	private boolean findBlock(ConfigSection triggerData) {

@@ -33,7 +33,7 @@ public class GameObjectBase implements GameObjectAction {
 		name = data.getName();
 		creatorData.put("objectBase", this);
 		triggerGroups = data.get("triggers", ConfigSection.class).getChildren().stream().map(child -> {
-			ConfigSection groupCreatorData = new ConfigSection(creatorData).builderPut("groupData", child);
+			ConfigSection groupCreatorData = new ConfigSection(creatorData).builderPut("groupData", new ConfigSection(child));
 			GameObjectGroup objectGroup = new GameObjectGroup(groupCreatorData);
 			objectGroup.load(child, groupCreatorData);
 			return objectGroup;

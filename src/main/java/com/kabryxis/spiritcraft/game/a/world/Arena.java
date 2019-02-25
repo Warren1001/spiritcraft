@@ -2,6 +2,7 @@ package com.kabryxis.spiritcraft.game.a.world;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
+import com.kabryxis.kabutils.spigot.world.ImmutableLocation;
 import com.sk89q.worldedit.*;
 import org.bukkit.Location;
 
@@ -29,7 +30,7 @@ public class Arena implements Weighted {
 	
 	public void reloadData() {
 		dynamic = data.getBoolean("dynamic", false);
-		location = data.getCustom("location", Location.class);
+		location = new ImmutableLocation(data.getCustom("location", Location.class));
 		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		editSession = worldManager.getEditSession(location.getWorld());
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);

@@ -28,10 +28,10 @@ public class BurnDownAction extends SpiritGameObjectAction {
 	@Override
 	public void perform(ConfigSection triggerData) {
 		super.perform(triggerData);
-		EditSession editSession = game.getCurrentArenaData().getEditSession();
+		EditSession editSession = game.getCurrentWorldData().getArena().getEditSession();
 		World world = game.getWorldManager().getWorld(editSession.getWorld().getName());
 		Map<Integer, Set<Vector>> positionsMap = new TreeMap<>((i1, i2) -> i2 - i1);
-		game.getCurrentArenaData().getRegion().forEach(bv -> {
+		game.getCurrentWorldData().getTotalRegion().forEach(bv -> {
 			if(editSession.getLazyBlock(bv).getId() == Material.REDSTONE_LAMP_ON.getId())
 				positionsMap.computeIfAbsent(bv.getBlockZ(), ignore -> new BlockVectorSet()).add(bv);
 		});

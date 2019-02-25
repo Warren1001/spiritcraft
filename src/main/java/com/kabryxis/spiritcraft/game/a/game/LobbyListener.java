@@ -2,10 +2,8 @@ package com.kabryxis.spiritcraft.game.a.game;
 
 import com.kabryxis.kabutils.spigot.listener.Listeners;
 import com.kabryxis.spiritcraft.GridRenderer;
-import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.sk89q.worldedit.Vector;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,9 +11,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -85,7 +85,7 @@ public class LobbyListener implements Listener {
 	
 	@EventHandler
 	public void onWeatherChange(WeatherChangeEvent event) {
-		if(event.toWeatherState()) event.setCancelled(true);
+		//if(event.toWeatherState()) event.setCancelled(true);
 	}
 	
 	@EventHandler
@@ -98,7 +98,7 @@ public class LobbyListener implements Listener {
 		if(event.getItem().hasMetadata("nopickup")) event.setCancelled(true);
 	}
 	
-	@EventHandler
+	/*@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Action action = event.getAction();
 		if(action == Action.LEFT_CLICK_BLOCK || action == Action.RIGHT_CLICK_BLOCK) {
@@ -109,7 +109,7 @@ public class LobbyListener implements Listener {
 				player.sendMessage("%s,%s,%s", offset.getX(), offset.getY(), offset.getZ());
 			}
 		}
-	}
+	}*/
 	
 	@EventHandler
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {

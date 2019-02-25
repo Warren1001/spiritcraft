@@ -9,7 +9,6 @@ import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
 import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
-import com.kabryxis.kabutils.spigot.world.BlockStateManager;
 import com.kabryxis.spiritcraft.game.DeadBody;
 import com.kabryxis.spiritcraft.game.GhostParticleInfo;
 import com.kabryxis.spiritcraft.game.ParticleTask;
@@ -25,7 +24,6 @@ import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -68,9 +66,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 		this.deadBody = game.getDeadBodyManager().getDeadBody(this);
 		this.customData = new ConfigSection();
 		this.fireWalkBlocks = new IndexingQueue<>(12, block -> {
-			BlockStateManager blockStateManager = game.getWorldManager().getBlockStateManager(block.getWorld());
-			BlockState state = blockStateManager.getState(block);
-			blockStateManager.setBlock(block, state.getType(), state.getRawData());
+			game.getWorldManager().getBlockStateManager(block.getWorld()).revertState(block);
 			game.getWorldManager().getMetadataProvider().removeMetadata(block, "nospread");
 		});
 		this.fireWalkBlocks.setIndexAction(5, block -> {

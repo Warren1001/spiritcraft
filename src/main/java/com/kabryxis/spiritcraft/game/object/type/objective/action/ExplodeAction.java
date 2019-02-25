@@ -37,7 +37,7 @@ public class ExplodeAction extends SpiritGameObjectAction {
 		Block block = objectiveBlock;
 		World world = block.getWorld();
 		world.playSound(block.getLocation(), Sound.FIZZ, 5F, 0.5F);
-		Location center = game.getCurrentArenaData().toLocation(this.center);
+		Location center = game.getCurrentWorldData().toLocation(this.center);
 		game.getTaskManager().start(() -> {
 			world.playSound(center, Sound.EXPLODE, 5F, 0.5F);
 			world.playEffect(center, Effect.EXPLOSION_HUGE, 10);

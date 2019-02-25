@@ -37,8 +37,8 @@ public class BlocksAction extends SpiritGameObjectAction {
 	@Override
 	public void perform(ConfigSection triggerData) {
 		super.perform(triggerData);
-		EditSession editSession = game.getCurrentArenaData().getEditSession();
-		game.getCurrentArenaData().getRegion().forEach(bv -> {
+		EditSession editSession = game.getCurrentWorldData().getArena().getEditSession();
+		game.getCurrentWorldData().getTotalRegion().forEach(bv -> {
 			BaseBlock forBlock = editSession.getBlock(bv);
 			if(forPredicate.test(forBlock)) {
 				try {

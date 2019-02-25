@@ -30,7 +30,7 @@ public class ObjectiveManager extends GameObjectTypeManager {
 	
 	@Override
 	public GameObjectBase createBase(ConfigSection data) {
-		Block block = game.getCurrentArenaData().toLocation(data.getCustom("location", Vector.class)).getBlock();
+		Block block = game.getCurrentWorldData().toLocation(data.getCustom("location", Vector.class)).getBlock();
 		ConfigSection creatorData = new ConfigSection();
 		creatorData.put("objectTypeManager", this);
 		creatorData.put("baseData", data);
