@@ -1,7 +1,5 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
@@ -10,7 +8,6 @@ import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldDataManager;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.Vector2D;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -28,8 +25,6 @@ public class WorldManager implements WorldLoader {
 	private final Map<String, WorldCreator> worldCreators = new HashMap<>();
 	private final Map<String, ChunkGenerator> chunkGenerators = new HashMap<>();
 	private final Map<World, BlockStateManager> blockStateManagers = new HashMap<>();
-	private final Map<World, EditSession> slowEditSessions = new HashMap<>();
-	private final Map<World, EditSession> fastEditSessions = new HashMap<>();
 	
 	private final SpiritGame game;
 	private final SchematicManager schematicManager;
@@ -37,13 +32,10 @@ public class WorldManager implements WorldLoader {
 	private final ChunkLoader chunkLoader;
 	private final MetadataProvider metadataProvider;
 	private final Config worldCreatorData;
-	private final EditSessionBuilder defaultBuilder;
 	private final RoundWorldDataManager worldDataManager;
 	
 	public WorldManager(SpiritGame game) {
 		this.game = game;
-		defaultBuilder = new EditSessionBuilder("null").fastmode(true).checkMemory(false).changeSetNull()
-				.limitUnlimited().allowedRegionsEverywhere();
 		File pluginFolder = game.getPlugin().getDataFolder();
 		chunkLoader = new ChunkLoader(game.getPlugin());
 		metadataProvider = new MetadataProvider(game.getPlugin());
@@ -81,16 +73,6 @@ public class WorldManager implements WorldLoader {
 	public BlockStateManager getBlockStateManager(World world) {
 		return blockStateManagers.computeIfAbsent(world, w -> new EditSessionBlockStateManager(game, w));
 	}
-
-	public EditSession getEditSession(World world, boolean fast) {
-		EditSessionBuilder builder = defaultBuilder.world(FaweAPI.getWorld(world.getName()));
-		return fast ? fastEditSessions.computeIfAbsent(world, ignore -> builder.fastmode(true).build()) :
-				slowEditSessions.computeIfAbsent(world, ignore -> builder.fastmode(false).build());
-	}
-
-	public EditSession getEditSession(World world) {
-		return getEditSession(world, true);
-	}
 	
 	public RoundWorldDataManager getWorldDataManager() {
 		return worldDataManager;
@@ -113,7 +95,7 @@ public class WorldManager implements WorldLoader {
 		return new ArenaData(game, arena, schematic);
 	}*/
 	
-	public void loadChunks(Object key, World world, Set<Vector2D> chunkVectors) {
+	public void loadChunks(Object key, World world, Set<? extends Vector2D> chunkVectors) {
 		chunkLoader.keepInMemory(key, chunkVectors.stream().map(vector -> world.getChunkAt(vector.getBlockX(), vector.getBlockZ())).collect(Collectors.toSet()));
 	}
 	

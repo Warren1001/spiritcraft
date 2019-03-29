@@ -64,7 +64,8 @@ public class ParticleTask extends TickingBukkitRunnable {
 			}
 			if(setBase) delay = baseDelay;
 		}
-		player.setExp((float)(skippedTicks / (double)maxSkipTicks));
+		float exp = (float)(skippedTicks / (double)maxSkipTicks);
+		if(player.getExp() != exp) player.setExp(exp);
 	}
 	
 	public BukkitTask start() {

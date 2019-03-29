@@ -85,7 +85,7 @@ public class LobbyListener implements Listener {
 	
 	@EventHandler
 	public void onWeatherChange(WeatherChangeEvent event) {
-		//if(event.toWeatherState()) event.setCancelled(true);
+		if(event.toWeatherState()) event.setCancelled(true);
 	}
 	
 	@EventHandler

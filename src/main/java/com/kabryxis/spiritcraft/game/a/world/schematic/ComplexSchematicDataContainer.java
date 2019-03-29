@@ -15,10 +15,12 @@ import java.util.List;
 public class ComplexSchematicDataContainer implements SchematicDataContainer {
 	
 	private final WorldManager worldManager;
+	private final Config data;
 	private final List<RandomArrayList<ComplexSchematicDataEntry>> dataContainerLists;
 	
-	public ComplexSchematicDataContainer(WorldManager worldManager, List<String> list) {
+	public ComplexSchematicDataContainer(WorldManager worldManager, Config data, List<String> list) {
 		this.worldManager = worldManager;
+		this.data = data;
 		dataContainerLists = new ArrayList<>(list.size());
 		for(String line : list) {
 			RandomArrayList<ComplexSchematicDataEntry> randomList = new WeightedRandomArrayList<>(2);
@@ -79,7 +81,7 @@ public class ComplexSchematicDataContainer implements SchematicDataContainer {
 	
 	@Override
 	public RoundWorldData create() {
-		return new ComplexRoundWorldData(worldManager, dataContainerLists);
+		return new ComplexRoundWorldData(worldManager, data, dataContainerLists);
 	}
 	
 }

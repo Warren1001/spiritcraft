@@ -24,7 +24,7 @@ public class ComplexSchematicDataEntry implements Weighted {
 	public ComplexSchematicDataEntry(WorldManager worldManager, Config data) {
 		schematic = worldManager.getSchematicManager().getSchematic(data.get("schematic", data.getName()));
 		this.data = data;
-		this.weight = -1;
+		weight = -1;
 	}
 	
 	public Schematic getSchematic() {

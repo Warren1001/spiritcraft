@@ -153,14 +153,12 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onBlockFade(BlockFadeEvent event) {
 		Block bfeBlock = event.getNewState().getBlock();
-		boolean shouldFade = true;
 		for(BlockFace face : nearbyFaces) {
 			if(bfeBlock.getRelative(face).getType().isSolid()) {
-				shouldFade = false;
+				event.setCancelled(true);
 				break;
 			}
 		}
-		if(!shouldFade) event.setCancelled(true);
 	}
 	
 	@EventHandler

@@ -16,7 +16,6 @@ import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.Vector2D;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionOperationException;
@@ -34,7 +33,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	protected final Arena arena;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
-	protected final Set<Vector2D> occupiedChunks;
+	protected final Set<BlockVector2D> occupiedChunks;
 	
 	protected Region totalRegion;
 	

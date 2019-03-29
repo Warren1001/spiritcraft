@@ -27,7 +27,7 @@ public class RoundWorldDataContainer implements Weighted {
 		Object schObj = data.get("schematic");
 		if(schObj == null) schDataContainer = new SimpleSchematicDataContainer(worldManager, data, data.getName());
 		else if(schObj instanceof String) schDataContainer = new SimpleSchematicDataContainer(worldManager, data);
-		else if(schObj instanceof List) schDataContainer = new ComplexSchematicDataContainer(worldManager, Lists.convert((List)schObj, Object::toString));
+		else if(schObj instanceof List) schDataContainer = new ComplexSchematicDataContainer(worldManager, data, Lists.convert((List)schObj, Object::toString));
 		else throw new IllegalArgumentException("cannot load " + schObj + " from schematic master file."); // TODO
 	}
 	
