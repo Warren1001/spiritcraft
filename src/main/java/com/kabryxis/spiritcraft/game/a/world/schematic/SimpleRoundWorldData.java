@@ -5,6 +5,9 @@ import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.example.NMSRelighter;
 import com.boydti.fawe.object.FaweQueue;
 import com.boydti.fawe.object.schematic.Schematic;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.kabryxis.kabutils.data.file.Files;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
@@ -23,6 +26,7 @@ import org.bukkit.Location;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
@@ -31,6 +35,8 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	protected final Schematic schematic;
 	protected final Config data;
 	protected final Arena arena;
+	protected final boolean hasWeather;
+	protected final boolean hasLightning;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
 	protected final Set<BlockVector2D> occupiedChunks;
@@ -41,6 +47,8 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 		this.worldManager = worldManager;
 		this.schematic = schematic;
 		data = null;
+		hasWeather = false;
+		hasLightning = false;
 		arena = worldManager.getArenaManager().random(this);
 		editSession = arena.getEditSession();
 		occupiedChunks = arena.getOccupiedChunks();
@@ -58,6 +66,8 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 			throw new RuntimeException(e);
 		}
 		arena = worldManager.getArenaManager().random(this);
+		hasWeather = data.getBoolean("weather", false);
+		hasLightning = data.getBoolean("lightning", false);
 		editSession = arena.getEditSession();
 		occupiedChunks = arena.getOccupiedChunks();
 		Location arenaLoc = arena.getLocation();
@@ -74,6 +84,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	
 	@Override
 	public void load() {
+		System.out.println("SimpleRoundWorldData loaded");
 		Vector loc = arena.getVectorLocation();
 		schematic.paste(editSession, loc, false);
 		totalRegion = schematic.getClipboard().getRegion();
@@ -103,6 +114,18 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	@Override
 	public void relight() {
 		worldManager.getGame().getTaskManager().start(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
+		if(hasWeather) {
+			PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.GAME_STATE_CHANGE);
+			packet.getIntegers().write(0, 7);
+			packet.getFloat().write(0, 1F);
+			worldManager.getGame().forEachPlayer(player -> {
+				try {
+					ProtocolLibrary.getProtocolManager().sendServerPacket(player.getPlayer(), packet);
+				} catch(InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			});
+		}
 	}
 	
 	@Override

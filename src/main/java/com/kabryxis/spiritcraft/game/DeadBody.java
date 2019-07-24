@@ -6,7 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.kabutils.spigot.version.custom.slime.hitbox.CustomHitbox;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.human.WrappedEntityHuman;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
@@ -172,7 +172,7 @@ public class DeadBody {
 	}
 	
 	private static int floor(double d) {
-		return NumberConversions.floor(d * 32D);
+		return Maths.floor(d * 32D);
 	}
 	
 }

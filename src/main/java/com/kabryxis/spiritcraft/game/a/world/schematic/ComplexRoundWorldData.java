@@ -21,7 +21,6 @@ import com.sk89q.worldedit.world.biome.BaseBiome;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -75,6 +74,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	
 	@Override
 	public void load() {
+		System.out.println("ComplexRoundWorldData loaded");
 		Location arenaLoc = arena.getLocation();
 		for(ComplexSchematicDataEntry dataEntry : dataEntries) {
 			Schematic schematic = dataEntry.getSchematic();
@@ -149,13 +149,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 			PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.GAME_STATE_CHANGE);
 			packet.getIntegers().write(0, 7);
 			packet.getFloat().write(0, 1F);
-			worldManager.getGame().forEachPlayer(player -> {
-				try {
-					ProtocolLibrary.getProtocolManager().sendServerPacket(player.getPlayer(), packet);
-				} catch(InvocationTargetException e) {
-					e.printStackTrace();
-				}
-			});
+			worldManager.getGame().forEachPlayer(player -> player.getProtocolLibAdapter().sendPacket(packet));
 		}
 	}
 	

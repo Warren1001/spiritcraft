@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +18,7 @@ public class CloudTask extends BukkitRunnable {
 	private static final double DISTANCE = Math.pow(8, 2);
 	private static final int DURATION = 6;
 	private static final int INTERVAL = 1;
-	private static final int ITERATIONS = NumberConversions.ceil(DURATION * (20.0 / INTERVAL));
+	private static final int ITERATIONS = Maths.ceil(DURATION * (20.0 / INTERVAL));
 	
 	private final SpiritGame game;
 	private final Location loc;

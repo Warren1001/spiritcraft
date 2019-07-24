@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
@@ -79,8 +79,8 @@ public class SchematicDataCreator { // TODO need to add multischematic support a
 	}
 	
 	private String serialize(Location loc) {
-		return String.format("%s,%s,%s,%s,%s", NumberConversions.roundToHalf(loc.getX()), NumberConversions.roundToHalf(loc.getY()),
-				NumberConversions.roundToHalf(loc.getZ()), NumberConversions.roundToHalf(loc.getYaw()), NumberConversions.roundToHalf(loc.getPitch()));
+		return String.format("%s,%s,%s,%s,%s", Maths.roundToHalf(loc.getX()), Maths.roundToHalf(loc.getY()),
+				Maths.roundToHalf(loc.getZ()), Maths.roundToHalf(loc.getYaw()), Maths.roundToHalf(loc.getPitch()));
 	}
 	
 }

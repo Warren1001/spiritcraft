@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Openable;
+import org.bukkit.util.Vector;
 import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.Set;
@@ -129,7 +130,8 @@ public class GameListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-		game.getPlayerManager().getPlayer(event.getPlayer()).getParticleTask().setSkipTick(event.isSneaking());
+		SpiritPlayer player = game.getPlayerManager().getPlayer(event.getPlayer());
+		if(player.getPlayerType() == PlayerType.GHOST) player.getParticleTask().setSkipTick(event.isSneaking());
 	}
 	
 	@EventHandler
@@ -171,6 +173,24 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player bukkitPlayer = event.getPlayer();
+		SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
+		/*game.forEachPlayer(p -> {
+			if(bukkitPlayer != p.getPlayer()) bukkitPlayer.sendMessage(String.format("LOS of %s: %s", p.getName(), bukkitPlayer.hasLineOfSight(p.getPlayer())));
+		});*/
+		if(player.getPlayerType() == PlayerType.GHOST) {
+			if(hasMoved(event.getFrom(), event.getTo())) {
+				game.forEachHunter(hunter -> {
+					if(crosshairNears(hunter, player)) player.sendMessage("%s is looking at you.", hunter.getName());
+				});
+			}
+		}
+		else if(player.getPlayerType() == PlayerType.HUNTER) {
+			if(hasTurned(event.getFrom(), event.getTo())) {
+				game.forEachGhost(ghost -> {
+					if(crosshairNears(player, ghost)) ghost.sendMessage("%s is looking at you.", player.getName());
+				});
+			}
+		}
 		if(bukkitPlayer.isSneaking()) return;
 		Block block = event.getFrom().getBlock();
 		Material belowType = block.getRelative(BlockFace.DOWN).getType();
@@ -180,9 +200,31 @@ public class GameListener implements Listener {
 			block = block.getRelative(BlockFace.UP);
 			if(block.getType() != Material.AIR) return;
 		}
-		SpiritPlayer player = game.getPlayerManager().getPlayer(bukkitPlayer);
 		IndexingQueue<Block> fireWalkBlocks = player.getFireWalkBlocks();
 		if(player.getCustomData().getBoolean("firewalk", false) && !fireWalkBlocks.contains(block)) fireWalkBlocks.add(block);
+	}
+	
+	private boolean crosshairNears(Player player, Player target) {
+		if(!player.hasLineOfSight(target)) return false;
+		Vector direction = player.getLocation().getDirection();
+		Location startLoc = player.getEyeLocation(), targetLoc = target.getLocation();
+		double lastDist = Double.MAX_VALUE;
+		while(!startLoc.getBlock().getType().isSolid()) {
+			double currLastDist = startLoc.distanceSquared(targetLoc);
+			if(currLastDist <= 4.0) return true;
+			if(currLastDist <= lastDist) lastDist = currLastDist;
+			else return false;
+			startLoc.add(direction);
+		}
+		return false;
+	}
+	
+	private boolean hasMoved(Location from, Location to) {
+		return from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ();
+	}
+	
+	private boolean hasTurned(Location from, Location to) {
+		return from.getYaw() != to.getYaw() || from.getPitch() != to.getPitch();
 	}
 	
 }

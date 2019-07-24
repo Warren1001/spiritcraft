@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.ability;
 
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,9 +34,9 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 	public void tick(int tick) {
 		if(ltr) items.forEach(item -> {
 			short maxDura = item.getType().getMaxDurability();
-			item.setDurability((short)Math.min(maxDura - 1, maxDura - NumberConversions.floor(maxDura * ((double)tick / (double)maxTicks))));
+			item.setDurability((short)Math.min(maxDura - 1, maxDura - Maths.floor(maxDura * ((double)tick / (double)maxTicks))));
 		});
-		else items.forEach(item -> item.setDurability((short)NumberConversions.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
+		else items.forEach(item -> item.setDurability((short)Maths.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
 	}
 
 	@Override

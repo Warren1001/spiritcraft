@@ -1,7 +1,9 @@
 package com.kabryxis.spiritcraft.game.a.game;
 
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.kabutils.random.Randoms;
 import com.kabryxis.kabutils.spigot.concurrent.BukkitTaskManager;
+import com.kabryxis.kabutils.utility.predicate.Predicates;
 import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.DeadBodyManager;
 import com.kabryxis.spiritcraft.game.ParticleManager;
@@ -29,7 +31,6 @@ import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.util.NumberConversions;
 
 import java.io.File;
 import java.util.*;
@@ -248,14 +249,14 @@ public class SpiritGame {
 			}
 		}
 		allPlayers.forEach(SpiritPlayer::resetDamageToGhost);
-		hunters.addAll(playing.stream().filter(player -> !ghosts.contains(player)).collect(Collectors.toList()));
+		playing.stream().filter(Predicates.not(ghosts::contains)).forEach(hunters::add);
 	}
 	
 	protected SpiritPlayer chooseWeightedRandomPlayer(List<SpiritPlayer> players) {
-		int rand = new Random().nextInt(players.stream().mapToInt(player -> NumberConversions.floor(player.getDamageToGhost() * 100.0)).sum()) + 1;
+		int rand = new Random().nextInt(players.stream().mapToInt(player -> Maths.floor(player.getDamageToGhost() * 100.0)).sum()) + 1;
 		for(Iterator<SpiritPlayer> iterator = players.iterator(); iterator.hasNext();) {
 			SpiritPlayer player = iterator.next();
-			rand -= NumberConversions.floor(player.getDamageToGhost() * 100.0);
+			rand -= Maths.floor(player.getDamageToGhost() * 100.0);
 			if(rand <= 0) {
 				iterator.remove();
 				return player;
@@ -295,6 +296,10 @@ public class SpiritGame {
 	
 	public void forEachPlayer(Consumer<? super SpiritPlayer> action) {
 		allPlayers.forEach(action);
+	}
+	
+	public void forEachGhost(Consumer<? super SpiritPlayer> action) {
+		ghostPlayers.forEach(action);
 	}
 	
 	public void forEachHunter(Consumer<? super SpiritPlayer> action) {
