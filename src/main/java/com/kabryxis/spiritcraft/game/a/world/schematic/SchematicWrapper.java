@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.boydti.fawe.object.schematic.Schematic;
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
@@ -18,7 +18,7 @@ public class SchematicWrapper {
 	private final Vector origin;
 	
 	public SchematicWrapper(File schematicFile) {
-		this.name = Files.getSimpleName(schematicFile);
+		this.name = KFiles.getSimpleName(schematicFile);
 		this.schematicFile = schematicFile;
 		try {
 			this.schematic = ClipboardFormat.SCHEMATIC.load(schematicFile);

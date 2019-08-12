@@ -100,6 +100,7 @@ public class PlayerItemInfo {
 		if(selectedSection == null) return;
 		selectedSection.getChildren().forEach(section -> {
 			String slotName = section.getName();
+			System.out.println(slotName);
 			int slot;
 			switch(slotName) {
 				case "h":
@@ -124,6 +125,7 @@ public class PlayerItemInfo {
 					break;
 			}
 			itemStacks[slot] = itemData.getItemInfo(section.get("name", String.class)).getItem(player, section.getInt("amount", 1));
+			System.out.println(itemStacks[slot]);
 		});
 	}
 	

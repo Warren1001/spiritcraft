@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.object.type.ability;
 
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.a.cooldown.CooldownHandler;
@@ -33,8 +33,8 @@ public class AbilityManager extends GameObjectTypeManager {
 		gameObjectBases.clear();
 		actionManager.clear();
 		prerequisiteManager.clear();
-		Files.forEachFileWithEnding(folder, Config.EXTENSION, file -> {
-			if(!Files.getSimpleName(file).toLowerCase().equals("globals")) createBase(new Config(file, true));
+		KFiles.forEachFileWithEnding(folder, Config.EXTENSION, file -> {
+			if(!KFiles.getSimpleName(file).toLowerCase().equals("globals")) createBase(new Config(file, true));
 		});
 	}
 	

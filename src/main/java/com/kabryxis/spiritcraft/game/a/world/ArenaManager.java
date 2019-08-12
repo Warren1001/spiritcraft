@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.conditional.ConditionalRandomArrayList;
 import com.kabryxis.kabutils.random.weighted.conditional.ObjectPredicate;
@@ -19,7 +19,7 @@ public class ArenaManager {
 		this.worldManager = worldManager;
 		this.folder = folder;
 		folder.mkdirs();
-		if(folder.exists()) Files.forEachFileWithEnding(folder, ".yml", file -> arenaRegistry.add(new Arena(worldManager, new Config(file, true))));
+		if(folder.exists()) KFiles.forEachFileWithEnding(folder, ".yml", file -> arenaRegistry.add(new Arena(worldManager, new Config(file, true))));
 	}
 	
 	public WorldManager getWorldManager() {

@@ -8,7 +8,7 @@ import com.boydti.fawe.object.schematic.Schematic;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.random.RandomArrayList;
@@ -61,7 +61,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 		this.data = data;
 		try {
 			File dataFile = data.getFile();
-			schematic = ClipboardFormat.SCHEMATIC.load(new File(dataFile.getParent(), data.get("schematic", Files.getSimpleName(dataFile)) + ".schematic"));
+			schematic = ClipboardFormat.SCHEMATIC.load(new File(dataFile.getParent(), data.get("schematic", KFiles.getSimpleName(dataFile)) + ".schematic"));
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}

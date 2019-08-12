@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game;
 
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class ParticleManager {
 	}
 	
 	public void loadAll() {
-		Files.forEachFileWithEnding(folder, ".yml", file -> registerParticleData(new GhostParticleInfo(new Config(file, true))));
+		KFiles.forEachFileWithEnding(folder, ".yml", file -> registerParticleData(new GhostParticleInfo(new Config(file, true))));
 	}
 	
 	public void registerParticleData(GhostParticleInfo ghostParticleInfo) {
