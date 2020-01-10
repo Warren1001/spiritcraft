@@ -1,0 +1,24 @@
+cloud_spawn:
+  sound: dig_snow
+  pitch: 0.5
+  ghost: true
+fire_breath:
+  sound: enderdragon_growl
+  pitch: 0.1
+  ghost: true
+flashbang_explode:
+  sound: glass
+  pitch: 0.01
+  ghost: true
+ghost_grenade_tick:
+  sound: note_piano
+  pitch: 2
+  ghost: true
+ghost_stab_execute:
+  sound: zombie_pig_hurt
+  pitch: 0.1
+  ghost: true
+ghost_stab_charge:
+  sound: zombie_pig_angry
+  pitch: 0.1
+  ghost: true

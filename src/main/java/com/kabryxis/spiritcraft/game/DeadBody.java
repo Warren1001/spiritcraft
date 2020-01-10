@@ -112,7 +112,7 @@ public class DeadBody {
 	}
 	
 	public void show(Player player) {
-		player.sendBlockChange(bedLoc, Material.BED_BLOCK, direction);
+		player.sendBlockChange(bedLoc, Material.BLACK_BED, direction);
 		try {
 			protocolManager.sendServerPacket(player, namedEntitySpawn);
 			protocolManager.sendServerPacket(player, entityTeleportZero);

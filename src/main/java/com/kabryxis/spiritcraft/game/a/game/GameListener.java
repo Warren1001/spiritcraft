@@ -77,7 +77,7 @@ public class GameListener implements Listener {
 		Location loc = defender.getLocation().add(0, 0.75, 0);
 		ParticleEffect.BLOCK_DUST.sendData(defender.getPlayer().getWorld().getPlayers(), loc.getX(), loc.getY(), loc.getZ(),
 				0.2, 0.66, 0.2, 0, 50, new ItemStack(Material.REDSTONE_BLOCK));
-		defender.getPlayer().getWorld().playSound(loc, Sound.ZOMBIE_HURT, 1F, 0.1F); // TODO call by soundmanager
+		defender.getPlayer().getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1F, 0.1F); // TODO call by soundmanager
 	}
 	
 	@EventHandler
@@ -145,7 +145,7 @@ public class GameListener implements Listener {
 		for(BlockFace face : nearbyFaces) {
 			Block relative = bseBlock.getRelative(face);
 			Material relativeType = relative.getType();
-			if(relativeType == Material.CARPET || relativeType == Material.WALL_SIGN || relativeType == Material.SIGN_POST)
+			if(relativeType.name().endsWith("CARPET") || relativeType == Material.WALL_SIGN || relativeType == Material.SIGN)
 				relative.setType(Material.FIRE);
 			else if(relativeType.isSolid()) shouldSpread = true;
 		}
@@ -166,8 +166,7 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onBlockCanBuild(BlockCanBuildEvent event) {
 		Material type = event.getBlock().getType();
-		if(type == Material.CARPET || type == Material.WALL_SIGN || type == Material.SIGN_POST || type == Material.FLOWER_POT ||
-				type == Material.FLOWER_POT_ITEM) event.setBuildable(true);
+		if(type.name().endsWith("CARPET") || type == Material.WALL_SIGN || type == Material.SIGN || type == Material.FLOWER_POT) event.setBuildable(true);
 	}
 	
 	@EventHandler
@@ -196,7 +195,7 @@ public class GameListener implements Listener {
 		Material belowType = block.getRelative(BlockFace.DOWN).getType();
 		if(belowType == Material.AIR || belowType == Material.FIRE) return;
 		Material type = block.getType();
-		if(type != Material.AIR && type != Material.CARPET) {
+		if(type != Material.AIR && !type.name().endsWith("CARPET")) {
 			block = block.getRelative(BlockFace.UP);
 			if(block.getType() != Material.AIR) return;
 		}

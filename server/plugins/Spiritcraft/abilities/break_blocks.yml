@@ -1,0 +1,14 @@
+triggers:
+  right:
+    type: RIGHT_CLICK
+    requires:
+    - 'hand~type:diamond_pickaxe'
+    actions:
+    - 'block_break~toggle:true'
+    - 'modify_hand~toggleenchant:DURABILITY'
+    cooldown: 0
+  left:
+    type: LEFT_CLICK
+    actions:
+    - 'block_break~range:8,cooldown:5'
+    abilityId: 2219

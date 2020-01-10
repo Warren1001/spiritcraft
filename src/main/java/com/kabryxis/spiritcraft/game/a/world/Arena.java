@@ -1,26 +1,25 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
 import com.boydti.fawe.FaweAPI;
+import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.kabutils.spigot.world.ImmutableLocation;
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class Arena implements Weighted {
 	
-	private final Set<BlockVector2D> occupiedChunks = new HashSet<>();
+	private final LocalBlockVector2DSet occupiedChunks = new LocalBlockVector2DSet();
 	
 	private final WorldManager worldManager;
 	private final Config data;
 	
 	private boolean dynamic = false;
 	private Location location;
-	private Vector vectorLocation;
+	private BlockVector3 vectorLocation;
 	private EditSession editSession;
 	private int sizeX, sizeY, sizeZ;
 	
@@ -33,7 +32,7 @@ public class Arena implements Weighted {
 	public void reloadData() {
 		dynamic = data.getBoolean("dynamic", false);
 		location = new ImmutableLocation(data.getCustom("location", Location.class));
-		vectorLocation = new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		vectorLocation = BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 		editSession = new EditSessionBuilder(FaweAPI.getWorld(location.getWorld().getName())).fastmode(true).checkMemory(false).changeSetNull()
 				.limitUnlimited().allowedRegionsEverywhere().build();
 		sizeX = data.getInt("size.x", Integer.MAX_VALUE);
@@ -47,7 +46,7 @@ public class Arena implements Weighted {
 		int macz = cz + data.getInt("load.max.cz", 3);
 		for(cx = micx; cx <= macx; cx++) {
 			for(cz = micz; cz <= macz; cz++) {
-				occupiedChunks.add(new BlockVector2D(cx, cz));
+				occupiedChunks.add(cx, cz);
 			}
 		}
 	}
@@ -64,7 +63,7 @@ public class Arena implements Weighted {
 		return location;
 	}
 	
-	public Vector getVectorLocation() {
+	public BlockVector3 getVectorLocation() {
 		return vectorLocation;
 	}
 	
@@ -72,11 +71,13 @@ public class Arena implements Weighted {
 		return editSession;
 	}
 	
-	public Set<BlockVector2D> getOccupiedChunks() {
-		return new HashSet<>(occupiedChunks);
+	public LocalBlockVector2DSet getOccupiedChunks() {
+		LocalBlockVector2DSet copy = new LocalBlockVector2DSet();
+		copy.addAll(occupiedChunks);
+		return copy;
 	}
 	
-	public boolean fits(Vector dimensions) {
+	public boolean fits(BlockVector3 dimensions) {
 		return dimensions.getBlockX() <= sizeX && dimensions.getBlockY() <= sizeY && dimensions.getBlockZ() <= sizeZ;
 	}
 	

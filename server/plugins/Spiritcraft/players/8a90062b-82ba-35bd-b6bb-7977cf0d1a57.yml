@@ -1,0 +1,37 @@
+particle-effect: flame
+inventory:
+  ghost:
+    owns:
+    - wooden_sword
+    - stick
+    - stab
+    - flashbang
+    - grenade
+    - cloud
+    - fire_breath
+    selected:
+      '0':
+        name: wooden_sword
+      '1':
+        name: stab
+      '2':
+        name: grenade
+      '3':
+        name: flashbang
+      '7':
+        name: cloud
+      '8':
+        name: fire_breath
+  hunter:
+    owns:
+    - wooden_sword
+    - grenade
+    selected:
+      '34':
+        amount: 1
+        name: grenade
+      '35':
+        amount: 1
+        name: wooden_sword
+currency: 83
+space: 21

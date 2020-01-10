@@ -9,7 +9,6 @@ import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +82,6 @@ public class ItemData {
 		allItemInfos.put(itemInfo.getName(), itemInfo);
 	}
 	
-	@Nullable
 	public BasicItemInfo getItemInfo(ItemStack representation) {
 		return allItemInfos.values().stream().filter(itemInfo -> itemInfo.isOf(representation)).findFirst().orElse(null);
 	}

@@ -1,29 +1,27 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
+import com.boydti.fawe.FaweAPI;
 import com.kabryxis.kabutils.data.file.KFiles;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.math.BlockVector3;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class SchematicWrapper {
 	
 	private final String name;
 	private final File schematicFile;
-	private final Schematic schematic;
-	private final Vector origin;
+	private final Clipboard schematic;
+	private final BlockVector3 origin;
 	
 	public SchematicWrapper(File schematicFile) {
 		this.name = KFiles.getSimpleName(schematicFile);
 		this.schematicFile = schematicFile;
 		try {
-			this.schematic = ClipboardFormat.SCHEMATIC.load(schematicFile);
-			Clipboard clipboard = getClipboard();
-			this.origin = clipboard.getOrigin().subtract(clipboard.getMinimumPoint());
+			this.schematic = FaweAPI.load(schematicFile);
+			BlockVector3 min = schematic.getMinimumPoint();
+			this.origin = schematic.getOrigin().subtract(min.getBlockX(), min.getBlockY(), min.getBlockZ());
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -33,15 +31,11 @@ public class SchematicWrapper {
 		return name;
 	}
 	
-	public Schematic getSchematic() {
+	public Clipboard getSchematic() {
 		return schematic;
 	}
 	
-	public Clipboard getClipboard() {
-		return Objects.requireNonNull(schematic.getClipboard());
-	}
-	
-	public Vector getOrigin() {
+	public BlockVector3 getOrigin() {
 		return origin;
 	}
 	

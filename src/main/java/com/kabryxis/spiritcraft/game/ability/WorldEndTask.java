@@ -2,8 +2,8 @@ package com.kabryxis.spiritcraft.game.ability;
 
 import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
-import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,7 +54,7 @@ public class WorldEndTask extends BukkitRunnable {
 			}
 		}
 		//center.getWorld().playEffect(center, Effect.EXPLOSION_HUGE, 100);
-		center.getWorld().playSound(center, Sound.ENDERDRAGON_DEATH, 10F, 0.1F);
+		center.getWorld().playSound(center, Sound.ENTITY_ENDER_DRAGON_DEATH, 10F, 0.1F);
 		return runTaskTimer(game.getPlugin(), 0L, 1L);
 	}
 	
@@ -76,7 +76,7 @@ public class WorldEndTask extends BukkitRunnable {
 		}
 		else if(tick == 360) {
 			//center.getWorld().playSound(center, Sound., 10F, 0.1F);
-			center.getWorld().playEffect(center, Effect.EXPLOSION_HUGE, 100);
+			center.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, center, 100);
 			tickingBlocks.forEach(TickingBlock::fast);
 		}
 		tick++;

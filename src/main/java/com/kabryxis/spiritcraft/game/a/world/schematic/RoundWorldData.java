@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.kabryxis.spiritcraft.game.a.world.Arena;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
 
@@ -19,7 +19,7 @@ public interface RoundWorldData {
 	
 	Location getRandomHunterSpawn();
 	
-	Location toLocation(Vector pos);
+	Location toLocation(BlockVector3 pos);
 	
 	Region getTotalRegion();
 	

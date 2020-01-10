@@ -1,17 +1,17 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import org.bukkit.World;
 
 public class SimpleSchematicDataContainer implements SchematicDataContainer {
 	
 	protected final WorldManager worldManager;
-	protected final Schematic schematic;
+	protected final Clipboard schematic;
 	protected final Config data;
 	
-	public SimpleSchematicDataContainer(WorldManager worldManager, Schematic schematic) {
+	public SimpleSchematicDataContainer(WorldManager worldManager, Clipboard schematic) {
 		this.worldManager = worldManager;
 		this.schematic = schematic;
 		data = null;
@@ -48,7 +48,7 @@ public class SimpleSchematicDataContainer implements SchematicDataContainer {
 		this(worldManager, data, data.get("schematic", data.getName()));
 	}
 	
-	public Schematic getSchematic() {
+	public Clipboard getSchematic() {
 		return schematic;
 	}
 	

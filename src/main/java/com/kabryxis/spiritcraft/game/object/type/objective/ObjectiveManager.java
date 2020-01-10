@@ -6,7 +6,7 @@ import com.kabryxis.spiritcraft.game.object.action.GameObjectAction;
 import com.kabryxis.spiritcraft.game.object.prerequisite.GameObjectPrerequisite;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectBase;
 import com.kabryxis.spiritcraft.game.object.type.GameObjectTypeManager;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.Block;
 
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class ObjectiveManager extends GameObjectTypeManager {
 	
 	@Override
 	public GameObjectBase createBase(ConfigSection data) {
-		Block block = game.getCurrentWorldData().toLocation(data.getCustom("location", Vector.class)).getBlock();
+		Block block = game.getCurrentWorldData().toLocation(data.getCustom("location", BlockVector3.class)).getBlock();
 		ConfigSection creatorData = new ConfigSection();
 		creatorData.put("objectTypeManager", this);
 		creatorData.put("baseData", data);

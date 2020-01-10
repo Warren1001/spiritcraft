@@ -1,21 +1,21 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 
 public class ComplexSchematicDataEntry implements Weighted {
 	
-	private final Schematic schematic;
+	private final Clipboard schematic;
 	private final Config data;
 	private final int weight;
 	
-	public ComplexSchematicDataEntry(Schematic schematic) {
+	public ComplexSchematicDataEntry(Clipboard schematic) {
 		this(schematic, 1000);
 	}
 	
-	public ComplexSchematicDataEntry(Schematic schematic, int weight) {
+	public ComplexSchematicDataEntry(Clipboard schematic, int weight) {
 		this.schematic = schematic;
 		data = null;
 		this.weight = weight;
@@ -27,7 +27,7 @@ public class ComplexSchematicDataEntry implements Weighted {
 		weight = -1;
 	}
 	
-	public Schematic getSchematic() {
+	public Clipboard getSchematic() {
 		return schematic;
 	}
 	

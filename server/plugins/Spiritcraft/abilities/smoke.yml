@@ -1,0 +1,16 @@
+triggers:
+  left:
+    type: LEFT_CLICK
+    requires:
+    - 'hand~type:wool'
+    actions:
+    - 'sound~name:cloud_spawn'
+    - cloud
+    - remove_hand
+  right:
+    type: RIGHT_CLICK
+    requires:
+    - 'hand~type:wool'
+    actions:
+    - 'throw_item_delayed~delay:40,finish:sound~name:cloud_spawn||cloud'
+    - remove_hand

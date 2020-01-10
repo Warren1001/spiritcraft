@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.boydti.fawe.FaweAPI;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class SchematicManager {
 
-	private final Map<String, Schematic> schematics = new HashMap<>();
+	private final Map<String, Clipboard> schematics = new HashMap<>();
 	
 	private final File folder;
 	
@@ -23,10 +23,10 @@ public class SchematicManager {
 		return folder;
 	}
 	
-	public Schematic getSchematic(String name) {
+	public Clipboard getSchematic(String name) {
 		return schematics.computeIfAbsent(name, n -> {
 			try {
-				return ClipboardFormat.SCHEMATIC.load(new File(folder, n.endsWith(".schematic") ? n : n + ".schematic"));
+				return FaweAPI.load(new File(folder, n.endsWith(".schematic") ? n : n + ".schematic"));
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

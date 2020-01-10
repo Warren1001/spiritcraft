@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game;
 
-import com.boydti.fawe.FaweCache;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.kabutils.spigot.command.BukkitCommandIssuer;
@@ -8,13 +7,16 @@ import com.kabryxis.spiritcraft.Spiritcraft;
 import com.kabryxis.spiritcraft.game.ability.FireBreathTask;
 import com.kabryxis.spiritcraft.game.ability.WorldEndTask;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -41,20 +43,29 @@ public class CommandListener implements Listener {
 		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && light) {
 			Block block = event.getClickedBlock();
 			event.getPlayer().sendMessage(block.getType().name() + ":" + block.getData() + " (" + block.getType().getId() + ":" + block.getData() + ")");
-			if(block.getType() == Material.REDSTONE_LAMP_OFF) {
+			if(block.getType() == Material.REDSTONE_LAMP) {
+				Lightable lightable = (Lightable)block.getBlockData();
+				lightable.setLit(!lightable.isLit());
+				block.setBlockData(lightable, false);
+				event.getPlayer().sendMessage(lightable.isLit() ? "on" : "off");
+			}
+			/*if(block.getType() == Material.REDSTONE_LAMP && !((Lightable)block.getBlockData()).isLit()) {
 				EditSession editSession = new EditSessionBuilder(block.getWorld().getName()).fastmode(true).build();
 				try {
-					editSession.setBlock(new BlockVector(block.getX(), block.getY(), block.getZ()), FaweCache.getBlock(Material.REDSTONE_LAMP_ON.getId(), 0));
+					editSession.setBlock(new BlockVector(block.getX(), block.getY(), block.getZ()), FaweCache.getBlock(0, 0));
 					editSession.flushQueue();
+					event.getPlayer().sendMessage("on");
 				} catch(MaxChangedBlocksException e) {
 					e.printStackTrace();
+					event.getPlayer().sendMessage("error");
 				}
-				event.getPlayer().sendMessage("on");
 			}
-			else if(block.getType() == Material.REDSTONE_LAMP_ON) {
-				block.setType(Material.REDSTONE_LAMP_OFF, false);
+			else if(block.getType() == Material.REDSTONE_LAMP && ((Lightable)block.getBlockData()).isLit()) {
+				Lightable lightable = (Lightable)block.getBlockData();
+				lightable.setLit(false);
+				block.setBlockData(lightable);
 				event.getPlayer().sendMessage("off");
-			}
+			}*/
 			event.setCancelled(true);
 		}
 	}
@@ -106,7 +117,7 @@ public class CommandListener implements Listener {
 				EditSession editSession = new EditSessionBuilder(p.getWorld().getName()).fastmode(true).build();
 				Region selection = p.getSelection();
 				selection.forEach(pos -> {
-					if(editSession.getLazyBlock(pos).getId() == 0) setDataForFaces(selection.getMinimumPoint().getBlockY(), p.getWorld(), editSession, pos);
+					if(editSession.getBlock(pos).getBlockType() == BlockTypes.AIR) setDataForFaces(selection.getMinimumPoint().getBlockY(), p.getWorld(), editSession, pos);
 				});
 				editSession.flushQueue();
 			}
@@ -114,9 +125,9 @@ public class CommandListener implements Listener {
 				SpiritPlayer p = plugin.getGame().getPlayerManager().getPlayer(player);
 				EditSession editSession = new EditSessionBuilder(p.getWorld().getName()).fastmode(true).build();
 				p.getSelection().forEach(pos -> {
-					if(editSession.getLazyBlock(pos).getId() == Material.VINE.getId()) {
+					if(editSession.getBlock(pos).getBlockType() == BlockTypes.VINE) {
 						try {
-							editSession.setBlock(pos, FaweCache.getBlock(0, 0));
+							editSession.setBlock(pos, BlockTypes.AIR);
 						} catch(MaxChangedBlocksException e) {
 							e.printStackTrace();
 						}
@@ -230,7 +241,7 @@ public class CommandListener implements Listener {
 				Region selection = spiritPlayer.getSelection();
 				selection.forEach(bv -> {
 					Block block = spiritPlayer.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
-					if(block.getType() == Material.REDSTONE_LAMP_OFF || block.getType() == Material.REDSTONE_LAMP_ON) {
+					if(block.getType() == Material.REDSTONE_LAMP) {
 						//BukkitThreads.syncLater(() -> block.getWorld().playSound(block.getLocation(), Sound.GLASS, 10F, 0.7F), new Random().nextInt(3));
 					}
 				});
@@ -289,19 +300,19 @@ public class CommandListener implements Listener {
 		return faces;
 	}
 	
-	private void setDataForFaces(int lowestY, World world, EditSession editSession, com.sk89q.worldedit.Vector pos) {
+	private void setDataForFaces(int lowestY, World world, EditSession editSession, BlockVector3 pos) {
 		Block block = world.getBlockAt(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ());
 		Set<BlockFace> faces = getNearbyFaces(block);
 		if(faces.isEmpty()) {
-			if(block.getRelative(BlockFace.UP).getType().isSolid()) editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), 0), true);
+			if(block.getRelative(BlockFace.UP).getType().isSolid()) editSession.setBlock(pos, BaseBlock.getState(Material.VINE.getId(), 0));
 		}
 		else {
 			int data = addUpFaces(faces);
-			editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
+			editSession.setBlock(pos, BaseBlock.getState(Material.VINE.getId(), data));
 			for(int y = block.getY() - 1; y >= lowestY; y--) {
 				Block down = block.getWorld().getBlockAt(block.getX(), y, block.getZ());
 				if(down.getType() != Material.AIR) break;
-				editSession.setBlock(pos, FaweCache.getBlock(Material.VINE.getId(), data), true);
+				editSession.setBlock(pos, BaseBlock.getState(Material.VINE.getId(), data));
 			}
 		}
 	}

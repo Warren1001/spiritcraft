@@ -1,6 +1,6 @@
 package com.kabryxis.spiritcraft.game.player;
 
-import com.boydti.fawe.object.FawePlayer;
+import com.boydti.fawe.Fawe;
 import com.kabryxis.kabutils.IndexingQueue;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
@@ -109,7 +109,7 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	}
 	
 	public Region getSelection() {
-		return FawePlayer.wrap(player).getSelection();
+		return Fawe.imp().wrap(player).getSelection();
 	}
 	
 	public SchematicDataCreator getDataCreator() {

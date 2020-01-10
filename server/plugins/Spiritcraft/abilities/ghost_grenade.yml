@@ -1,0 +1,15 @@
+triggers:
+  left:
+    type: LEFT_CLICK
+    requires:
+    - 'hand~type:magma_cream'
+    actions:
+    - 'explode~power:3.5'
+    - remove_hand
+  right:
+    type: RIGHT_CLICK
+    requires:
+    - 'hand~type:magma_cream'
+    actions:
+    - 'throw_item_timer~interval:5,duration:2500,tick:sound~name:ghost_grenade_tick;finish:explode~power:3.5'
+    - remove_hand

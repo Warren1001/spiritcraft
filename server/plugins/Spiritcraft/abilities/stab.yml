@@ -1,0 +1,8 @@
+triggers:
+  click:
+    type: LEFT_CLICK
+    cooldown: 30
+    requires:
+    - 'hand~type:shears'
+    actions:
+    - 'charge~duration:60,interval:4,start:sound~name:ghost_stab_charge;finish:sound~name:ghost_stab_execute||infront~lookmod:1.25,ability:nearby~radius:1.1,affects:hunters,amount:1,ability:player~damage:20'

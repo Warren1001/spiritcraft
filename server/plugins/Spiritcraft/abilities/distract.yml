@@ -1,0 +1,8 @@
+triggers:
+  left:
+    type: LEFT_CLICK
+    requires:
+    - 'hand~type:bone'
+    actions:
+    - 'looking~ability:sound~name:ghost_stab_charge'
+    - 'remove_hand~duration:200'

@@ -32,7 +32,7 @@ public class ItemManager {
 		start.setInteractablePlayerItem(17, inventoryManager.getErrorItem());
 		DynamicInventory ghostInv = ghostData.getInventory();
 		ghostInv.setPrevious(start);
-		start.setInteractableServerItem(2, new OpenNextInventoryAction(ghostInv), new ItemBuilder(Material.SNOW_BALL).name(ChatColor.DARK_GRAY + "Ghost").build());
+		start.setInteractableServerItem(2, new OpenNextInventoryAction(ghostInv), new ItemBuilder(Material.SNOWBALL).name(ChatColor.DARK_GRAY + "Ghost").build());
 		DynamicInventory hunterInv = hunterData.getInventory();
 		hunterInv.setPrevious(start);
 		start.setInteractableServerItem(6, new OpenNextInventoryAction(hunterInv), new ItemBuilder(Material.CHAINMAIL_CHESTPLATE).name(ChatColor.DARK_RED + "Hunter").build());

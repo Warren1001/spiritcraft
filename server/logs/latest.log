@@ -1,0 +1,366 @@
+[17:19:08] [main/INFO]: Loaded 0 recipes
+[17:19:08] [Server thread/INFO]: Starting minecraft server version 1.13.2
+[17:19:08] [Server thread/INFO]: Loading properties
+[17:19:08] [Server thread/WARN]: resource-pack-hash is deprecated and found along side resource-pack-sha1. resource-pack-hash will be ignored.
+[17:19:08] [Server thread/INFO]: Default game type: ADVENTURE
+[17:19:08] [Server thread/INFO]: This server is running CraftBukkit version git-Spigot-1a3504a-84f3da3 (MC: 1.13.2) (Implementing API version 1.13.2-R0.1-SNAPSHOT)
+[17:19:09] [Server thread/INFO]: Debug logging is disabled
+[17:19:09] [Server thread/WARN]: Ignoring invalid stats.forced-stats achievement.openInventory
+[17:19:09] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[17:19:09] [Server thread/INFO]: Using 4 threads for Netty based IO
+[17:19:09] [Server thread/INFO]: Generating keypair
+[17:19:09] [Server thread/INFO]: Starting Minecraft server on *:25565
+[17:19:09] [Server thread/INFO]: Using default channel type
+[17:19:18] [Server thread/INFO]: Got request to register class com.sk89q.worldedit.bukkit.BukkitServerInterface with WorldEdit [com.sk89q.worldedit.extension.platform.PlatformManager@4d4acadc]
+[17:19:18] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
+[17:19:19] [Server thread/INFO]: Using com.sk89q.worldedit.bukkit.adapter.impl.FAWE_Spigot_v1_13_R2 as the Bukkit adapter
+[17:19:19] [Server thread/WARN]: Failed to find properties for minecraft:__reserved__
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:acacia_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:acacia_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:andesite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:andesite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:andesite_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:bamboo
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:bamboo_sapling
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:barrel
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:bee_nest
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:beehive
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:bell
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:birch_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:birch_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:blast_furnace
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:campfire
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:cartography_table
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:composter
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:cornflower
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:cut_red_sandstone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:cut_sandstone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:dark_oak_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:dark_oak_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:diorite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:diorite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:diorite_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:end_stone_brick_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:end_stone_brick_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:end_stone_brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:fletching_table
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:granite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:granite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:granite_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:grindstone
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:jigsaw
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:jungle_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:jungle_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:lantern
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:lectern
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:lily_of_the_valley
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:loom
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:mossy_cobblestone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:mossy_cobblestone_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:mossy_stone_brick_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:mossy_stone_brick_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:mossy_stone_brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:nether_brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:oak_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:oak_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_andesite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_andesite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_diorite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_diorite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_granite_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:polished_granite_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:potted_bamboo
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:potted_cornflower
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:potted_lily_of_the_valley
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:potted_wither_rose
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:prismarine_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:red_nether_brick_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:red_nether_brick_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:red_nether_brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:red_sandstone_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:sandstone_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:scaffolding
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smithing_table
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smoker
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_quartz_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_quartz_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_red_sandstone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_red_sandstone_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_sandstone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_sandstone_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:smooth_stone_slab
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:spruce_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:spruce_wall_sign
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:stone_brick_wall
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:stone_stairs
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:stonecutter
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:sweet_berry_bush
+[17:19:20] [Server thread/INFO]: Ignoring invalid block minecraft:wither_rose
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=0]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=1]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=2]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=3]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=4]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=5]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=6]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=7]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=8]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=9]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=10]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=11]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=12]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=13]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=14]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_sign[rotation=15]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=north]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=south]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=west]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=east]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=north]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=south]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=west]
+[17:19:20] [Server thread/WARN]: Unknown block: minecraft:oak_wall_sign[facing=east]
+[17:19:20] [Server thread/WARN]: Unknown item: minecraft:red_dye
+[17:19:20] [Server thread/WARN]: Unknown item: minecraft:green_dye
+[17:19:20] [Server thread/WARN]: Unknown item: minecraft:yellow_dye
+[17:19:20] [Server thread/WARN]: [WorldEdit] ====================================================
+[17:19:20] [Server thread/WARN]: [WorldEdit]  WorldEdit works better if you use Paper 
+[17:19:20] [Server thread/WARN]: [WorldEdit]  as your server software. 
+[17:19:20] [Server thread/WARN]: [WorldEdit]   
+[17:19:20] [Server thread/WARN]: [WorldEdit]  Paper offers significant performance improvements,
+[17:19:20] [Server thread/WARN]: [WorldEdit]  bug fixes, security enhancements and optional
+[17:19:20] [Server thread/WARN]: [WorldEdit]  features for server owners to enhance their server.
+[17:19:20] [Server thread/WARN]: [WorldEdit]   
+[17:19:20] [Server thread/WARN]: [WorldEdit]  Paper includes Timings v2, which is significantly
+[17:19:20] [Server thread/WARN]: [WorldEdit]  better at diagnosing lag problems over v1.
+[17:19:20] [Server thread/WARN]: [WorldEdit]   
+[17:19:20] [Server thread/WARN]: [WorldEdit]  All of your plugins should still work, and the
+[17:19:20] [Server thread/WARN]: [WorldEdit]  Paper community will gladly help you fix any issues.
+[17:19:20] [Server thread/WARN]: [WorldEdit]   
+[17:19:20] [Server thread/WARN]: [WorldEdit]  Join the Paper Community @ https://papermc.io
+[17:19:20] [Server thread/WARN]: [WorldEdit] ====================================================
+[17:19:20] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v1.15-28;dce9e54
+[17:19:20] [Server thread/INFO]: [FastAsyncWorldEdit] Loading FastAsyncWorldEdit v1.14
+[17:19:20] [Server thread/INFO]: [ProtocolLib] Loading ProtocolLib v4.5.0
+[17:19:22] [Server thread/INFO]: [Spiritcraft] Loading Spiritcraft v1.0.0
+[17:19:22] [Server thread/INFO]: [ProtocolLib] Enabling ProtocolLib v4.5.0
+[17:19:22] [Server thread/INFO]: [ProtocolLib] Started structure compiler thread.
+[17:19:22] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[17:19:22] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[17:19:22] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[17:19:22] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[17:19:22] [Server thread/INFO]: Preparing level "spirit_lobby"
+[17:19:22] [Server thread/INFO]: Reloading ResourceManager: Default, bukkit
+[17:19:24] [Server thread/INFO]: Loaded 524 recipes
+[17:19:26] [Server thread/INFO]: Registering commands with com.sk89q.worldedit.bukkit.BukkitServerInterface
+[17:19:26] [Server thread/INFO]: Preparing start region for level minecraft:overworld (Seed: -256361760893336266)
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 4%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 8%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 12%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 16%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 20%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 24%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 28%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 32%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 36%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 40%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 44%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 48%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 52%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 56%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 60%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 64%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 68%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 72%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 76%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 80%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 84%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 88%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 92%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 96%
+[17:19:26] [Server thread/INFO]: Preparing spawn area: 100%
+[17:19:26] [Server thread/INFO]: Time elapsed: 406 ms
+[17:19:26] [Server thread/INFO]: [FastAsyncWorldEdit] Enabling FastAsyncWorldEdit v1.14
+[17:19:26] [Server thread/INFO]: [Spiritcraft] Enabling Spiritcraft v1.0.0
+[17:19:26] [Server thread/INFO]: Preparing start region for level 1 (Seed: 4053682364279397283)
+[17:19:27] [Server thread/ERROR]: Error occurred while enabling Spiritcraft v1.0.0 (Is it up to date?)
+net.minecraft.server.v1_13_R2.ReportedException: Exception generating new chunk
+	at net.minecraft.server.v1_13_R2.ChunkProviderServer.a(ChunkProviderServer.java:172) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkProviderServer.getChunkAt(ChunkProviderServer.java:114) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.craftbukkit.v1_13_R2.CraftServer.createWorld(CraftServer.java:991) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.Bukkit.createWorld(Bukkit.java:486) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.WorldCreator.createWorld(WorldCreator.java:279) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at com.kabryxis.spiritcraft.game.a.world.WorldManager.getWorld(WorldManager.java:87) ~[?:?]
+	at com.kabryxis.kabutils.spigot.world.Locations.deserialize(Locations.java:40) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.WorldManager.lambda$new$0(WorldManager.java:45) ~[?:?]
+	at com.kabryxis.kabutils.data.file.yaml.ConfigSection.getCustom(ConfigSection.java:254) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.Arena.reloadData(Arena.java:34) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.Arena.<init>(Arena.java:29) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.ArenaManager.lambda$new$0(ArenaManager.java:22) ~[?:?]
+	at com.kabryxis.kabutils.data.Arrays.forEach(Arrays.java:36) ~[?:?]
+	at com.kabryxis.kabutils.data.file.KFiles.forEachFileWithEnding(KFiles.java:16) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.ArenaManager.<init>(ArenaManager.java:22) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.world.WorldManager.<init>(WorldManager.java:48) ~[?:?]
+	at com.kabryxis.spiritcraft.game.a.game.SpiritGame.<init>(SpiritGame.java:73) ~[?:?]
+	at com.kabryxis.spiritcraft.Spiritcraft.onEnable(Spiritcraft.java:58) ~[?:?]
+	at org.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:265) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:347) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:410) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.craftbukkit.v1_13_R2.CraftServer.enablePlugin(CraftServer.java:436) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.craftbukkit.v1_13_R2.CraftServer.enablePlugins(CraftServer.java:350) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.l(MinecraftServer.java:580) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.a(MinecraftServer.java:542) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.a(MinecraftServer.java:420) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.DedicatedServer.init(DedicatedServer.java:294) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.run(MinecraftServer.java:698) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.lang.Thread.run(Thread.java:834) [?:?]
+Caused by: java.util.concurrent.CompletionException: java.lang.UnsupportedOperationException: Custom generator is missing required method generateChunkData
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:314) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:319) ~[?:?]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:645) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:478) ~[?:?]
+	at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:260) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture.uniApplyNow(CompletableFuture.java:677) ~[?:?]
+	at java.util.concurrent.CompletableFuture.uniApplyStage(CompletableFuture.java:658) ~[?:?]
+	at java.util.concurrent.CompletableFuture.thenApplyAsync(CompletableFuture.java:2104) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:147) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus$1.a(SourceFile:53) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus$1.a(SourceFile:27) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:115) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler.a(SourceFile:61) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run$$$capture(CompletableFuture.java:1700) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java) ~[?:?]
+	at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:260) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture.asyncSupplyStage(CompletableFuture.java:1714) ~[?:?]
+	at java.util.concurrent.CompletableFuture.supplyAsync(CompletableFuture.java:1931) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler.a(SourceFile:62) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.SchedulerBatch.a(SourceFile:39) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkProviderServer.getChunkAt(ChunkProviderServer.java:109) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	... 27 more
+Caused by: java.lang.UnsupportedOperationException: Custom generator is missing required method generateChunkData
+	at org.bukkit.generator.ChunkGenerator.generateChunkData(ChunkGenerator.java:79) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.craftbukkit.v1_13_R2.generator.CustomChunkGenerator.createChunk(CustomChunkGenerator.java:61) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkTaskBase.a(SourceFile:13) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkTask.a(SourceFile:35) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:95) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkTaskScheduler.a(ChunkTaskScheduler.java:75) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkTaskScheduler.a(ChunkTaskScheduler.java:1) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:147) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:478) ~[?:?]
+	at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:260) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture.uniApplyNow(CompletableFuture.java:677) ~[?:?]
+	at java.util.concurrent.CompletableFuture.uniApplyStage(CompletableFuture.java:658) ~[?:?]
+	at java.util.concurrent.CompletableFuture.thenApplyAsync(CompletableFuture.java:2104) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:147) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus$1.a(SourceFile:53) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus$1.a(SourceFile:27) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:105) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkStatus.a(SourceFile:22) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:143) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.Map.computeIfAbsent(Map.java:1003) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:137) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler$a.a(SourceFile:115) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.Scheduler.a(SourceFile:61) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run$$$capture(CompletableFuture.java:1700) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java) ~[?:?]
+	at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:260) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.util.concurrent.CompletableFuture.asyncSupplyStage(CompletableFuture.java:1714) ~[?:?]
+	at java.util.concurrent.CompletableFuture.supplyAsync(CompletableFuture.java:1931) ~[?:?]
+	at net.minecraft.server.v1_13_R2.Scheduler.a(SourceFile:62) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.SchedulerBatch.a(SourceFile:39) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.ChunkProviderServer.getChunkAt(ChunkProviderServer.java:109) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	... 27 more
+[17:19:27] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[17:19:27] [Server thread/INFO]: Done (5.220s)! For help, type "help"
+[17:27:24] [Server thread/INFO]: Stopping the server
+[17:27:24] [Server thread/INFO]: Stopping server
+[17:27:24] [Server thread/INFO]: [Spiritcraft] Disabling Spiritcraft v1.0.0
+[17:27:24] [Server thread/ERROR]: Error occurred while disabling Spiritcraft v1.0.0 (Is it up to date?)
+java.lang.NullPointerException: null
+	at com.kabryxis.spiritcraft.Spiritcraft.onDisable(Spiritcraft.java:74) ~[?:?]
+	at org.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:267) ~[server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.plugin.java.JavaPluginLoader.disablePlugin(JavaPluginLoader.java:371) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.plugin.SimplePluginManager.disablePlugin(SimplePluginManager.java:429) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.plugin.SimplePluginManager.disablePlugins(SimplePluginManager.java:422) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at org.bukkit.craftbukkit.v1_13_R2.CraftServer.disablePlugins(CraftServer.java:370) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.stop(MinecraftServer.java:621) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at net.minecraft.server.v1_13_R2.MinecraftServer.run(MinecraftServer.java:766) [server.jar:git-Spigot-1a3504a-84f3da3]
+	at java.lang.Thread.run(Thread.java:834) [?:?]
+[17:27:24] [Server thread/INFO]: [ProtocolLib] Disabling ProtocolLib v4.5.0
+[17:27:24] [Server thread/INFO]: [FastAsyncWorldEdit] Disabling FastAsyncWorldEdit v1.14
+[17:27:24] [Server thread/INFO]: [WorldEdit] Disabling WorldEdit v1.15-28;dce9e54
+[17:27:24] [Server thread/INFO]: Unregistering com.sk89q.worldedit.bukkit.BukkitServerInterface from WorldEdit
+[17:27:24] [Server thread/INFO]: Saving players
+[17:27:24] [Server thread/INFO]: Saving worlds
+[17:27:24] [Server thread/INFO]: Saving chunks for level 'spirit_lobby'/minecraft:overworld
+[17:27:24] [Server thread/INFO]: Saving chunks for level 'spirit_overworld'/minecraft:overworld

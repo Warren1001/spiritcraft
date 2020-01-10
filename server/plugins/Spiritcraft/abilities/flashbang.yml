@@ -1,0 +1,16 @@
+triggers:
+  left:
+    type: LEFT_CLICK
+    requires:
+    - 'hand~type:nether_star'
+    actions:
+    - 'sound~name:flashbang_explode'
+    - 'nearby~radius:3.5,affects:hunters,ability:potion~type:blindness,duration:4,force:true'
+    - remove_hand
+  right:
+    type: RIGHT_CLICK
+    requires:
+    - 'hand~type:nether_star'
+    actions:
+    - 'throw_item_delayed~delay:40,finish:sound~name:flashbang_explode||nearby~radius:3.5,affects:hunters,ability:potion~type:blindness,duration:4,force:true'
+    - remove_hand

@@ -1,0 +1,9 @@
+effect: FLAME
+particle-count: 15
+item:
+  ==: ib
+  type: BLAZE_POWDER
+  name: '&eFlame'
+  lore:
+  - '&r'
+  - '&cWell suited for most environments.'

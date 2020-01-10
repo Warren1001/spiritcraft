@@ -2,7 +2,6 @@ package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import org.bukkit.Material;
 
 import java.io.File;
@@ -16,7 +15,7 @@ public class ArenaSchematic extends SchematicWrapper implements Weighted {
 	private final Set<Material> protectedBlocks = EnumSet.noneOf(Material.class);
 	
 	public ArenaSchematic(Config data) {
-		this(new File(data.getFile().getParent(), String.format("%s.%s", data.get("sch", data.getName()), ClipboardFormat.SCHEMATIC.getExtension())), data);
+		this(new File(data.getFile().getParent(), String.format("%s.%s", data.get("sch", data.getName()), "schematic")), data);
 	}
 	
 	public ArenaSchematic(File schematicFile, File dataFile) {

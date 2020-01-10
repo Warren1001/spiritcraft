@@ -1,12 +1,12 @@
 package com.kabryxis.spiritcraft.game.object.type.objective.action;
 
-import com.boydti.fawe.FaweCache;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.string.Strings;
 import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import java.util.function.Predicate;
 
 public class BlocksAction extends SpiritGameObjectAction {
 	
-	private Predicate<BaseBlock> forPredicate;
-	private BaseBlock block;
+	private Predicate<BlockState> forPredicate;
+	private BlockState block;
 	
 	public BlocksAction(ConfigSection creatorData) {
 		super(creatorData, "blocks");
@@ -30,7 +30,7 @@ public class BlocksAction extends SpiritGameObjectAction {
 				material = Integer.parseInt(args[0]);
 				data = Integer.parseInt(args[1]);
 			}
-			block = FaweCache.getBlock(material, data);
+			block = BaseBlock.getState(material, data);
 		});
 	}
 	
@@ -39,7 +39,7 @@ public class BlocksAction extends SpiritGameObjectAction {
 		super.perform(triggerData);
 		EditSession editSession = game.getCurrentWorldData().getArena().getEditSession();
 		game.getCurrentWorldData().getTotalRegion().forEach(bv -> {
-			BaseBlock forBlock = editSession.getBlock(bv);
+			BlockState forBlock = editSession.getBlock(bv);
 			if(forPredicate.test(forBlock)) {
 				try {
 					editSession.setBlock(bv, block);
@@ -51,17 +51,17 @@ public class BlocksAction extends SpiritGameObjectAction {
 		editSession.flushQueue();
 	}
 	
-	private Predicate<BaseBlock> parseFor(String string) {
+	private Predicate<BlockState> parseFor(String string) {
 		List<Boolean> orsAndAnds = new ArrayList<>();
 		for(char c : string.toCharArray()) {
 			if(c == '|' || c == '&') orsAndAnds.add(c == '&');
 		}
 		if(orsAndAnds.size() == 0) return constructPredicate(string);
 		String[] predicateArgs = string.split("[|&]");
-		Predicate<BaseBlock> previous = null;
+		Predicate<BlockState> previous = null;
 		for(int i = 0; i < predicateArgs.length; i++) {
 			String predicateArg = predicateArgs[i];
-			Predicate<BaseBlock> predicate = constructPredicate(predicateArg);
+			Predicate<BlockState> predicate = constructPredicate(predicateArg);
 			if(i == 0) {
 				previous = predicate;
 				continue;
@@ -71,18 +71,18 @@ public class BlocksAction extends SpiritGameObjectAction {
 		return previous;
 	}
 	
-	private Predicate<BaseBlock> constructPredicate(String string) {
+	private Predicate<BlockState> constructPredicate(String string) {
 		String[] args = Strings.split(string, "-");
 		if(args.length != 1) {
 			String cmd = args[0].toLowerCase();
 			if(cmd.equals("id")) {
 				int material = Integer.parseInt(args[1]);
-				return block -> block.getId() == material;
+				return block -> block.getInternalBlockTypeId() == material;
 			}
-			else if(cmd.equals("data")) {
+			/*else if(cmd.equals("data")) { TODO
 				int data = Integer.parseInt(args[1]);
-				return block -> block.getData() == data;
-			}
+				return block -> block.getBlockType()..getData() == data;
+			}*/
 		}
 		throw new IllegalArgumentException(String.format("Cannot parse String '%s'", string));
 	}

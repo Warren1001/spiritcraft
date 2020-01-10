@@ -1,0 +1,11 @@
+triggers:
+  click:
+    type:
+    - LEFT_CLICK
+    - RIGHT_CLICK
+    requires:
+    - 'hand~type:blaze_powder'
+    actions:
+    - 'sound~name:fire_breath'
+    - fire_breath
+    - remove_hand

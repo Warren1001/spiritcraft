@@ -7,13 +7,11 @@ import org.bukkit.block.Block;
 public class FloatingBlock {
 	
 	protected final Location loc;
-	private final int id;
-	private final byte data;
+	private final Material type;
 	
 	public FloatingBlock(Block block) {
 		loc = block.getLocation().add(0.5, 0.5, 0.5);
-		id = block.getTypeId();
-		data = block.getData();
+		type = block.getType();
 	}
 	
 	public void start() {
@@ -21,7 +19,7 @@ public class FloatingBlock {
 	}
 	
 	public void end() {
-		loc.getBlock().setTypeIdAndData(id, data, false);
+		loc.getBlock().setType(type, false);
 	}
 	
 }

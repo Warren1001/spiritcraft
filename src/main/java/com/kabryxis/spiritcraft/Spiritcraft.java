@@ -16,7 +16,7 @@ import com.kabryxis.spiritcraft.game.AttackHiddenPlayerAdapter;
 import com.kabryxis.spiritcraft.game.a.game.*;
 import com.kabryxis.spiritcraft.game.a.parse.CommandHandler;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -28,16 +28,16 @@ import java.util.function.Function;
 
 public class Spiritcraft extends JavaPlugin {
 	
-	public static final Function<String, Vector> DESERIALIZE_VECTOR = string -> {
+	public static final Function<String, BlockVector3> DESERIALIZE_VECTOR = string -> {
 		String[] args = string.split(",");
-		return new Vector(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
+		return BlockVector3.at(Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]));
 	};
 	
 	static {
 		SpigotSerialization.registerSerializers();
-		ConfigSection.addDeserializer(Vector.class, DESERIALIZE_VECTOR);
+		ConfigSection.addDeserializer(BlockVector3.class, DESERIALIZE_VECTOR);
 		ConfigSection.addDeserializer(Material.class, Material::matchMaterial);
-		CommandHandler.registerDataConverter(Vector.class, DESERIALIZE_VECTOR);
+		CommandHandler.registerDataConverter(BlockVector3.class, DESERIALIZE_VECTOR);
 		CommandHandler.registerDataConverter(Material.class, Material::matchMaterial);
 	}
 	

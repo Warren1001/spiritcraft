@@ -1,0 +1,192 @@
+ghost:
+  basic:
+    slot: 0
+    max-amount: 1
+    item:
+      type: WOOD_SWORD
+      name: '&fBasic Attacks'
+    items:
+      wooden_sword:
+        slot: 0
+        weight: 1
+        value: 1
+        item:
+          type: WOOD_SWORD
+          name: Wooden Sword
+          lore:
+          - '&r'
+          - '&cSmack people.'
+          custom:
+            AbiId: 1
+      stick:
+        slot: 1
+        weight: 1
+        value: 1
+        item:
+          type: STICK
+          name: Cane
+          lore:
+          - '&r'
+          - '&cSmack people really far.'
+          enchants:
+            knockback: 3
+  finisher:
+    slot: 1
+    max-amount: 1
+    item:
+      type: SHEARS
+      name: '&fFinisher Attacks'
+    items:
+      stab:
+        slot: 0
+        weight: 1
+        value: 1
+        item:
+          type: SHEARS
+          name: Stab
+          lore:
+          - '&r'
+          - '&cA charge-up that one shots people.'
+          uid: uidsc
+          custom:
+            AbiId: 1
+  utility:
+    slot: 2
+    item:
+      type: NETHER_STAR
+      name: '&fUtility Skills'
+    items:
+      flashbang:
+        slot: 0
+        weight: 1
+        value: 1
+        max_amount: 5
+        item:
+          type: NETHER_STAR
+          name: Flashbang
+          lore:
+          - '&r'
+          - '&cThrow a Flashbang. Blinds Hunters.'
+      distract:
+        slot: 1
+        weight: 1
+        value: 1
+        item:
+          type: BONE
+          name: Distract
+          lore:
+          - '&r'
+          - '&cTricks the Hunters into thinking'
+          - "&cyou're somewhere that you're not."
+      break_blocks:
+        slot: 2
+        weight: 1
+        value: 1
+        item:
+          type: DIAMOND_PICKAXE
+          name: Toggle Breaking Blocks
+          lore:
+          - '&r'
+          - '&cAllows you to throw blocks around the map.'
+          - '&cWhich blocks you can break and how far you'
+          - '&c  can break them from is different per map.'
+          flags:
+          - HIDE_ENCHANTS
+          custom:
+            AbiId: 2219
+  aoe:
+    slot: 3
+    item:
+      type: MAGMA_CREAM
+      name: '&fArea of Effect Skills'
+    items:
+      grenade:
+        slot: 0
+        weight: 1
+        value: 1
+        max_amount: 3
+        item:
+          type: MAGMA_CREAM
+          name: Grenade
+          lore:
+          - '&r'
+          - '&cThrow a Grenade, explodes and hurts Hunters.'
+      trailing_arrow:
+        slot: 1
+        weight: 1
+        value: 1
+        item:
+          type: ARROW
+          name: Trailing Arrow
+          lore:
+          - '&r'
+          - "&cShoots an arrow of death where you're looking."
+  escape:
+    slot: 4
+    max-amount: 2
+    item:
+      type: WOOL
+      name: '&fEscape Abilities'
+    items:
+      cloud:
+        slot: 0
+        weight: 1
+        value: 1
+        item:
+          type: WOOL
+          name: Cloud
+          lore:
+          - '&r'
+          - '&cThrows a Wool, spawns a cloud of particles.'
+  ultimate:
+    slot: 5
+    max-amount: 1
+    item:
+      type: BLAZE_POWDER
+      name: '&fUltimate Abilities'
+    items:
+      fire_breath:
+        slot: 0
+        weight: 1
+        value: 1
+        item:
+          type: BLAZE_POWDER
+          name: Fire Breath
+          lore:
+          - '&r'
+          - '&cBreathe out fire, burning your enemies.'
+hunter:
+  basic:
+    slot: 0
+    max-amount: 1
+    item:
+      type: WOOD_SWORD
+      name: '&fBasic Attacks'
+    items:
+      wooden_sword:
+        slot: 0
+        weight: 1
+        value: 1
+        item:
+          type: WOOD_SWORD
+          name: Wooden Sword
+          lore:
+          - '&r'
+          - '&cSmack people.'
+  utility:
+    slot: 1
+    item:
+      type: ENDER_PEARL
+      name: '&fUtility Skills'
+    items:
+      grenade:
+        slot: 0
+        weight: 1
+        value: 1
+        max_amount: 3
+        item:
+          type: ENDER_PEARL
+          name: Grenade
+          lore:
+          - '&r'
+          - '&cAllahu Akbar.'

@@ -1,0 +1,17 @@
+spirit_overworld:
+  ==: wc
+  world-name: spirit_overworld
+  environment: NORMAL
+  type: FLAT
+  generator: empty
+spirit_end:
+  ==: wc
+  world-name: spirit_end
+  environment: THE_END
+  generator: empty
+spirit_lobby:
+  ==: wc
+  world-name: spirit_lobby
+  environment: NORMAL
+  type: FLAT
+  generator: empty

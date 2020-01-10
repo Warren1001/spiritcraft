@@ -1,0 +1,13 @@
+triggers:
+  right:
+    type: RIGHT_CLICK
+    requires:
+    - 'hand~type:arrow'
+    actions:
+    - 'infront~lookmod:0.85,ability:trailing_arrow~velmod:0.85'
+  left:
+    type: LEFT_CLICK
+    requires:
+    - 'hand~type:arrow'
+    actions:
+    - 'infront~lookmod:-0.85,ability:trailing_arrow~velmod:-0.85'

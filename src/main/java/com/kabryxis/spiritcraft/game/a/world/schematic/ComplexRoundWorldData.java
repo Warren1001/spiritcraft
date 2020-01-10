@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.FaweCache;
-import com.boydti.fawe.object.schematic.Schematic;
+import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -11,18 +10,19 @@ import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.kabutils.spigot.world.Locations;
 import com.kabryxis.spiritcraft.game.a.world.Arena;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
-import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionOperationException;
-import com.sk89q.worldedit.world.biome.BaseBiome;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.biome.BiomeTypes;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ComplexRoundWorldData implements RoundWorldData {
@@ -30,13 +30,13 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	protected final WorldManager worldManager;
 	protected final Config data;
 	protected final Arena arena;
-	protected final BaseBiome biome;
+	protected final BiomeType biome;
 	protected final boolean hasWeather;
 	protected final boolean hasLightning;
 	protected final List<ComplexSchematicDataEntry> dataEntries;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
-	protected final Set<BlockVector2D> occupiedChunks;
+	protected final LocalBlockVector2DSet occupiedChunks;
 	
 	protected Region totalRegion;
 	
@@ -50,13 +50,13 @@ public class ComplexRoundWorldData implements RoundWorldData {
 			List<ComplexSchematicDataEntry> dataEntriesCopy = dataEntries = dataContainerLists.stream()
 					.map(RandomArrayList::random).collect(Collectors.toList());
 			arena = worldManager.getArenaManager().random(object -> object instanceof Arena &&
-					dataEntriesCopy.stream().allMatch(dataEntry -> ((Arena)object).fits(dataEntry.getSchematic().getClipboard().getDimensions())));
+					dataEntriesCopy.stream().allMatch(dataEntry -> ((Arena)object).fits(dataEntry.getSchematic().getDimensions())));
 			count++;
 		}
 		if(arena == null) throw new IllegalStateException("no arena compatible with a certain ComplexRoundWorldData");
 		this.arena = arena;
 		Biome bukkitBiome = data.getEnum("biome", Biome.class);
-		biome = bukkitBiome == null ? null : FaweCache.getBiome(bukkitBiome.ordinal());
+		biome = bukkitBiome == null ? null : BiomeTypes.getLegacy(bukkitBiome.ordinal());
 		hasWeather = data.getBoolean("weather", false);
 		hasLightning = data.getBoolean("lightning", false);
 		this.dataEntries = dataEntries;
@@ -77,7 +77,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		System.out.println("ComplexRoundWorldData loaded");
 		Location arenaLoc = arena.getLocation();
 		for(ComplexSchematicDataEntry dataEntry : dataEntries) {
-			Schematic schematic = dataEntry.getSchematic();
+			Clipboard schematic = dataEntry.getSchematic();
 			schematic.paste(editSession, arena.getVectorLocation(), false);
 			recalcTotalRegion(schematic);
 			if(dataEntry.hasData()) {
@@ -89,16 +89,16 @@ public class ComplexRoundWorldData implements RoundWorldData {
 			}
 		}
 		try {
-			totalRegion.expand(new Vector(-32, 0, -32), new Vector(32, 0, 32));
+			totalRegion.expand(BlockVector3.at(-32, 0, -32), BlockVector3.at(32, 0, 32));
 		} catch(RegionOperationException e) {
 			e.printStackTrace();
 		}
 		for(int cx = (totalRegion.getMinimumPoint().getBlockX() >> 4); cx <= (totalRegion.getMaximumPoint().getBlockX() >> 4); cx++) {
 			for(int cz = (totalRegion.getMinimumPoint().getBlockZ() >> 4); cz <= (totalRegion.getMaximumPoint().getBlockZ() >> 4); cz++) {
-				occupiedChunks.add(new BlockVector2D(cx, cz));
+				occupiedChunks.add(cx, cz);
 			}
 		}
-		Vector min = totalRegion.getMinimumPoint(), max = totalRegion.getMaximumPoint();
+		BlockVector3 min = totalRegion.getMinimumPoint(), max = totalRegion.getMaximumPoint();
 		for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 				editSession.setBiome(x, 0, z, biome);
@@ -106,7 +106,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		}
 		editSession.flushQueue();
 		//worldManager.getGame().getTaskManager().start(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.
-		editSession.getQueue().getRelighter().removeAndRelight(true);
+		//editSession.getBlockBag().getQueue().getRelighter().removeAndRelight(true); TODO
 		//worldManager.loadChunks(this, arena.getLocation().getWorld(), occupiedChunks);
 		//editSession.getQueue().getRelighter().fixSkyLighting();
 			//FaweAPI.fixLighting(editSession.getWorld(), totalRegion, editSession.getQueue(), FaweQueue.RelightMode.ALL);
@@ -116,11 +116,12 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		// either design maps with no corner blocks or find out how to relight without lag while players occupy the chunks
 	}
 	
-	private void recalcTotalRegion(Schematic newSchematic) {
-		Vector loc = arena.getVectorLocation();
-		Region region = newSchematic.getClipboard().getRegion();
+	private void recalcTotalRegion(Clipboard newSchematic) {
+		BlockVector3 loc = arena.getVectorLocation();
+		Region region = newSchematic.getRegion();
 		try {
-			region.shift(loc.subtract(newSchematic.getClipboard().getOrigin()));
+			BlockVector3 origin = newSchematic.getOrigin();
+			region.shift(loc.subtract(origin.getX(), origin.getY(), origin.getZ()));
 		} catch(RegionOperationException e) {
 			throw new RuntimeException(e);
 		}
@@ -129,7 +130,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 			return;
 		}
 		double mix, miy, miz, max, may, maz;
-		Vector currMin = totalRegion.getMinimumPoint(), currMax = totalRegion.getMaximumPoint(),
+		BlockVector3 currMin = totalRegion.getMinimumPoint(), currMax = totalRegion.getMaximumPoint(),
 				newMin = region.getMinimumPoint(), newMax = region.getMaximumPoint();
 		mix = Math.min(currMin.getX(), newMin.getX());
 		miy = Math.min(currMin.getY(), newMin.getY());
@@ -137,7 +138,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		max = Math.max(currMax.getX(), newMax.getX());
 		may = Math.max(currMax.getY(), newMax.getY());
 		maz = Math.max(currMax.getZ(), newMax.getZ());
-		totalRegion = new CuboidRegion(new Vector(mix, miy, miz), new Vector(max, may, maz));
+		totalRegion = new CuboidRegion(BlockVector3.at(mix, miy, miz), BlockVector3.at(max, may, maz));
 	}
 	
 	@Override
@@ -157,7 +158,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	public void unload() {
 		//CustomEntityRegistry.removeAll(spawnedEntities); // removes non custom entities as well
 		//spawnedEntities.clear();
-		editSession.setBlocks(totalRegion, FaweCache.getBlock(0, 0));
+		editSession.setBlocks(totalRegion, BaseBlock.getState(0, 0));
 		editSession.flushQueue();
 		//FaweAPI.fixLighting(editSession.getWorld(), totalRegion, editSession.getQueue(), FaweQueue.RelightMode.ALL);
 		worldManager.unloadChunks(this);
@@ -175,7 +176,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	}
 	
 	@Override
-	public Location toLocation(Vector pos) {
+	public Location toLocation(BlockVector3 pos) {
 		return arena.getLocation().add(pos.getX(), pos.getY(), pos.getZ());
 	}
 	

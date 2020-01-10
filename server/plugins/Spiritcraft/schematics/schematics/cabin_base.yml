@@ -1,0 +1,21 @@
+weight: 1000
+spawns:
+  hunter:
+  - 0.5,0.0,5.5,-0.5,0.0
+  ghost:
+  - 0.5,0.0,5.5,-0.5,0.0
+objectives:
+  lights:
+    location: '0,0,5'
+    triggers:
+      test:
+        type: LEFT_CLICK
+        actions:
+        - 'blocks~for:id-123,set:124'
+  burn_down:
+    location: '0,0,6'
+    triggers:
+      test:
+        type: LEFT_CLICK
+        actions:
+        - 'burn_down'

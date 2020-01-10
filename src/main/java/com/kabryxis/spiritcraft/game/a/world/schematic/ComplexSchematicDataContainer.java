@@ -1,12 +1,12 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.schematic.Schematic;
 import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.RandomArrayList;
 import com.kabryxis.kabutils.random.weighted.WeightedRandomArrayList;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ComplexSchematicDataContainer implements SchematicDataContainer {
 	public ComplexSchematicDataEntry constructDataEntry(String line) {
 		if(line.contains(",")) {
 			String[] kvArgs = line.split(",");
-			Schematic schematic = null;
+			Clipboard schematic = null;
 			Config data = null;
 			int weight = 1000;
 			//Arena arena = null;

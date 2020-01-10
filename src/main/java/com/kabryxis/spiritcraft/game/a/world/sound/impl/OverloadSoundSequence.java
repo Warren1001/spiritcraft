@@ -44,7 +44,7 @@ public class OverloadSoundSequence implements SoundPlayer {
 					}
 				}
 				if(tick == 0 || tick - lastTicked >= soundInterval) {
-					cause.playSound(Sound.PORTAL, 10F, 10F);
+					cause.playSound(Sound.BLOCK_PORTAL_TRAVEL, 10F, 10F);
 					lastTicked = tick;
 				}
 			}

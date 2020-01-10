@@ -2,7 +2,7 @@ package com.kabryxis.spiritcraft.game.object.type.objective.action;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
@@ -15,15 +15,15 @@ public class ExplodeAction extends SpiritGameObjectAction {
 	
 	private final Block objectiveBlock;
 	
-	private Vector min, max, center;
+	private BlockVector3 min, max, center;
 	private int protectX, protectZ;
 	
 	public ExplodeAction(ConfigSection creatorData) {
 		super(creatorData, "explode");
 		this.objectiveBlock = creatorData.get("objectiveBlock");
-		handleSubCommand("min", true, Vector.class, data -> min = data);
-		handleSubCommand("max", true, Vector.class, data -> max = data);
-		handleSubCommand("center", true, Vector.class, data -> center = data);
+		handleSubCommand("min", true, BlockVector3.class, data -> min = data);
+		handleSubCommand("max", true, BlockVector3.class, data -> max = data);
+		handleSubCommand("center", true, BlockVector3.class, data -> center = data);
 		handleSubCommand("protect", true, true, data -> {
 			String[] dataArgs = data.split(",");
 			protectX = Integer.parseInt(dataArgs[0]);
@@ -36,11 +36,11 @@ public class ExplodeAction extends SpiritGameObjectAction {
 		Random rand = new Random();
 		Block block = objectiveBlock;
 		World world = block.getWorld();
-		world.playSound(block.getLocation(), Sound.FIZZ, 5F, 0.5F);
+		world.playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 5F, 0.5F);
 		Location center = game.getCurrentWorldData().toLocation(this.center);
 		game.getTaskManager().start(() -> {
-			world.playSound(center, Sound.EXPLODE, 5F, 0.5F);
-			world.playEffect(center, Effect.EXPLOSION_HUGE, 10);
+			world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 5F, 0.5F);
+			world.spawnParticle(Particle.EXPLOSION_HUGE, center, 10);
 			for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 				for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 					for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {

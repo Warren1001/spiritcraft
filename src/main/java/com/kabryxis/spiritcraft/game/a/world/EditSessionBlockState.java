@@ -1,15 +1,16 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.boydti.fawe.FaweCache;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -34,13 +35,12 @@ public class EditSessionBlockState implements BlockState {
     @Override
     public boolean update(boolean flush) {
         try {
-            editSession.setBlock(new BlockVector(getX(), getY(), getZ()), FaweCache.getBlock(getTypeId(), getRawData()));
+            editSession.setBlock(BlockVector3.at(getX(), getY(), getZ()), BaseBlock.getState(getType().getId(), getRawData()));
             if(flush) editSession.flushQueue();
-            return true;
-        } catch (MaxChangedBlocksException e) {
+        } catch(MaxChangedBlocksException e) {
             e.printStackTrace();
-            return false;
         }
+        return true;
     }
 
     @Override
@@ -61,16 +61,15 @@ public class EditSessionBlockState implements BlockState {
     public MaterialData getData() {
         return state.getData();
     }
-
+    
+    @Override
+    public BlockData getBlockData() {
+        return state.getBlockData();
+    }
+    
     @Override
     public Material getType() {
         return state.getType();
-    }
-
-    @Deprecated
-    @Override
-    public int getTypeId() {
-        return state.getTypeId();
     }
 
     @Override
@@ -117,16 +116,15 @@ public class EditSessionBlockState implements BlockState {
     public void setData(MaterialData materialData) {
         state.setData(materialData);
     }
-
+    
+    @Override
+    public void setBlockData(BlockData data) {
+        state.setBlockData(data);
+    }
+    
     @Override
     public void setType(Material material) {
         state.setType(material);
-    }
-
-    @Deprecated
-    @Override
-    public boolean setTypeId(int i) {
-        return state.setTypeId(i);
     }
 
     @Deprecated
