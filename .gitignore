@@ -1,7 +1,4 @@
 *target*
 .project
 .classpath
-.settings/
-.idea/
-*.iml
 src/test/
