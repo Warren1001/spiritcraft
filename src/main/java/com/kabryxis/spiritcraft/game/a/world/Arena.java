@@ -1,18 +1,21 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
 import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.random.weighted.Weighted;
 import com.kabryxis.kabutils.spigot.world.ImmutableLocation;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Arena implements Weighted {
 	
-	private final LocalBlockVector2DSet occupiedChunks = new LocalBlockVector2DSet();
+	private final Set<BlockVector2> occupiedChunks = new HashSet<>();
 	
 	private final WorldManager worldManager;
 	private final Config data;
@@ -46,7 +49,7 @@ public class Arena implements Weighted {
 		int macz = cz + data.getInt("load.max.cz", 3);
 		for(cx = micx; cx <= macx; cx++) {
 			for(cz = micz; cz <= macz; cz++) {
-				occupiedChunks.add(cx, cz);
+				occupiedChunks.add(BlockVector2.at(cx, cz));
 			}
 		}
 	}
@@ -71,10 +74,8 @@ public class Arena implements Weighted {
 		return editSession;
 	}
 	
-	public LocalBlockVector2DSet getOccupiedChunks() {
-		LocalBlockVector2DSet copy = new LocalBlockVector2DSet();
-		copy.addAll(occupiedChunks);
-		return copy;
+	public Set<BlockVector2> getOccupiedChunks() {
+		return new HashSet<>(occupiedChunks);
 	}
 	
 	public boolean fits(BlockVector3 dimensions) {

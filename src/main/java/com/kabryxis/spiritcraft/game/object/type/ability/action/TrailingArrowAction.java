@@ -7,7 +7,7 @@ import com.kabryxis.spiritcraft.game.object.TriggerType;
 import com.kabryxis.spiritcraft.game.object.Triggers;
 import com.kabryxis.spiritcraft.game.object.action.SpiritGameObjectAction;
 import org.bukkit.Location;
-import org.inventivetalent.particle.ParticleEffect;
+import org.bukkit.Particle;
 
 public class TrailingArrowAction extends SpiritGameObjectAction {
 
@@ -24,7 +24,7 @@ public class TrailingArrowAction extends SpiritGameObjectAction {
     public void perform(ConfigSection triggerData) {
         super.perform(triggerData);
         Location loc = Triggers.getOptimalLocation(triggerData);
-        TrailingArrow.spawn(loc, loc.getDirection().multiply(velmod), speed, game.getTaskManager(), new ParticleInfo(ParticleEffect.CRIT));
+        TrailingArrow.spawn(loc, loc.getDirection().multiply(velmod), speed, game.getTaskManager(), new ParticleInfo(Particle.CRIT));
     }
 
 }

@@ -4,10 +4,11 @@ import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
-import org.inventivetalent.particle.ParticleEffect;
 
 public class FireBreathTask extends BukkitRunnable {
 	
@@ -39,7 +40,11 @@ public class FireBreathTask extends BukkitRunnable {
 		double particleCount = Maths.floor(offset * 50);
 		if(iteration > 210) particleCount /= ((iteration - 210) / 5.0) + 1;
 		//System.out.println(iteration + ":" + offset + "," + particleCount);
-		if(iteration <= EXPLODE_ITERATION || iteration % 2 == 0) ParticleEffect.FLAME.send(owner.getPlayer().getWorld().getPlayers(), loc, offset, offset / 1.5, offset, 0, (int)particleCount);
+		if(iteration <= EXPLODE_ITERATION || iteration % 2 == 0) {
+			for(Player player : owner.getPlayer().getWorld().getPlayers()) {
+				player.spawnParticle(Particle.FLAME, loc, (int)particleCount, offset, offset / 1.5, offset);
+			}
+		}
 		iteration++;
 		if(iteration == MAX_ITERATIONS) cancel();
 	}

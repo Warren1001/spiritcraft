@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -12,6 +11,7 @@ import com.kabryxis.spiritcraft.game.a.world.Arena;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Biome;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ComplexRoundWorldData implements RoundWorldData {
@@ -36,7 +37,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	protected final List<ComplexSchematicDataEntry> dataEntries;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
-	protected final LocalBlockVector2DSet occupiedChunks;
+	protected final Set<BlockVector2> occupiedChunks;
 	
 	protected Region totalRegion;
 	
@@ -95,7 +96,7 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		}
 		for(int cx = (totalRegion.getMinimumPoint().getBlockX() >> 4); cx <= (totalRegion.getMaximumPoint().getBlockX() >> 4); cx++) {
 			for(int cz = (totalRegion.getMinimumPoint().getBlockZ() >> 4); cz <= (totalRegion.getMaximumPoint().getBlockZ() >> 4); cz++) {
-				occupiedChunks.add(cx, cz);
+				occupiedChunks.add(BlockVector2.at(cx, cz));
 			}
 		}
 		BlockVector3 min = totalRegion.getMinimumPoint(), max = totalRegion.getMaximumPoint();

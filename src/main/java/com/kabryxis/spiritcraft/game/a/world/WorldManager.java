@@ -1,6 +1,5 @@
 package com.kabryxis.spiritcraft.game.a.world;
 
-import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.kabryxis.kabutils.data.file.yaml.Config;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.serialization.WorldCreatorSerializer;
@@ -9,6 +8,7 @@ import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.serialization.LoadingLocationSerializer;
 import com.kabryxis.spiritcraft.game.a.world.schematic.RoundWorldDataManager;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicManager;
+import com.sk89q.worldedit.math.BlockVector2;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -17,6 +17,7 @@ import org.bukkit.generator.ChunkGenerator;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WorldManager implements WorldLoader {
@@ -94,7 +95,7 @@ public class WorldManager implements WorldLoader {
 		return new ArenaData(game, arena, schematic);
 	}*/
 	
-	public void loadChunks(Object key, World world, LocalBlockVector2DSet chunkVectors) {
+	public void loadChunks(Object key, World world, Set<BlockVector2> chunkVectors) {
 		chunkLoader.keepInMemory(key, chunkVectors.stream().map(vector -> world.getChunkAt(vector.getBlockX(), vector.getBlockZ())).collect(Collectors.toSet()));
 	}
 	

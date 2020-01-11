@@ -14,6 +14,7 @@ import com.kabryxis.spiritcraft.game.player.PlayerType;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -34,7 +35,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Openable;
 import org.bukkit.util.Vector;
-import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -75,8 +75,8 @@ public class GameListener implements Listener {
 		if(!event.isCancelled()) attacker.addDamageToGhost(event.getDamage()); // TODO seperate event with monitor priority
 		if(defender.getPlayerType() != PlayerType.GHOST) return;
 		Location loc = defender.getLocation().add(0, 0.75, 0);
-		ParticleEffect.BLOCK_DUST.sendData(defender.getPlayer().getWorld().getPlayers(), loc.getX(), loc.getY(), loc.getZ(),
-				0.2, 0.66, 0.2, 0, 50, new ItemStack(Material.REDSTONE_BLOCK));
+		defender.getPlayer().getWorld().getPlayers().forEach(player -> player.spawnParticle(Particle.BLOCK_DUST, loc.getX(), loc.getY(), loc.getZ(),
+				50, 0.2, 0.66, 0.2, 0, Material.REDSTONE_BLOCK.createBlockData()));
 		defender.getPlayer().getWorld().playSound(loc, Sound.ENTITY_ZOMBIE_HURT, 1F, 0.1F); // TODO call by soundmanager
 	}
 	

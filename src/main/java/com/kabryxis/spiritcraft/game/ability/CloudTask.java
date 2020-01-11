@@ -4,11 +4,11 @@ import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.*;
 
@@ -62,8 +62,8 @@ public class CloudTask extends BukkitRunnable {
 			return;
 		}
 		Random random = new Random();
-		blocksList.get(currentBlockIteration).forEach(b -> ParticleEffect.FLAME.send(loc.getWorld().getPlayers(),
-				b.getLocation().subtract(0.5, 0.5, 0.5), 0.6, 0.6, 0.6, 0, 1));
+		blocksList.get(currentBlockIteration).forEach(b -> loc.getWorld().getPlayers().forEach(player ->
+				player.spawnParticle(Particle.FLAME, b.getLocation().subtract(0.5, 0.5, 0.5), 1, 0.6, 0.6, 0.6)));
 		currentBlockIteration++;
 		if(currentBlockIteration == MAX_BLOCK_ITERATIONS) currentBlockIteration = 0;
 	}

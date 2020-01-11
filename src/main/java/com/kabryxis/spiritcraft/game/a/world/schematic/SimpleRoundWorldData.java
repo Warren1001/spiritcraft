@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
 import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.object.collection.LocalBlockVector2DSet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -15,6 +14,7 @@ import com.kabryxis.spiritcraft.game.a.world.Arena;
 import com.kabryxis.spiritcraft.game.a.world.WorldManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionOperationException;
@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 
 public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	
@@ -35,7 +36,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 	protected final boolean hasLightning;
 	protected final EditSession editSession;
 	protected final RandomArrayList<Location> ghostSpawns, hunterSpawns;
-	protected final LocalBlockVector2DSet occupiedChunks;
+	protected final Set<BlockVector2> occupiedChunks;
 	
 	protected Region totalRegion;
 	
@@ -92,7 +93,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 		}
 		for(int cx = (totalRegion.getMinimumPoint().getBlockX() >> 4) - 1; cx <= (totalRegion.getMaximumPoint().getBlockX() >> 4) + 1; cx++) {
 			for(int cz = (totalRegion.getMinimumPoint().getBlockZ() >> 4) - 1; cz <= (totalRegion.getMaximumPoint().getBlockZ() >> 4) + 1; cz++) {
-				occupiedChunks.add(cx, cz);
+				occupiedChunks.add(BlockVector2.at(cx, cz));
 			}
 		}
 		worldManager.getGame().getTaskManager().start(() -> { // relighting needs to be after all blocks are completely set or some chunks will be improperly lit, idk how better to do this.

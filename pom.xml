@@ -96,8 +96,8 @@
     </dependency>-->
     <dependency>
       <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib-API</artifactId>
-      <version>4.4.0</version>
+      <artifactId>ProtocolLib</artifactId>
+      <version>4.5.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -105,10 +105,10 @@
       <artifactId>kabutils</artifactId>
       <version>0.0.1</version>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>org.inventivetalent</groupId>
       <artifactId>particleapi</artifactId>
       <version>2.1.1</version>
-    </dependency>
+    </dependency>-->
   </dependencies>
 </project>

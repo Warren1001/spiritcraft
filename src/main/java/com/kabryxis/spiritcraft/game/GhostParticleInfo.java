@@ -7,7 +7,6 @@ import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 
 public class GhostParticleInfo extends ParticleInfo {
@@ -38,8 +37,8 @@ public class GhostParticleInfo extends ParticleInfo {
 		Location loc = player.getLocation().add(0, 1, 0);
 		List<Player> otherPlayers = player.getWorld().getPlayers();
 		otherPlayers.remove(player.getPlayer());
-		effect.send(otherPlayers, loc, offsetX, offsetY, offsetZ, speed, particleCount, displayRadius);
-		effect.send(Collections.singletonList(player.getPlayer()), loc.add(loc.getDirection().setY(0).normalize().multiply(-0.6)), offsetX, offsetY, offsetZ, speed, particleCount, displayRadius);
+		otherPlayers.forEach(otherPlayer -> otherPlayer.spawnParticle(particle, loc, particleCount, offsetX, offsetY, offsetZ, speed));
+		player.spawnParticle(particle, loc.add(loc.getDirection().setY(0).normalize().multiply(-0.6)), particleCount, offsetX, offsetY, offsetZ, speed);
 	}
 	
 }

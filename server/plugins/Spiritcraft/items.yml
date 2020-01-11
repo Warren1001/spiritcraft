@@ -3,7 +3,7 @@ ghost:
     slot: 0
     max-amount: 1
     item:
-      type: WOOD_SWORD
+      type: WOODEN_SWORD
       name: '&fBasic Attacks'
     items:
       wooden_sword:
@@ -11,7 +11,7 @@ ghost:
         weight: 1
         value: 1
         item:
-          type: WOOD_SWORD
+          type: WOODEN_SWORD
           name: Wooden Sword
           lore:
           - '&r'
@@ -125,7 +125,7 @@ ghost:
     slot: 4
     max-amount: 2
     item:
-      type: WOOL
+      type: WHITE_WOOL
       name: '&fEscape Abilities'
     items:
       cloud:
@@ -133,7 +133,7 @@ ghost:
         weight: 1
         value: 1
         item:
-          type: WOOL
+          type: WHITE_WOOL
           name: Cloud
           lore:
           - '&r'
@@ -160,7 +160,7 @@ hunter:
     slot: 0
     max-amount: 1
     item:
-      type: WOOD_SWORD
+      type: WOODEN_SWORD
       name: '&fBasic Attacks'
     items:
       wooden_sword:
@@ -168,7 +168,7 @@ hunter:
         weight: 1
         value: 1
         item:
-          type: WOOD_SWORD
+          type: WOODEN_SWORD
           name: Wooden Sword
           lore:
           - '&r'
