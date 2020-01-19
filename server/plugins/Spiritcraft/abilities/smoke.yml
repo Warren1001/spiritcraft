@@ -2,7 +2,7 @@ triggers:
   left:
     type: LEFT_CLICK
     requires:
-    - 'hand~type:wool'
+    - 'hand~type:white_wool'
     actions:
     - 'sound~name:cloud_spawn'
     - cloud
@@ -10,7 +10,7 @@ triggers:
   right:
     type: RIGHT_CLICK
     requires:
-    - 'hand~type:wool'
+    - 'hand~type:white_wool'
     actions:
     - 'throw_item_delayed~delay:40,finish:sound~name:cloud_spawn||cloud'
     - remove_hand

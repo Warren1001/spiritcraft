@@ -1,7 +1,6 @@
 package com.kabryxis.spiritcraft.game.a.world.schematic;
 
-import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
+import com.bergerkiller.bukkit.lightcleaner.lighting.LightingService;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -81,7 +80,6 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		Location arenaLoc = arena.getLocation();
 		for(ComplexSchematicDataEntry dataEntry : dataEntries) {
 			Clipboard schematic = dataEntry.getSchematic();
-			System.out.println(arena.getVectorLocation());
 			schematic.paste(editSession, arena.getVectorLocation(), false);
 			recalcTotalRegion(schematic);
 			if(dataEntry.hasData()) {
@@ -114,30 +112,12 @@ public class ComplexRoundWorldData implements RoundWorldData {
 		//worldManager.loadChunks(this, arena.getLocation().getWorld(), occupiedChunks);
 		//editSession.getQueue().getRelighter().fixSkyLighting();
 			//FaweAPI.fixLighting(editSession.getWorld(), totalRegion, editSession.getQueue(), FaweQueue.RelightMode.ALL);
-		try {
-			FaweAPI.fixLighting(editSession.getWorld(), totalRegion);
-		} catch(Exception e) {
-			System.out.println("heck");
-		}
+		Location loc = arena.getLocation();
+		LightingService.scheduleArea(loc.getWorld(), loc.getChunk().getX(), loc.getChunk().getZ(), 8);
 		worldManager.getGame().finishSetup();
 		//}, 60L);
 		// lighting bug with corner blocks (or possibly transparent blocks like doors and stairs), light isnt accurately recalculated unless player has the chunk loaded?
 		// either design maps with no corner blocks or find out how to relight without lag while players occupy the chunks
-	}
-
-	private void relight0() {
-		AsyncWorld asyncWorld = AsyncWorld.wrap(arena.getLocation().getWorld());
-		BlockVector3 bot = totalRegion.getMinimumPoint();
-		BlockVector3 top = totalRegion.getMaximumPoint();
-		int minX = bot.getBlockX() >> 4;
-		int minZ = bot.getBlockZ() >> 4;
-		int maxX = top.getBlockX() >> 4;
-		int maxZ = top.getBlockZ() >> 4;
-		for(int x = minX; x <= maxX; ++x) {
-			for(int z = minZ; z <= maxZ; ++z) {
-				asyncWorld.relightChunk(x, z);
-			}
-		}
 	}
 	
 	private void recalcTotalRegion(Clipboard newSchematic) {
@@ -168,8 +148,10 @@ public class ComplexRoundWorldData implements RoundWorldData {
 	@Override
 	public void relight() {
 		//worldManager.getGame().getTaskManager().start(() -> occupiedChunks.forEach(cv -> arena.getLocation().getWorld().refreshChunk(cv.getBlockX(), cv.getBlockZ())), 20L);
-		//worldManager.getGame().getTaskManager().start(this::relight0, 20L);
+		//worldManager.getGame().getTaskManager().start(() -> FaweAPI.fixLighting(editSession.getWorld(), totalRegion, editSession.getQueue(), FaweQueue.RelightMode.OPTIMAL), 20L);
 		//worldManager.getGame().getTaskManager().start(() -> ((NMSRelighter)editSession.getQueue().getRelighter()).sendChunks(), 15L); // TODO maybe relight sky again
+		Location loc = arena.getLocation();
+		//LightingService.scheduleArea(loc.getWorld(), loc.getChunk().getX(), loc.getChunk().getZ(), 8);
 		if(hasWeather) {
 			PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.GAME_STATE_CHANGE);
 			packet.getIntegers().write(0, 7);

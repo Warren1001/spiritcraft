@@ -42,6 +42,7 @@ public class GameObjectBase implements GameObjectAction {
 	
 	@Override
 	public void perform(ConfigSection triggerData) {
+		System.out.println(String.format("%s called: perform", name));
 		triggerGroups.stream().filter(group -> group.canPerform(triggerData)).forEach(group -> group.perform(triggerData));
 	}
 	
@@ -52,6 +53,7 @@ public class GameObjectBase implements GameObjectAction {
 	
 	@Override
 	public boolean canPerform(ConfigSection triggerData) {
+		System.out.println(String.format("%s called: canPerform", name));
 		return triggerGroups.stream().anyMatch(group -> group.canPerform(triggerData));
 	}
 	

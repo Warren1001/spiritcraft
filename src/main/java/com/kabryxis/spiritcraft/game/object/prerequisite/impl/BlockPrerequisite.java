@@ -25,7 +25,7 @@ public class BlockPrerequisite extends SpiritGameObject implements GameObjectPre
 	@Override
 	public boolean perform(ConfigSection triggerData) {
 		Block block = triggerData.get("block");
-		return type == null || (block.getType() == type && block.getData() == d);
+		return type == null || (block.getType() == type);
 	}
 	
 }

@@ -38,7 +38,7 @@ public class HandPrerequisite extends SpiritGameObject implements GameObjectPrer
 	
 	@Override
 	public boolean perform(ConfigSection triggerData) {
-		return flags.isEmpty() || builder.isOf(triggerData.get("triggerer", SpiritPlayer.class).getInventory().getItemInHand(), flags);
+		return flags.isEmpty() || builder.isOf(triggerData.get("triggerer", SpiritPlayer.class).getInventory().getItemInMainHand(), flags);
 	}
 	
 }

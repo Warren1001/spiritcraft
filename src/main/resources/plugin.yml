@@ -1,5 +1,5 @@
 name: Spiritcraft
 main: com.kabryxis.spiritcraft.Spiritcraft
 version: 1.0.0
-depend: [WorldEdit,ProtocolLib]
+depend: [WorldEdit,ProtocolLib,LightCleaner]
 api-version: '1.13'
