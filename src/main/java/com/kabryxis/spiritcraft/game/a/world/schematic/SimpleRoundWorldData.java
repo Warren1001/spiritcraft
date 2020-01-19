@@ -58,7 +58,7 @@ public class SimpleRoundWorldData implements RoundWorldData, ObjectPredicate {
 		this.data = data;
 		try {
 			File dataFile = data.getFile();
-			schematic = FaweAPI.load(new File(dataFile.getParent(), data.get("schematic", KFiles.getSimpleName(dataFile)) + ".schematic"));
+			schematic = FaweAPI.load(new File(dataFile.getParent(), data.get("schematic", KFiles.getSimpleName(dataFile)) + ".schem"));
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -15,7 +15,7 @@ public class ArenaSchematic extends SchematicWrapper implements Weighted {
 	private final Set<Material> protectedBlocks = EnumSet.noneOf(Material.class);
 	
 	public ArenaSchematic(Config data) {
-		this(new File(data.getFile().getParent(), String.format("%s.%s", data.get("sch", data.getName()), "schematic")), data);
+		this(new File(data.getFile().getParent(), String.format("%s.%s", data.get("sch", data.getName()), "schem")), data);
 	}
 	
 	public ArenaSchematic(File schematicFile, File dataFile) {

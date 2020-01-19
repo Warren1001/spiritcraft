@@ -41,7 +41,7 @@ public class SimpleSchematicDataContainer implements SchematicDataContainer {
 	public SimpleSchematicDataContainer(WorldManager worldManager, Config data, String name) {
 		this.worldManager = worldManager;
 		this.data = data;
-		schematic = worldManager.getSchematicManager().getSchematic(name.endsWith(".schematic") ? name : name + ".schematic");
+		schematic = worldManager.getSchematicManager().getSchematic(name.endsWith(".schem") ? name : name + ".schem");
 	}
 	
 	public SimpleSchematicDataContainer(WorldManager worldManager, Config data) {

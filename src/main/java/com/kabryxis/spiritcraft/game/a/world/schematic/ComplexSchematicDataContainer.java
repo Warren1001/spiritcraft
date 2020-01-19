@@ -51,7 +51,7 @@ public class ComplexSchematicDataContainer implements SchematicDataContainer {
 						File file = new File(worldManager.getSchematicManager().getFolder(), value);
 						if(file.exists()) {
 							if(value.endsWith(".yml")) data = new Config(file, true);
-							else if(value.endsWith(".schematic")) schematic = worldManager.getSchematicManager().getSchematic(KFiles.getSimpleName(file));
+							else if(value.endsWith(".schem")) schematic = worldManager.getSchematicManager().getSchematic(KFiles.getSimpleName(file));
 							else throw new IllegalArgumentException("cannot handle extension '" + value.split("\\.")[1] + "' for multi-schematic loading");
 							if(data == null && schematic == null) throw new IllegalArgumentException();
 						}
@@ -72,7 +72,7 @@ public class ComplexSchematicDataContainer implements SchematicDataContainer {
 			File file = new File(worldManager.getSchematicManager().getFolder(), line);
 			if(file.exists()) {
 				if(line.endsWith(".yml")) return new ComplexSchematicDataEntry(worldManager, new Config(file, true));
-				else if(line.endsWith(".schematic")) return new ComplexSchematicDataEntry(worldManager.getSchematicManager().getSchematic(KFiles.getSimpleName(file)));
+				else if(line.endsWith(".schem")) return new ComplexSchematicDataEntry(worldManager.getSchematicManager().getSchematic(KFiles.getSimpleName(file)));
 				else throw new IllegalArgumentException("cannot handle extension '" + line.split("\\.")[1] + "' for multi-schematic loading");
 			}
 			else throw new IllegalArgumentException("file at path '" + file.getPath() + "' could not be found.");

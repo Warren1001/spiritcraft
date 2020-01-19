@@ -1,9 +1,9 @@
 # These first 6 aren't configurable
 issues: "https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/issues"
 wiki: "https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/wiki"
-date: "5 Feb 2020 06:00:00 GMT"
-build: "https://ci.athion.net/job/FastAsyncWorldEdit-commanding-pipeline/28"
-commit: "https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/commit/f23161ac"
+date: "15 Feb 2020 06:00:00 GMT"
+build: "https://ci.athion.net/job/FastAsyncWorldEdit-1.15/45"
+commit: "https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/commit/ff35280e"
 platform: "bukkit"
 # Options: cn, de, es, fr, it, nl, ru, tr
 # Create a PR to contribute a translation: https://github.com/IntellectualSites/FastAsyncWorldEdit-1.13/tree/master/worldedit-core/src/main/resources
@@ -116,7 +116,7 @@ experimental:
 # This relates to how FAWE places chunks
 queue:
   # This should equal the number of processors you have
-  parallel-threads: 6
+  parallel-threads: 8
   progress:
     # Display constant titles about the progress of a user's edit
     #  - false = disabled

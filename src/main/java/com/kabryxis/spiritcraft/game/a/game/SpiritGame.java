@@ -106,7 +106,7 @@ public class SpiritGame {
 		abilityManager.loadAbilities();
 		lobbySpawn = plugin.getData().getCustom("lobby-spawn", Location.class);
 		worldManager.loadChunks(this, lobbySpawn, 9);
-		//loadNext(); TODO
+		loadNext();
 	}
 	
 	public Spiritcraft getPlugin() {

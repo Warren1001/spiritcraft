@@ -1,4 +1,4 @@
-effect: FLAME
+particle: FLAME
 particle-count: 15
 item:
   ==: ib

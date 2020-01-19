@@ -26,7 +26,7 @@ public class SchematicManager {
 	public Clipboard getSchematic(String name) {
 		return schematics.computeIfAbsent(name, n -> {
 			try {
-				return FaweAPI.load(new File(folder, n.endsWith(".schematic") ? n : n + ".schematic"));
+				return FaweAPI.load(new File(folder, n.endsWith(".schem") ? n : n + ".schem"));
 			} catch(IOException e) {
 				throw new RuntimeException(e);
 			}

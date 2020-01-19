@@ -2,33 +2,84 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="713db650-3868-4cae-a381-9e5dc5056328" name="Default" comment="all the updates">
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-10-4.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-10-5.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-1.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-10.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-2.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-3.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-4.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-5.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-6.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-7.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-8.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-9.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/3b60b73c-609c-48e2-9a1c-a06712973fc4.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/5f9a3942-e46c-4b1d-9a10-702c4120386d.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/625a9576-8481-47bf-a6ed-673c8bbeee12.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/f2b46ead-9173-4947-aba8-250d5cb6ab68.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/spirit_lobby/advancements/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Mansion_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Mineshaft_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Monument_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Stronghold_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Temple_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/build/data/Village_index.dat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-1.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-10.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-11.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-12.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-13.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-14.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-2.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-3.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-4.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-5.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-6.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-7.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-8.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-16-9.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/09a9fbd6-1832-4f09-9fc2-599c690b8026.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/29311831-6e67-4b76-9c05-22e2f003cc2b.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/4aae0c2e-b8a8-4212-b3fb-0b756d87eec3.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/566240da-4c26-4bb8-a137-9652fe522517.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/5e2c5754-3c2e-4869-8786-71f17371e5b8.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/706e3e81-ca1f-4f16-a5d9-862123f47216.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/7ccdaa9a-b390-4b85-b7d5-170db37d7a15.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/8449b293-5d31-4169-b584-4cfa423102b6.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/8f4afde1-5c9a-4926-b633-85e0d043938b.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/9cac52ed-10b6-48da-9c91-1e1a731ccfdc.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/bb2c8ba4-3e7b-4922-b887-bf24bb584c57.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/e00573e6-9aad-469e-8475-892ade4b1f1d.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/f4896606-9fb1-448a-8aec-61c931b65b0a.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fbcb308c-beb0-4340-8027-47990b0cfa2d.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fbfcd8c9-04e2-46d5-8283-2dfeb9001b36.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fc41cdd6-fd88-4122-b50a-ce4abc5d89ec.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/1.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/1.nbtt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/summary.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/schematics/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/cabin.schem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/schematics/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/cabin_base.schem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/schematics/cabin_base.schem" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/custom/ItemStackTracker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/custom/WrappedInventory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/custom/impl/WrappedInventoryv1_13_R2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/data/villages.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/data/villages.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/level.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/level.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/level.dat_old" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/level.dat_old" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-1.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-1.-1.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-1.-2.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-1.-2.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-1.-3.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-1.-3.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-1.0.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-2.-2.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-2.-2.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.-2.-3.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.-2.-3.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.0.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.0.-1.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/region/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/region/r.0.0.mca" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build/session.lock" beforeDir="false" afterPath="$PROJECT_DIR$/server/build/session.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/bukkit.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/bukkit.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/commands.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/commands.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/logs/latest.log" beforeDir="false" afterPath="$PROJECT_DIR$/server/logs/latest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/ops.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/ops.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit-1.15-28.jar" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit-1.15-45.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/config.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/plugins/ProtocolLib/lastupdate" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/ProtocolLib/lastupdate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft.jar" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/items.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/items.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/cabin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/cabin.yml.hide" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/sounds.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/sounds.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/arenas/overworld1.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/arenas/overworld1.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/particles/flame.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/particles/flame.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/cabin.yml.hide" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/cabin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/schematics/cabin_base.schematic" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/schematics/cabin_base.schematic.backup" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/schematics/cabin_outside_test.schematic" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/schematics/schematics/cabin_outside_test.schem" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spigot.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/spigot.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spirit_lobby/advancements/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/advancements/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/data/villages.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/data/villages.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/level.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/level.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/level.dat_old" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/level.dat_old" afterDir="false" />
@@ -47,16 +98,15 @@
       <change beforePath="$PROJECT_DIR$/server/spirit_overworld/region/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_overworld/region/r.0.0.mca" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_overworld/session.lock" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_overworld/session.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/usercache.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/usercache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/GhostParticleInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/GhostParticleInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/game/GameListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/game/GameListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/game/SpiritGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/game/SpiritGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/WorldManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/WorldManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/tracker/ItemTracker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/tracker/ItemTracker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ArenaSchematic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ArenaSchematic.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexRoundWorldData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexRoundWorldData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexSchematicDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexSchematicDataContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SchematicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SchematicManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SimpleRoundWorldData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SimpleRoundWorldData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/CloudTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/CloudTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/FireBreathTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/FireBreathTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/type/ability/action/TrailingArrowAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/type/ability/action/TrailingArrowAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SimpleSchematicDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/SimpleSchematicDataContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/player/SpiritPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/player/SpiritPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +135,9 @@
       </MavenImportingSettings>
     </option>
   </component>
+  <component name="NamedScopeManager">
+    <scope name="Unnamed" pattern="lib:com.boydti.fawe.*||lib:com.sk89q.worldedit.*" />
+  </component>
   <component name="ProjectId" id="1V5VipcLAgwZvCRdG8yhj5HQ5K7" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -96,10 +149,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last.edited.regexp" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
-    <property name="project.structure.last.edited" value="Facets" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/server/plugins" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -123,23 +177,23 @@
       <recent name="com.kabryxis.ghostcraft.game.inv" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Developing\Workspace\spiritcraft\server" />
       <recent name="C:\Developing\Workspace\spiritcraft\server\plugins" />
+      <recent name="C:\Developing\Workspace\spiritcraft\server\plugins\Spiritcraft\schematics\schematics" />
+      <recent name="C:\Developing\Workspace\spiritcraft\src\main\java\com\kabryxis\spiritcraft\game\inventory\kh" />
+      <recent name="C:\Developing\Workspace\spiritcraft\server" />
       <recent name="C:\Developing\Workspace\spiritcraft" />
-      <recent name="C:\Developing\Workspace\ghostcraft\src\main\java\com\kabryxis\ghostcraft\game\a\world\a" />
     </key>
   </component>
   <component name="RunManager" selected="JAR Application.server">
-    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-    </configuration>
-    <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -149,7 +203,7 @@
       <option name="VM_PARAMETERS" value="-Xmx2G -DIReallyKnowWhatIAmDoingISwear" />
       <option name="WORKING_DIRECTORY" value="C:\Developing\Workspace\spiritcraft\server" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/dcevm-11.0.5+5" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <method v="2" />
     </configuration>
     <configuration name="kabutils" type="MavenRunConfiguration" factoryName="Maven">
@@ -204,6 +258,15 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="JAR Application.server" />
       <item itemvalue="Maven.spiritcraft" />
@@ -221,6 +284,9 @@
         </serviceView>
       </list>
     </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -431,9 +497,14 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="552" y="183" key="#Notifications/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1576971717329" />
-    <state x="414" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578695665909">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="361" y="77" key="#Project_Structure" timestamp="1579190286615">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state x="361" y="77" key="#Project_Structure/0.0.1536.834@0.0.1536.834" timestamp="1579190286615" />
+    <state x="331" y="144" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1579300829827">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="331" y="144" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1579300829827" />
     <state x="414" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578695665909" />
     <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1578596067298">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -447,53 +518,75 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="619" y="120" key="CommitChangelistDialog2/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578699065555" />
-    <state x="740" y="281" key="FileChooserDialogImpl" timestamp="1578594004202">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="592" y="223" key="FileChooserDialogImpl" timestamp="1579195129062">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state x="592" y="223" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1579195129062" />
     <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578594004202" />
-    <state width="1921" height="329" key="GridCell.Tab.0.bottom" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.0.bottom" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.0.center" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.0.center" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.0.center/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.0.left" timestamp="1578779421256">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.0.left" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.0.left/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421256" />
-    <state width="1921" height="329" key="GridCell.Tab.0.right" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.0.right" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.0.right/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.1.bottom" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.bottom" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.1.bottom/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.1.center" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.center" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.1.center/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.1.left" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.left" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.1.left/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state width="1921" height="329" key="GridCell.Tab.1.right" timestamp="1578779421257">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.right" timestamp="1579222527055">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state width="1537" height="274" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
     <state width="1921" height="329" key="GridCell.Tab.1.right/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578779421257" />
-    <state x="440" y="100" key="SettingsEditor" timestamp="1578594266598">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="352" y="0" key="SettingsEditor" timestamp="1579195215764">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state x="352" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1579195215764" />
     <state x="440" y="100" key="SettingsEditor/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578594266598" />
     <state x="552" y="259" key="Vcs.Push.Dialog.v2" timestamp="1578699069321">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578699069321" />
+    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1579189724802">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.834@0.0.1536.834" timestamp="1579189724802" />
+    <state x="463" y="15" width="609" height="804" key="find.popup" timestamp="1579195888728">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="463" y="15" width="609" height="804" key="find.popup/0.0.1536.834@0.0.1536.834" timestamp="1579195888728" />
     <state x="594" y="220" key="new project wizard" timestamp="1576972115686">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="594" y="220" key="new project wizard/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1576972115686" />
+    <state x="361" y="77" key="scopes" timestamp="1579197126226">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="361" y="77" key="scopes/0.0.1536.834@0.0.1536.834" timestamp="1579197126226" />
   </component>
 </project>

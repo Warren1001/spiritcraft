@@ -7,7 +7,6 @@ import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.game.player.GamePlayer;
 import com.kabryxis.kabutils.spigot.game.player.ResetFlag;
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
-import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.WrappedEntityPlayer;
 import com.kabryxis.spiritcraft.game.DeadBody;
 import com.kabryxis.spiritcraft.game.GhostParticleInfo;
@@ -19,6 +18,7 @@ import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.tracker.ItemTracker;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
 import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
+import com.kabryxis.spiritcraft.game.inventory.custom.WrappedInventory;
 import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Material;
@@ -154,8 +154,8 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 	
 	public void clearLastErrorMessages(int amount) {
 		int end = Math.max(errorMessages.size() - amount, 0);
-		for(int i = errorMessages.size() - 1; i >= end; i--) {
-			errorMessages.remove(i);
+		if(errorMessages.size() > end) {
+			errorMessages.subList(end, errorMessages.size()).clear();
 		}
 	}
 	

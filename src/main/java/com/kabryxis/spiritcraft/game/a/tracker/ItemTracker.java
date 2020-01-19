@@ -1,7 +1,7 @@
 package com.kabryxis.spiritcraft.game.a.tracker;
 
 import com.kabryxis.kabutils.spigot.inventory.itemstack.Items;
-import com.kabryxis.kabutils.spigot.version.custom.player.ItemStackTracker;
+import com.kabryxis.spiritcraft.game.inventory.custom.ItemStackTracker;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;

@@ -1,6 +1,0 @@
-weight: 1000
-schematic:
-- cabin_base.yml
-- cabin_outside_test.schematic
-biome: COLD_TAIGA
-weather: true
