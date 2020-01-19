@@ -514,9 +514,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="689" y="310" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578593946449" />
-    <state x="619" y="120" key="CommitChangelistDialog2" timestamp="1578699065555">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="495" y="26" key="CommitChangelistDialog2" timestamp="1579462593251">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
+    <state x="495" y="26" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1579462593251" />
     <state x="619" y="120" key="CommitChangelistDialog2/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578699065555" />
     <state x="592" y="223" key="FileChooserDialogImpl" timestamp="1579195129062">
       <screen x="0" y="0" width="1536" height="834" />
