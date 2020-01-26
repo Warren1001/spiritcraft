@@ -17,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+@SuppressWarnings("DeprecatedIsStillUsed")
 public class EditSessionBlockState implements BlockState {
 
     private final EditSession editSession;

@@ -42,7 +42,7 @@ public class FireBreathTask extends BukkitRunnable {
 		//System.out.println(iteration + ":" + offset + "," + particleCount);
 		if(iteration <= EXPLODE_ITERATION || iteration % 2 == 0) {
 			for(Player player : owner.getPlayer().getWorld().getPlayers()) {
-				player.spawnParticle(Particle.FLAME, loc, (int)particleCount, offset, offset / 1.5, offset);
+				player.spawnParticle(Particle.FLAME, loc, (int)particleCount, offset, offset / 1.5, offset, 0);
 			}
 		}
 		iteration++;

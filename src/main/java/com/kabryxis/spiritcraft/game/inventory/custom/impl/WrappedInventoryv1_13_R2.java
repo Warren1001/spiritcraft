@@ -180,7 +180,7 @@ public class WrappedInventoryv1_13_R2 extends PlayerInventory implements Wrapped
 			if(k > getMaxStackSize() - item.getCount()) k = getMaxStackSize() - item.getCount();
 			if(k != 0) {
 				i -= k;
-				item.setCount(item.getCount() + k);;
+				item.setCount(item.getCount() + k);
 				item.d(5);
 				return i;
 			}

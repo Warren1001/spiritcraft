@@ -3,6 +3,8 @@ package com.kabryxis.spiritcraft.game.ability;
 import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collection;
@@ -33,15 +35,25 @@ public class ItemBarTimerTask extends AbilityTimerRunnable {
 	@Override
 	public void tick(int tick) {
 		if(ltr) items.forEach(item -> {
-			short maxDura = item.getType().getMaxDurability();
-			item.setDurability((short)Math.min(maxDura - 1, maxDura - Maths.floor(maxDura * ((double)tick / (double)maxTicks))));
+			int maxDura = item.getType().getMaxDurability();
+			ItemMeta meta = item.getItemMeta();
+			((Damageable)meta).setDamage(Math.min(maxDura - 1, maxDura - Maths.floor(maxDura * ((double)tick / (double)maxTicks))));
+			item.setItemMeta(meta);
 		});
-		else items.forEach(item -> item.setDurability((short)Maths.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks))));
+		else items.forEach(item -> {
+			ItemMeta meta = item.getItemMeta();
+			((Damageable)meta).setDamage(Maths.floor(item.getType().getMaxDurability() * ((double)tick / (double)maxTicks)));
+			item.setItemMeta(meta);
+		});
 	}
 
 	@Override
 	public void onStop() {
-		items.forEach(item -> item.setDurability((short)0));
+		items.forEach(item -> {
+			ItemMeta meta = item.getItemMeta();
+			((Damageable)meta).setDamage(0);
+			item.setItemMeta(meta);
+		});
 	}
 
 }

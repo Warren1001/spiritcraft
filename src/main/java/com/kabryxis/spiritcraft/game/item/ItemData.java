@@ -6,7 +6,9 @@ import com.kabryxis.spiritcraft.game.inventory.InventoryManager;
 import com.kabryxis.spiritcraft.game.inventory.OpenNextInventoryAction;
 import com.kabryxis.spiritcraft.game.inventory.SpiritInventory;
 import com.kabryxis.spiritcraft.game.player.SpiritPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public class ItemData {
 	private final boolean ghost;
 	private final String typeName;
 	private final String itemTitle;
-	private final DynamicInventory inv;
+	private final Inventory inv;
 	
 	public ItemData(ItemManager itemManager, boolean ghost) {
 		this.itemManager = itemManager;
@@ -30,13 +32,13 @@ public class ItemData {
 		this.ghost = ghost;
 		this.typeName = ghost ? "ghost" : "hunter";
 		this.itemTitle = (ghost ? ChatColor.DARK_GRAY : ChatColor.DARK_RED) + "Choose {type} item";
-		this.inv = new SpiritInventory(inventoryManager, (ghost ? ChatColor.DARK_GRAY : ChatColor.DARK_RED) + "Choose item type to modify", 2);
-		inv.setInteractablePlayerItem(9, inventoryManager.getPreviousInventoryItem());
-		inv.setInteractablePlayerItem(13, inventoryManager.getInformationItem());
-		inv.setInteractablePlayerItem(17, inventoryManager.getErrorItem());
-	}
+		this.inv = Bukkit.createInventory(null, 18, (ghost ? ChatColor.DARK_GRAY : ChatColor.DARK_RED) + "Choose item type to modify");
+		inv.setItem(9, InventoryManager.PREV_INV_ITEMSTACK);
+		inv.setItem(13, InventoryManager.INFO_ITEMSTACK);
+		inv.setItem(17, InventoryManager.ERROR_ITEMSTACK);
+	}./.''.;xc
 	
-	public DynamicInventory getInventory() {
+	public Inventory getInventory() {
 		return inv;
 	}
 	

@@ -1,18 +1,10 @@
 package com.kabryxis.spiritcraft.game.inventory;
 
-import com.kabryxis.kabutils.spigot.inventory.itemstack.ItemBuilder;
-import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-public class PlayerConfigureInventory extends SpiritInventory {
+public class PlayerConfigureInventory {
 	
-	private static final ItemStack FILL = new ItemBuilder(Material.BARRIER).name(ChatColor.BLACK.toString()).build();
+	/*private static final ItemStack FILL = new ItemBuilder(Material.BARRIER).name(ChatColor.BLACK.toString()).build();
 	private static final InteractableItem CANCEL_ITEM = (player, right, shift) -> true;
-	private static final int FILL_START = Version.VERSION.isVersionAtLeast(Version.v1_9_R1) ? 5 : 4;
+	private static final int FILL_START = 5;
 	
 	private final SpiritGame game;
 	private final boolean ghost;
@@ -49,6 +41,6 @@ public class PlayerConfigureInventory extends SpiritInventory {
 			contents[i] = null;
 		}
 		bukkitInventory.setContents(contents);
-	}
+	}*/
 	
 }

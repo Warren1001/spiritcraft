@@ -25,7 +25,7 @@ public class RemoveHandAction extends SpiritGameObjectAction {
 		ItemStack itemStack = triggerData.get("hand");
 		int amountToRemove = Math.min(itemStack.getAmount(), this.amountToRemove);
 		int amount = itemStack.getAmount() - amountToRemove;
-		if(amount <= 0) player.getInventory().setItemInHand(null);
+		if(amount <= 0) player.getInventory().setItemInMainHand(null);
 		else itemStack.setAmount(amount);
 		if(duration > 0L) {
 			int slot = player.getInventory().getHeldItemSlot();

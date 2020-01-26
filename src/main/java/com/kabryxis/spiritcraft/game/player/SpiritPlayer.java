@@ -17,7 +17,6 @@ import com.kabryxis.spiritcraft.game.a.cooldown.PlayerCooldownManager;
 import com.kabryxis.spiritcraft.game.a.game.SpiritGame;
 import com.kabryxis.spiritcraft.game.a.tracker.ItemTracker;
 import com.kabryxis.spiritcraft.game.a.world.schematic.SchematicDataCreator;
-import com.kabryxis.spiritcraft.game.inventory.DynamicInventory;
 import com.kabryxis.spiritcraft.game.inventory.custom.WrappedInventory;
 import com.kabryxis.spiritcraft.game.item.PlayerItemInfo;
 import com.sk89q.worldedit.regions.Region;
@@ -210,9 +209,9 @@ public class SpiritPlayer extends GamePlayer { // TODO combat logger
 		return playerType;
 	}
 	
-	public void openInventory(DynamicInventory inventory) {
+	/*public void openInventory(DynamicInventory inventory) {
 		inventory.open(player);
-	}
+	}*/
 	
 	public void startParticleTimer() {
 		if(particleTask != null) particleTask.cancel();

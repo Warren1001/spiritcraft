@@ -63,7 +63,7 @@ public class CloudTask extends BukkitRunnable {
 		}
 		Random random = new Random();
 		blocksList.get(currentBlockIteration).forEach(b -> loc.getWorld().getPlayers().forEach(player ->
-				player.spawnParticle(Particle.FLAME, b.getLocation().subtract(0.5, 0.5, 0.5), 1, 0.6, 0.6, 0.6)));
+				player.spawnParticle(Particle.FLAME, b.getLocation().subtract(0.5, 0.5, 0.5), 1, 0.6, 0.6, 0.6, 0)));
 		currentBlockIteration++;
 		if(currentBlockIteration == MAX_BLOCK_ITERATIONS) currentBlockIteration = 0;
 	}

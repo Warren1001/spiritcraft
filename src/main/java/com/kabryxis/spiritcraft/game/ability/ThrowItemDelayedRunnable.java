@@ -15,7 +15,7 @@ public abstract class ThrowItemDelayedRunnable extends BukkitRunnable {
 	public ThrowItemDelayedRunnable(SpiritPlayer player, long delay) {
 		this.player = player;
 		Player p = player.getPlayer();
-		ItemStack itemStack = p.getItemInHand().clone();
+		ItemStack itemStack = p.getInventory().getItemInMainHand().clone();
 		itemStack.setAmount(1);
 		item = Items.dropItem(p.getEyeLocation(), itemStack);
 		item.setVelocity(p.getLocation().getDirection().multiply(1.2));

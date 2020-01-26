@@ -2,52 +2,66 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="713db650-3868-4cae-a381-9e5dc5056328" name="Default" comment="all the updates">
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-11.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-12.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-11-13.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-1.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-3.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-4.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-5.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-6.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-19-7.log.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/BKCommonLib-1.13.2-v4-SNAPSHOT.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/BKCommonLib/Localization.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit-1.15-28.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/4db4a92f-6e94-4086-824b-0f2d5dc819ec.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/58ac86c6-ec28-432e-9b38-e8e026051732.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/75ec422b-be79-439b-87dd-d1e9eaf5d11c.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/94af170e-e9e2-423d-99cc-d01f21de8110.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/9b322241-c306-4432-9889-ba01adebc1fd.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/9c47dea0-b635-4817-84be-00eb80fb4eed.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/aae81a3c-3db4-4cfa-ae27-dbac3b1c5033.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/ac1969ce-fc36-4b6a-ae9c-6c2fd38d189e.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/e765b689-4ef5-4526-9473-e251b5880106.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fa7398ae-b157-41c2-9599-3c53b876978c.bd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/LightCleaner-1.13.2-v1-SNAPSHOT.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/LightCleaner/Localization.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-23-1.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-23-2.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-1.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-2.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-3.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-4.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-5.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/logs/2020-01-24-6.log.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/17461231-9b4d-41ef-8770-eb0888f8a20d.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/2178d99e-aa61-4609-a257-60dd9c392e1e.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/23221402-e0e5-42b5-97de-e43981dd4a0e.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/38a2d5b7-16f2-45ec-8b4d-79277ddd1134.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/424e3672-e610-4b1e-a72d-335fa7030530.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/48b91f4e-a9e6-4ea4-8fca-4e74188d1f53.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/8f4af9d6-4df4-48f0-bd4a-ba700dc4c044.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/95fed5e4-d36b-4043-a42a-d4ac10988262.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/9de4d72c-4978-40a5-968b-a7bc5633f0b6.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/bfa6977c-a766-4ada-9879-1a003c543358.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/cdc5741b-a1c9-4935-afab-9399ae600249.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/de29dd2f-f0e1-404d-addc-f3056c0a7dfa.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/e27a855e-7ab8-4240-ba0d-3765272c12da.bd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/f611e127-1273-4636-a54b-4371cf2a3b48.bd" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/server/plugins/LightCleaner/PendingLight.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/LightCleaner/PermissionDefaults.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/plugins/LightCleaner/config.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/spirit_lobby/advancements/8a90062b-82ba-35bd-b6bb-7977cf0d1a57.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/ActionItemStack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/logs/latest.log" beforeDir="false" afterPath="$PROJECT_DIR$/server/logs/latest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/ops.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/ops.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/3b60b73c-609c-48e2-9a1c-a06712973fc4.bd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/5f9a3942-e46c-4b1d-9a10-702c4120386d.bd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/625a9576-8481-47bf-a6ed-673c8bbeee12.bd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/f2b46ead-9173-4947-aba8-250d5cb6ab68.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/09a9fbd6-1832-4f09-9fc2-599c690b8026.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/29311831-6e67-4b76-9c05-22e2f003cc2b.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/4aae0c2e-b8a8-4212-b3fb-0b756d87eec3.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/566240da-4c26-4bb8-a137-9652fe522517.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/5e2c5754-3c2e-4869-8786-71f17371e5b8.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/706e3e81-ca1f-4f16-a5d9-862123f47216.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/7ccdaa9a-b390-4b85-b7d5-170db37d7a15.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/8449b293-5d31-4169-b584-4cfa423102b6.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/8f4afde1-5c9a-4926-b633-85e0d043938b.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/9cac52ed-10b6-48da-9c91-1e1a731ccfdc.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/bb2c8ba4-3e7b-4922-b887-bf24bb584c57.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/e00573e6-9aad-469e-8475-892ade4b1f1d.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/f4896606-9fb1-448a-8aec-61c931b65b0a.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fbcb308c-beb0-4340-8027-47990b0cfa2d.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fbfcd8c9-04e2-46d5-8283-2dfeb9001b36.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/clipboard/fc41cdd6-fd88-4122-b50a-ce4abc5d89ec.bd" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/1.bd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0/1.nbtt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/FastAsyncWorldEdit/history/build/summary.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/server/plugins/ProtocolLib/lastupdate" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/ProtocolLib/lastupdate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft.jar" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/abilities/smoke.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/abilities/smoke.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/Spiritcraft/players/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.yml" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/Spiritcraft/players/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/advancements/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/advancements/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/data/villages.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/data/villages.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/level.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/level.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/level.dat_old" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/level.dat_old" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/playerdata/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/playerdata/4e1c2fb7-27a0-3025-bbee-7d9f605c06a0.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spirit_lobby/playerdata/8a90062b-82ba-35bd-b6bb-7977cf0d1a57.dat" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/playerdata/8a90062b-82ba-35bd-b6bb-7977cf0d1a57.dat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/region/r.-1.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/region/r.-1.-1.mca" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/region/r.-1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/region/r.-1.0.mca" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_lobby/region/r.0.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_lobby/region/r.0.-1.mca" afterDir="false" />
@@ -62,11 +76,30 @@
       <change beforePath="$PROJECT_DIR$/server/spirit_overworld/region/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_overworld/region/r.0.0.mca" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/spirit_overworld/session.lock" beforeDir="false" afterPath="$PROJECT_DIR$/server/spirit_overworld/session.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/usercache.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/usercache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexRoundWorldData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/ComplexRoundWorldData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/prerequisite/impl/BlockPrerequisite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/prerequisite/impl/BlockPrerequisite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/prerequisite/impl/HandPrerequisite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/prerequisite/impl/HandPrerequisite.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/type/GameObjectBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/type/GameObjectBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/parse/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/parse/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/tracker/ItemTrackerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/tracker/ItemTrackerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/EditSessionBlockState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/EditSessionBlockState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/RoundWorldDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/a/world/schematic/RoundWorldDataContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/CloudTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/CloudTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/FireBreathTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/FireBreathTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ItemBarTimerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ItemBarTimerTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ThrowItemDelayedRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ThrowItemDelayedRunnable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ThrowItemTimerRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/ability/ThrowItemTimerRunnable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/DynamicInventory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/InteractableItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/InteractablePlayerItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/InventoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/InventoryManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/OpenNextInventoryAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/PlayerConfigureInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/PlayerConfigureInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/PlayerItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/SpiritInventory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/custom/impl/WrappedInventoryv1_13_R2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/custom/impl/WrappedInventoryv1_13_R2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/player/ErrorItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/player/InformationItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/player/PreviousInventoryItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/item/ItemData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/item/ItemData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/action/impl/RemoveHandAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/object/action/impl/RemoveHandAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/player/SpiritPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/player/SpiritPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,6 +120,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
@@ -100,6 +134,7 @@
   </component>
   <component name="ProjectId" id="1V5VipcLAgwZvCRdG8yhj5HQ5K7" />
   <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -112,25 +147,22 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="last.edited.regexp" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server/plugins" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/kabryxis/spiritcraft/game/inventory/a" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Developing\Workspace" />
+      <recent name="C:\Developing\Workspace\spiritcraft" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.kabryxis.spiritcraft.game.object" />
       <recent name="com.kabryxis.spiritcraft.game" />
       <recent name="com.kabryxis.spiritcraft.game.a.game.object" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Developing\Workspace\spiritcraft\server\plugins" />
-      <recent name="C:\Developing\Workspace\spiritcraft\server\plugins\Spiritcraft\schematics\schematics" />
-      <recent name="C:\Developing\Workspace\spiritcraft\src\main\java\com\kabryxis\spiritcraft\game\inventory\kh" />
-      <recent name="C:\Developing\Workspace\spiritcraft\server" />
-      <recent name="C:\Developing\Workspace\spiritcraft" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.kabryxis.spiritcraft.game.object.type" />
@@ -139,30 +171,24 @@
       <recent name="com.kabryxis.ghostcraft.game.a.world" />
       <recent name="com.kabryxis.ghostcraft.game.inv" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Developing\Workspace" />
-      <recent name="C:\Developing\Workspace\spiritcraft" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Developing\Workspace\spiritcraft\src\main\java\com\kabryxis\spiritcraft\game\inventory\a" />
+      <recent name="C:\Developing\Workspace\spiritcraft\server\plugins" />
+      <recent name="C:\Developing\Workspace\spiritcraft\server\plugins\Spiritcraft\schematics\schematics" />
+      <recent name="C:\Developing\Workspace\spiritcraft\src\main\java\com\kabryxis\spiritcraft\game\inventory\kh" />
+      <recent name="C:\Developing\Workspace\spiritcraft\server" />
     </key>
   </component>
   <component name="RunManager" selected="JAR Application.server">
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="TestNG">
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="Application" factoryName="Application">
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -226,6 +252,15 @@
         </option>
       </MavenSettings>
       <method v="2" />
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <list>
       <item itemvalue="JAR Application.server" />
@@ -453,14 +488,22 @@
     <option name="LAST_COMMIT_MESSAGE" value="all the updates" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="399" y="107" key="#Inspections" timestamp="1579881103002">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="399" y="107" key="#Inspections/0.0.1536.834@0.0.1536.834" timestamp="1579881103002" />
+    <state x="361" y="77" key="#Java" timestamp="1579900024294">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="361" y="77" key="#Java/0.0.1536.834@0.0.1536.834" timestamp="1579900024294" />
     <state x="552" y="183" key="#Notifications" timestamp="1576971717329">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="552" y="183" key="#Notifications/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1576971717329" />
-    <state x="361" y="77" key="#Project_Structure" timestamp="1579190286615">
+    <state x="361" y="77" key="#Project_Structure" timestamp="1579880394979">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="361" y="77" key="#Project_Structure/0.0.1536.834@0.0.1536.834" timestamp="1579190286615" />
+    <state x="361" y="77" key="#Project_Structure/0.0.1536.834@0.0.1536.834" timestamp="1579880394979" />
     <state x="414" y="181" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1579463792296">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -474,55 +517,71 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="689" y="310" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578593946449" />
+    <state x="227" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1579899255699">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="227" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.834@0.0.1536.834" timestamp="1579899255699" />
+    <state x="513" y="274" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1579881104977">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="513" y="274" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.834@0.0.1536.834" timestamp="1579881104977" />
     <state x="495" y="26" key="CommitChangelistDialog2" timestamp="1579462593251">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="495" y="26" key="CommitChangelistDialog2/0.0.1536.834@0.0.1536.834" timestamp="1579462593251" />
     <state x="619" y="120" key="CommitChangelistDialog2/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578699065555" />
-    <state x="592" y="223" key="FileChooserDialogImpl" timestamp="1579195129062">
+    <state x="523" y="134" key="DetectedRootsChooserDialog" timestamp="1579880496540">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="592" y="223" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1579195129062" />
+    <state x="523" y="134" key="DetectedRootsChooserDialog/0.0.1536.834@0.0.1536.834" timestamp="1579880496540" />
+    <state x="93" y="93" width="1350" height="648" key="DiffContextDialog" timestamp="1579905637402">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="93" y="93" width="1350" height="648" key="DiffContextDialog/0.0.1536.834@0.0.1536.834" timestamp="1579905637402" />
+    <state x="592" y="223" key="FileChooserDialogImpl" timestamp="1579880489123">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="592" y="223" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1579880489123" />
     <state x="740" y="281" key="FileChooserDialogImpl/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578594004202" />
-    <state width="1921" height="320" key="GridCell.Tab.0.bottom" timestamp="1579465155485">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="221" key="GridCell.Tab.0.bottom" timestamp="1579922802594">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="221" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579922802594" />
     <state width="1921" height="320" key="GridCell.Tab.0.bottom/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155485" />
-    <state width="1921" height="320" key="GridCell.Tab.0.center" timestamp="1579465155485">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="221" key="GridCell.Tab.0.center" timestamp="1579922802594">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="221" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1579922802594" />
     <state width="1921" height="320" key="GridCell.Tab.0.center/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155485" />
-    <state width="1921" height="320" key="GridCell.Tab.0.left" timestamp="1579465155485">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="221" key="GridCell.Tab.0.left" timestamp="1579922802594">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="221" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1579922802594" />
     <state width="1921" height="320" key="GridCell.Tab.0.left/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155485" />
-    <state width="1921" height="320" key="GridCell.Tab.0.right" timestamp="1579465155485">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="221" key="GridCell.Tab.0.right" timestamp="1579922802594">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="221" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1579922802594" />
     <state width="1921" height="320" key="GridCell.Tab.0.right/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155485" />
-    <state width="1921" height="320" key="GridCell.Tab.1.bottom" timestamp="1579465155105">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.bottom" timestamp="1579886439950">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="274" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1579886439950" />
     <state width="1921" height="320" key="GridCell.Tab.1.bottom/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155105" />
-    <state width="1921" height="320" key="GridCell.Tab.1.center" timestamp="1579465155104">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.center" timestamp="1579886439950">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="274" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1579886439950" />
     <state width="1921" height="320" key="GridCell.Tab.1.center/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155104" />
-    <state width="1921" height="320" key="GridCell.Tab.1.left" timestamp="1579465155104">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.left" timestamp="1579886439950">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="274" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1579886439950" />
     <state width="1921" height="320" key="GridCell.Tab.1.left/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155104" />
-    <state width="1921" height="320" key="GridCell.Tab.1.right" timestamp="1579465155104">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state width="1537" height="274" key="GridCell.Tab.1.right" timestamp="1579886439950">
+      <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1537" height="274" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1579222527055" />
+    <state width="1537" height="274" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1579886439950" />
     <state width="1921" height="320" key="GridCell.Tab.1.right/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1579465155104" />
     <state x="440" y="100" key="SettingsEditor" timestamp="1579463801042">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -533,10 +592,14 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="552" y="259" key="Vcs.Push.Dialog.v2/0.0.1920.1050/1920.303.1366.738@0.0.1920.1050" timestamp="1578699069321" />
-    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1579189724802">
+    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1579905335364">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.834@0.0.1536.834" timestamp="1579189724802" />
+    <state x="93" y="93" width="1350" height="648" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.834@0.0.1536.834" timestamp="1579905335364" />
+    <state x="578" y="335" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1579879106712">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="578" y="335" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.834@0.0.1536.834" timestamp="1579879106712" />
     <state x="463" y="15" width="609" height="804" key="find.popup" timestamp="1579195888728">
       <screen x="0" y="0" width="1536" height="834" />
     </state>

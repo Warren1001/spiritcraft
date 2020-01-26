@@ -57,7 +57,7 @@ public class CommandHandler implements ParseHandler {
 		if(objectType == String.class) registerSubCommandHandler(subCommand, required, true, (Consumer<String>)commandDataHandler);
 		else {
 			Function<String, ?> converter = dataConverters.get(objectType);
-			if(converter == null) System.out.println("Could not find a " + objectType.getClass().getSimpleName() + " data converter.");
+			if(converter == null) System.out.println("Could not find a " + objectType.getSimpleName() + " data converter.");
 			else registerSubCommandHandler(subCommand, required, true, string -> commandDataHandler.accept((T)converter.apply(string)));
 		}
 	}
